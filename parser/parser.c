@@ -1,15 +1,33 @@
 #include "parser.h"
 
-void	parser(char *input)
+int	check_quotes(char *input)
 {
-	char	**commands;
-	int		i;
+	int	i;
+	int	single_quote;
+	int	double_quote;
 
-	commands = ft_split(input, ' ');
 	i = 0;
-	while (commands[i])
+	single_quote = 0;
+	double_quote = 0;
+	while (input[i])
 	{
-		printf("command: %s\n", commands[i]);
+		if (input[i] == '\'' && !double_quote)
+			single_quote = !single_quote;
+		if (input[i] == '\"' && !single_quote)
+			double_quote = !double_quote;
 		i++;
 	}
+	if (single_quote || double_quote)
+	{
+		printf("Error: unclosed quotes\n");
+		return (0);
+	}
+	return (1);
+}
+
+void	parser(char *input)
+{
+	if (!check_quotes(input))
+		return ;
+	lexer(input);
 }

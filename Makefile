@@ -4,6 +4,7 @@ CC = cc
 C_FLAGS = -Wall -Wextra -Werror
 
 SRCS = parser/parser.c\
+		parser/lexer.c\
 		 main.c \
 
 OBJ =$(SRCS:.c=.o)
