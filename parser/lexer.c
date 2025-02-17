@@ -1,9 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/17 18:27:24 by aakyuz            #+#    #+#             */
+/*   Updated: 2025/02/17 19:24:40 by aakyuz           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parser.h"
 
 t_lexer	*create_token(char *str, t_tokens token_type, int index)
 {
 	t_lexer	*new_token;
 
+	printf("Creating token: str='%s', type=%d, index=%d\n", str, token_type, index);
 	new_token = (t_lexer *)malloc(sizeof(t_lexer));
 	if (!new_token)
 		return (NULL);
@@ -32,6 +45,7 @@ void	add_token(t_lexer **list, t_lexer *new_token)
 {
 	t_lexer	*temp;
 
+	printf("Adding token to list: '%s'\n", new_token->str);
 	if (!*list)
 	{
 		*list = new_token;
@@ -68,14 +82,18 @@ t_lexer	*lexer(char *input)
 	int			i;
 	t_tokens	token_type;
 
+	printf("\n=== Starting Lexical Analysis ===\n");
+	printf("Input string: '%s'\n", input);
 	token_list = NULL;
 	words = ft_split(input, ' ');
 	i = -1;
 	while (words[++i])
 	{
 		token_type = check_token_type(words[i]);
+		printf("Word[%d]: '%s' -> Token type: %d\n", i, words[i], token_type);
 		add_token(&token_list, create_token(words[i], token_type, i));
 	}
+	printf("=== Lexical Analysis Complete ===\n\n");
 	i = 0;
 	while (words[i])
 		free(words[i++]);

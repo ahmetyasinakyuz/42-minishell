@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
+/*   Updated: 2025/02/17 18:28:29 by aakyuz           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	main(void)
@@ -11,7 +23,7 @@ int	main(void)
 		input = readline(shell_name);
 		if (!input)
 			break ;
-		if (ft_strncmp(input, "exit", 4) == 0)
+		if (ft_strncmp(input, "exit", 5) == 0)
 		{
 			free(input);
 			break ;
