@@ -50,24 +50,23 @@ t_tokens	check_token_type(char *str)
 		return (WORD);
 	if (ft_strncmp(str, "|", 2) == 0)
 		return (PIPE);
+	if (ft_strncmp(str, "<<", 3) == 0)
+		return (REDIRECT_HEREDOC);
 	if (ft_strncmp(str, "<", 2) == 0)
 		return (REDIRECT_IN);
-	if (ft_strncmp(str, "<<", 3) == 0)
-		return (REDIRECT_IN);
-	if (ft_strncmp(str, ">", 2) == 0)
-		return (REDIRECT_OUT);
 	if (ft_strncmp(str, ">>", 3) == 0)
+		return (REDIRECT_APPEND);
+	if (ft_strncmp(str, ">", 2) == 0)
 		return (REDIRECT_OUT);
 	return (WORD);
 }
 
-void	lexer(char *input)
+t_lexer	*lexer(char *input)
 {
 	t_lexer		*token_list;
 	char		**words;
 	int			i;
 	t_tokens	token_type;
-	t_lexer		*temp;
 
 	token_list = NULL;
 	words = ft_split(input, ' ');
@@ -81,11 +80,5 @@ void	lexer(char *input)
 	while (words[i])
 		free(words[i++]);
 	free(words);
-	temp = token_list;
-	while (temp)
-	{
-		printf("Token %d: %s (type: %d)\n", temp->i, temp->str, temp->token);
-		temp = temp->next;
-	}
-	free_lexer_list(token_list);
+	return (token_list);
 }

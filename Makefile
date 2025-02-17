@@ -3,7 +3,8 @@ NAME = minishell
 CC = cc
 C_FLAGS = -Wall -Wextra -Werror
 
-SRCS = parser/parser.c\
+SRCS =	parser/parser_utils.c\
+		parser/parser.c\
 		parser/lexer.c\
 		 main.c \
 
@@ -33,3 +34,5 @@ a: re
 	rm -f $(OBJ)
 	$(MAKE) clean
 	clear
+
+.PHONY: all clean fclean re a

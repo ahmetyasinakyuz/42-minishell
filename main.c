@@ -5,7 +5,7 @@ int	main(void)
 	char	*input;
 	char	*shell_name;
 
-	shell_name = "minishell> ";
+	shell_name = "minihell> ";
 	while (1)
 	{
 		input = readline(shell_name);
