@@ -6,14 +6,14 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/17 19:07:12 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/18 16:09:08 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
-# include "../libft/libft.h"
+# include "../libs/libft/libft.h"
 # include <stdio.h>
 
 typedef enum e_tokens
@@ -25,6 +25,7 @@ typedef enum e_tokens
 	REDIRECT_OUT,
 	REDIRECT_APPEND,
 }							t_tokens;
+
 typedef struct s_lexer
 {
 	char					*str;
@@ -33,17 +34,13 @@ typedef struct s_lexer
 	struct s_lexer			*next;
 	struct s_lexer			*prev;
 }							t_lexer;
-typedef struct s_tools
-{
-	int						placeholder;
-}							t_tools;
 
 typedef struct s_simple_cmds
 {
 	char					**str;
-	int						(*builtin)(t_tools *, struct s_simple_cmds *);
 	int						num_redirections;
 	char					*hd_file_name;
+	int						pipe;
 	t_lexer					*redirections;
 	struct s_simple_cmds	*next;
 	struct s_simple_cmds	*prev;

@@ -1,36 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putuint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/18 17:13:22 by aakyuz           ###   ########.fr       */
+/*   Created: 2024/10/22 18:49:30 by aakyuz            #+#    #+#             */
+/*   Updated: 2024/10/22 23:28:40 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "ft_printf.h"
 
-int	main(void)
+void	ft_putuint(unsigned int num, int *counter)
 {
-	char	*input;
-
-	while (1)
-	{
-		input = readline("minihell> ");
-		if (!input)
-			break ;
-		if (ft_strncmp(input, "exit", 5) == 0)
-		{
-			free(input);
-			break ;
-		}
-		if (ft_strlen(input) > 0)
-			add_history(input);
-		parser(input);
-		free(input);
-	}
-	rl_clear_history();
-	return (0);
+	if (num > 9)
+		ft_putnbr((num / 10), counter);
+	ft_putchar(('0' + num % 10), counter);
 }

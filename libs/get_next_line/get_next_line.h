@@ -1,36 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/18 17:13:22 by aakyuz           ###   ########.fr       */
+/*   Created: 2024/10/28 16:38:17 by aakyuz            #+#    #+#             */
+/*   Updated: 2025/02/18 15:10:35 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+# include <stdlib.h>
+# include <unistd.h>
+# include "../libft/libft.h"
 
-int	main(void)
-{
-	char	*input;
+char	*get_next_line(int fd);
 
-	while (1)
-	{
-		input = readline("minihell> ");
-		if (!input)
-			break ;
-		if (ft_strncmp(input, "exit", 5) == 0)
-		{
-			free(input);
-			break ;
-		}
-		if (ft_strlen(input) > 0)
-			add_history(input);
-		parser(input);
-		free(input);
-	}
-	rl_clear_history();
-	return (0);
-}
+#endif

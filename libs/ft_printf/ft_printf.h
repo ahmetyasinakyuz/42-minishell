@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/18 16:08:07 by aakyuz           ###   ########.fr       */
+/*   Created: 2024/10/22 18:48:53 by aakyuz            #+#    #+#             */
+/*   Updated: 2024/10/23 00:25:06 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 
-# include "libs/libft/libft.h"
-# include "libs/get_next_line/get_next_line.h"
-# include "libs/ft_printf/ft_printf.h"
-# include "parser/parser.h"
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <stdio.h>
+# include <stdarg.h>
 # include <stdlib.h>
-# include <string.h>
 # include <unistd.h>
+
+int		ft_printf(char const *str, ...);
+void	ft_putchar(char c, int *counter);
+void	ft_putstr(char *str, int *counter);
+void	ft_putnbr(int num, int *counter);
+void	ft_putuint(unsigned int num, int *counter);
+void	ft_puthex(unsigned int num, int *counter, char *base);
+void	ft_putptr(void *ptr, int *counter);
+char	*ft_hex(unsigned long long n, char *base);
 
 #endif

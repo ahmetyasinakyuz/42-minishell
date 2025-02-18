@@ -1,36 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/18 17:13:22 by aakyuz           ###   ########.fr       */
+/*   Created: 2024/10/22 18:49:25 by aakyuz            #+#    #+#             */
+/*   Updated: 2024/10/22 23:28:35 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "ft_printf.h"
 
-int	main(void)
+void	ft_putstr(char *str, int *counter)
 {
-	char	*input;
-
-	while (1)
+	if (!str)
+		str = "(null)";
+	while (*str)
 	{
-		input = readline("minihell> ");
-		if (!input)
-			break ;
-		if (ft_strncmp(input, "exit", 5) == 0)
-		{
-			free(input);
-			break ;
-		}
-		if (ft_strlen(input) > 0)
-			add_history(input);
-		parser(input);
-		free(input);
+		ft_putchar(*str, counter);
+		str++;
 	}
-	rl_clear_history();
-	return (0);
 }

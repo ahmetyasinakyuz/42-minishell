@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/17 19:24:40 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/18 17:44:34 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	free_command_list(t_simple_cmds *list)
 {
-	printf("\n=== Freeing Command List ===\n");
 	t_simple_cmds	*temp;
 	int				i;
 
@@ -32,13 +31,6 @@ void	free_command_list(t_simple_cmds *list)
 			free_lexer_list(temp->redirections);
 		free(temp);
 	}
-	printf("Command list freed\n\n");
-}
-
-int	is_redirection(t_tokens token)
-{
-	return (token == REDIRECT_IN || token == REDIRECT_OUT
-		|| token == REDIRECT_APPEND || token == REDIRECT_HEREDOC);
 }
 
 void	remove_token(t_lexer **list, t_lexer *token)
@@ -69,36 +61,47 @@ void	add_redirection(t_lexer **redirection_list, t_lexer *token)
 	token->prev = temp;
 }
 
+int	is_redirection(t_tokens token)
+{
+	return (token == REDIRECT_IN || token == REDIRECT_OUT
+		|| token == REDIRECT_APPEND || token == REDIRECT_HEREDOC);
+}
+
+t_lexer	*copy_token(t_lexer *token)
+{
+	t_lexer	*new_token;
+
+	new_token = malloc(sizeof(t_lexer));
+	if (!new_token)
+		return (NULL);
+	new_token->str = ft_strdup(token->str);
+	new_token->token = token->token;
+	new_token->i = token->i;
+	new_token->next = NULL;
+	new_token->prev = NULL;
+	return (new_token);
+}
+
 void	handle_redirections(t_simple_cmds *cmd, t_lexer **token_list)
 {
 	t_lexer	*current;
 	t_lexer	*next;
-	t_lexer	*temp;
 
 	current = *token_list;
-	printf("\n=== Processing Redirections ===\n");
 	while (current && current->token != PIPE)
 	{
 		next = current->next;
 		if (is_redirection(current->token))
 		{
-			printf("Found redirection: '%s'\n", current->str);
 			cmd->num_redirections++;
 			if (next && next->token == WORD)
 			{
-				printf("Redirection target: '%s'\n", next->str);
-				temp = next->next;
-				remove_token(token_list, current);
-				remove_token(token_list, next);
-				add_redirection(&cmd->redirections, current);
-				add_redirection(&cmd->redirections, next);
-				current = temp;
-				continue ;
+				add_redirection(&cmd->redirections, copy_token(current));
+				add_redirection(&cmd->redirections, copy_token(next));
 			}
 		}
 		current = next;
 	}
-	printf("Total redirections found: %d\n", cmd->num_redirections);
 }
 
 t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
@@ -111,27 +114,22 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 	cmd = malloc(sizeof(t_simple_cmds));
 	if (!cmd)
 		return (NULL);
-	cmd->builtin = NULL;
 	cmd->num_redirections = 0;
 	cmd->hd_file_name = NULL;
 	cmd->redirections = NULL;
 	cmd->next = NULL;
 	cmd->prev = NULL;
-	printf("\n=== Creating New Command ===\n");
+	cmd->pipe = 0;
 	handle_redirections(cmd, &start);
-	printf("Counting words in command...\n");
 	word_count = 0;
 	current = start;
 	while (current != end && current)
 	{
-		if (current->token == WORD)
-		{
+		if (current->token == WORD && (!current->prev
+				|| !is_redirection(current->prev->token)))
 			word_count++;
-			printf("Word found: '%s'\n", current->str);
-		}
 		current = current->next;
 	}
-	printf("Total words in command: %d\n", word_count);
 	cmd->str = malloc(sizeof(char *) * (word_count + 1));
 	if (!cmd->str)
 	{
@@ -142,12 +140,11 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 	current = start;
 	while (current != end && current)
 	{
-		if (current->token == WORD)
+		if (current->token == WORD && (!current->prev
+				|| !is_redirection(current->prev->token)))
 			cmd->str[i++] = ft_strdup(current->str);
 		current = current->next;
 	}
 	cmd->str[i] = NULL;
-	printf("=== Command Creation Complete ===\n\n");
 	return (cmd);
 }
-
