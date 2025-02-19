@@ -6,7 +6,7 @@
 #    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/02/18 16:07:58 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/02/19 13:56:00 by aakyuz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,8 @@ CC = cc
 C_FLAGS = -Wall -Wextra -Werror
 
 SRCS =	libs/get_next_line/get_next_line.c\
+		parser/redirections.c\
+		parser/quotes.c\
 		parser/parser_utils.c\
 		parser/parser.c\
 		parser/lexer.c\

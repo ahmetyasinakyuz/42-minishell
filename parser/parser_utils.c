@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/18 17:44:34 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/19 13:46:01 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,28 +45,6 @@ void	remove_token(t_lexer **list, t_lexer *token)
 	token->prev = NULL;
 }
 
-void	add_redirection(t_lexer **redirection_list, t_lexer *token)
-{
-	t_lexer	*temp;
-
-	if (!*redirection_list)
-	{
-		*redirection_list = token;
-		return ;
-	}
-	temp = *redirection_list;
-	while (temp->next)
-		temp = temp->next;
-	temp->next = token;
-	token->prev = temp;
-}
-
-int	is_redirection(t_tokens token)
-{
-	return (token == REDIRECT_IN || token == REDIRECT_OUT
-		|| token == REDIRECT_APPEND || token == REDIRECT_HEREDOC);
-}
-
 t_lexer	*copy_token(t_lexer *token)
 {
 	t_lexer	*new_token;
@@ -80,28 +58,6 @@ t_lexer	*copy_token(t_lexer *token)
 	new_token->next = NULL;
 	new_token->prev = NULL;
 	return (new_token);
-}
-
-void	handle_redirections(t_simple_cmds *cmd, t_lexer **token_list)
-{
-	t_lexer	*current;
-	t_lexer	*next;
-
-	current = *token_list;
-	while (current && current->token != PIPE)
-	{
-		next = current->next;
-		if (is_redirection(current->token))
-		{
-			cmd->num_redirections++;
-			if (next && next->token == WORD)
-			{
-				add_redirection(&cmd->redirections, copy_token(current));
-				add_redirection(&cmd->redirections, copy_token(next));
-			}
-		}
-		current = next;
-	}
 }
 
 t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)

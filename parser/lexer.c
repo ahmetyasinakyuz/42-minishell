@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:24 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/18 12:48:42 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/19 13:44:16 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,21 +76,31 @@ t_tokens	check_token_type(char *str)
 t_lexer	*lexer(char *input)
 {
 	t_lexer		*token_list;
-	char		**words;
+	char		*token;
 	int			i;
 	t_tokens	token_type;
 
-	token_list = NULL;
-	words = ft_split(input, ' ');
-	i = -1;
-	while (words[++i])
+	if (validate_quotes(input) == QUOTE_ERROR)
 	{
-		token_type = check_token_type(words[i]);
-		add_token(&token_list, create_token(words[i], token_type, i));
+		printf("Error: Unclosed quotes\n");
+		return (NULL);
 	}
+	if (check_special_chars(input))
+	{
+		printf("Error: Invalid special characters (\\, ;)\n");
+		return (NULL);
+	}
+	token_list = NULL;
 	i = 0;
-	while (words[i])
-		free(words[i++]);
-	free(words);
+	while (input[i])
+	{
+		token = extract_token(input, &i);
+		if (token && *token)
+		{
+			token_type = check_token_type(token);
+			add_token(&token_list, create_token(token, token_type, i));
+			free(token);
+		}
+	}
 	return (token_list);
 }

@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/18 16:09:08 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/19 13:55:35 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 # include "../libs/libft/libft.h"
 # include <stdio.h>
+
+# define QUOTE_ERROR 1
+# define SUCCESS 0
 
 typedef enum e_tokens
 {
@@ -64,5 +67,10 @@ void						add_redirection(t_lexer **redirection_list,
 								t_lexer *token);
 void						remove_token(t_lexer **list, t_lexer *token);
 int							is_redirection(t_tokens token);
+int							validate_quotes(char *str);
+int							check_special_chars(char *str);
+int							handle_quoted_string(char *str, int *i, char quote);
+char						*extract_token(char *input, int *i);
+t_lexer						*copy_token(t_lexer *token);
 
 #endif

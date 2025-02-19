@@ -13,6 +13,8 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define READLINE_SUPPRESS_LEAK
+
 # include "libs/libft/libft.h"
 # include "libs/get_next_line/get_next_line.h"
 # include "libs/ft_printf/ft_printf.h"
