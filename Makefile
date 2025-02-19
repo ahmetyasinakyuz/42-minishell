@@ -6,7 +6,7 @@
 #    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/02/19 13:56:00 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/02/19 20:05:24 by aakyuz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRCS =	libs/get_next_line/get_next_line.c\
 		parser/parser_utils.c\
 		parser/parser.c\
 		parser/lexer.c\
+		parser/env.c\
 		main.c \
 
 OBJ =$(SRCS:.c=.o)

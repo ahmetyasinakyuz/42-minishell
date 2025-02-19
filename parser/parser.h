@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/19 13:55:35 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/19 23:31:33 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef struct s_simple_cmds
 	struct s_simple_cmds	*prev;
 }							t_simple_cmds;
 
-void						parser(char *input);
+void						parser(char *input, char ***vars);
 t_lexer						*lexer(char *input);
 t_lexer						*create_token(char *str, t_tokens token_type,
 								int index);
@@ -72,5 +72,6 @@ int							check_special_chars(char *str);
 int							handle_quoted_string(char *str, int *i, char quote);
 char						*extract_token(char *input, int *i);
 t_lexer						*copy_token(t_lexer *token);
+char						*is_dolar(char *str);
 
 #endif

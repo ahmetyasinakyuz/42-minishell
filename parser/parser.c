@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/19 12:41:57 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/19 23:32:44 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ void	parse_commands(t_lexer *token_list)
 	current = token_list;
 	while (current)
 	{
+		if (current->token == WORD)
+			current->str = is_dolar(current->str);
 		if (current->token == PIPE)
 		{
 			new_cmd = create_command(start, current);
@@ -96,10 +98,11 @@ void	parse_commands(t_lexer *token_list)
 	free_command_list(cmd_list);
 }
 
-void	parser(char *input)
+void	parser(char *input, char ***vars)
 {
 	t_lexer	*token_list;
 
+	(void)vars;
 	token_list = lexer(input);
 	if (!token_list)
 		return ;
