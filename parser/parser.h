@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/19 23:31:33 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/20 01:47:46 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,14 @@ typedef enum e_tokens
 	REDIRECT_APPEND,
 }							t_tokens;
 
+typedef struct s_vars
+{
+	char					*key;
+	char					*value;
+	struct s_vars			*next;
+	struct s_vars			*prev;
+}							t_vars;
+
 typedef struct s_lexer
 {
 	char					*str;
@@ -49,7 +57,7 @@ typedef struct s_simple_cmds
 	struct s_simple_cmds	*prev;
 }							t_simple_cmds;
 
-void						parser(char *input, char ***vars);
+void						parser(char *input, t_vars *vars);
 t_lexer						*lexer(char *input);
 t_lexer						*create_token(char *str, t_tokens token_type,
 								int index);
@@ -59,7 +67,7 @@ void						free_lexer_list(t_lexer *list);
 t_simple_cmds				*create_command(t_lexer *start, t_lexer *end);
 void						add_command(t_simple_cmds **cmd_list,
 								t_simple_cmds *new_cmd);
-void						parse_commands(t_lexer *token_list);
+void						parse_commands(t_lexer *token_list, t_vars **vars);
 void						free_command_list(t_simple_cmds *list);
 void						handle_redirections(t_simple_cmds *cmd,
 								t_lexer **token_list);
@@ -72,6 +80,10 @@ int							check_special_chars(char *str);
 int							handle_quoted_string(char *str, int *i, char quote);
 char						*extract_token(char *input, int *i);
 t_lexer						*copy_token(t_lexer *token);
-char						*is_dolar(char *str);
+int							is_in_vars(char *key, t_vars **vars);
+char						*get_var(char *key, t_vars **vars);
+char						*is_dolar(char *str, t_vars **vars);
+void						add_var(t_vars **vars, char *key, char *value);
+void						found_var(char *str, t_vars **vars);
 
 #endif

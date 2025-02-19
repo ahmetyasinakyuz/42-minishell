@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/19 23:32:44 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/20 01:51:54 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 	}
 }
 
-void	parse_commands(t_lexer *token_list)
+void	parse_commands(t_lexer *token_list, t_vars **vars)
 {
 	t_simple_cmds	*cmd_list;
 	t_simple_cmds	*new_cmd;
@@ -78,7 +78,10 @@ void	parse_commands(t_lexer *token_list)
 	while (current)
 	{
 		if (current->token == WORD)
-			current->str = is_dolar(current->str);
+		{
+			found_var(current->str, vars);
+			current->str = is_dolar(current->str, vars);
+		}
 		if (current->token == PIPE)
 		{
 			new_cmd = create_command(start, current);
@@ -98,14 +101,16 @@ void	parse_commands(t_lexer *token_list)
 	free_command_list(cmd_list);
 }
 
-void	parser(char *input, char ***vars)
+void	parser(char *input, t_vars *vars)
 {
-	t_lexer	*token_list;
+	t_lexer			*token_list;
+	static t_vars	*vars_list = NULL;
 
-	(void)vars;
+	if (!vars_list)
+		vars_list = vars;
 	token_list = lexer(input);
 	if (!token_list)
 		return ;
-	parse_commands(token_list);
+	parse_commands(token_list, &vars_list);
 	free_lexer_list(token_list);
 }
