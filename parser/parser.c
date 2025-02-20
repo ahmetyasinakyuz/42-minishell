@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 10:11:07 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/20 10:44:36 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,16 +84,27 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 	}
 }
 
+static void	handle_word_token(t_lexer *current, t_vars **vars)
+{
+	int	len;
+
+	len = ft_strlen(current->str);
+	if (len > 0 && current->str[len - 1] != '1')
+	{
+		found_var(current->str, vars);
+		current->str = is_dolar(current->str, vars);
+	}
+	else if (len > 0 && current->str[len - 1] == '1')
+		current->str[len - 1] = '\0';
+}
+
 static void	handle_current_token(t_lexer **current, t_lexer **start,
 		t_simple_cmds **cmd_list, t_vars **vars)
 {
 	t_simple_cmds	*new_cmd;
 
 	if ((*current)->token == WORD)
-	{
-		found_var((*current)->str, vars);
-		(*current)->str = is_dolar((*current)->str, vars);
-	}
+		handle_word_token(*current, vars);
 	if ((*current)->token == PIPE)
 	{
 		new_cmd = create_command(*start, *current);

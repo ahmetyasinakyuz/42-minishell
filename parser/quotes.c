@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 10:11:07 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/20 10:41:42 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,34 +60,43 @@ int	check_special_chars(char *str)
 
 char	*extract_token(char *input, int *i)
 {
-	int		start;
 	int		j;
 	char	*token;
 	char	quote;
+	int		has_single_quote;
 
-	start = *i;
 	j = 0;
-	token = malloc(ft_strlen(input) + 1);
+	has_single_quote = 0;
+	token = malloc(ft_strlen(input) + 2);
 	if (!token)
 		return (NULL);
+	ft_memset(token, 0, ft_strlen(input) + 2); // Buffer'ı temizle
+	if (input[*i] == '\'')
+	{
+		has_single_quote = 1;
+		(*i)++;
+	}
 	while (input[*i])
 	{
 		if (input[*i] == '\'' || input[*i] == '\"')
 		{
 			quote = input[*i];
+			if (quote == '\'' && !has_single_quote)
+				has_single_quote = 1;
 			(*i)++;
 			while (input[*i] && input[*i] != quote)
 				token[j++] = input[(*i)++];
 			if (input[*i])
 				(*i)++;
 		}
-		else if (input[*i] == ' ' && *i > start)
+		else if (input[*i] == ' ' && j > 0)
 			break ;
 		else if (input[*i] != ' ')
 			token[j++] = input[(*i)++];
 		else
 			(*i)++;
 	}
-	token[j] = '\0';
+	if (has_single_quote)
+		token[j] = '1';
 	return (token);
 }
