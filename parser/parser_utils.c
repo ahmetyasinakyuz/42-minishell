@@ -6,32 +6,11 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/19 19:32:45 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/20 09:47:30 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
-
-void	free_command_list(t_simple_cmds *list)
-{
-	t_simple_cmds	*temp;
-	int				i;
-
-	while (list)
-	{
-		temp = list;
-		list = list->next;
-		i = 0;
-		while (temp->str[i])
-			free(temp->str[i++]);
-		free(temp->str);
-		if (temp->hd_file_name)
-			free(temp->hd_file_name);
-		if (temp->redirections)
-			free_lexer_list(temp->redirections);
-		free(temp);
-	}
-}
 
 void	remove_token(t_lexer **list, t_lexer *token)
 {
@@ -60,23 +39,26 @@ t_lexer	*copy_token(t_lexer *token)
 	return (new_token);
 }
 
-t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
+int	init_cmd(t_simple_cmds **cmd)
 {
-	t_simple_cmds	*cmd;
-	t_lexer			*current;
-	int				word_count;
-	int				i;
+	*cmd = malloc(sizeof(t_simple_cmds));
+	if (!*cmd)
+		return (1);
+	(*cmd)->num_redirections = 0;
+	(*cmd)->hd_file_name = NULL;
+	(*cmd)->redirections = NULL;
+	(*cmd)->next = NULL;
+	(*cmd)->prev = NULL;
+	(*cmd)->pipe = 0;
+	(*cmd)->str = NULL;
+	return (0);
+}
 
-	cmd = malloc(sizeof(t_simple_cmds));
-	if (!cmd)
-		return (NULL);
-	cmd->num_redirections = 0;
-	cmd->hd_file_name = NULL;
-	cmd->redirections = NULL;
-	cmd->next = NULL;
-	cmd->prev = NULL;
-	cmd->pipe = 0;
-	handle_redirections(cmd, &start);
+int	count_words(t_lexer *start, t_lexer *end)
+{
+	int		word_count;
+	t_lexer	*current;
+
 	word_count = 0;
 	current = start;
 	while (current != end && current)
@@ -86,12 +68,14 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 			word_count++;
 		current = current->next;
 	}
-	cmd->str = malloc(sizeof(char *) * (word_count + 1));
-	if (!cmd->str)
-	{
-		free(cmd);
-		return (NULL);
-	}
+	return (word_count);
+}
+
+void	fill_words(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
+{
+	int		i;
+	t_lexer	*current;
+
 	i = 0;
 	current = start;
 	while (current != end && current)
@@ -102,5 +86,4 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 		current = current->next;
 	}
 	cmd->str[i] = NULL;
-	return (cmd);
 }

@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 04:21:10 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 06:12:17 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/20 06:27:34 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	found_var(char *str, t_vars **vars)
 		value = ft_strdup(str + i + 1);
 	else
 		value = ft_strdup("");
-	if(is_alraday_declared(vars, key, value) == 1)
+	if (is_alraday_declared(vars, key, value) == 1)
 		return ;
 	add_var(vars, key, value);
 }

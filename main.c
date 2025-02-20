@@ -6,25 +6,11 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 04:48:20 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/20 07:54:12 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	clear_vars(t_vars **vars)
-{
-	t_vars	*temp;
-
-	while (*vars)
-	{
-		temp = *vars;
-		*vars = (*vars)->next;
-		free(temp->key);
-		free(temp->value);
-		free(temp);
-	}
-}
 
 int	main(int argc, char **argv)
 {
@@ -37,7 +23,7 @@ int	main(int argc, char **argv)
 	{
 		while (1)
 		{
-			input = readline("minihell> ");
+			input = readline("minihellin> ");
 			if (!input)
 				break ;
 			if (ft_strncmp(input, "exit", 5) == 0)

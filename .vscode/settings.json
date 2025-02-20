@@ -9,6 +9,18 @@
 	],
 	"C_Cpp.dimInactiveRegions": false,
 	"files.associations": {
-		"sstream": "cpp"
+		"sstream": "cpp",
+		"parser.h": "c",
+		"array": "c",
+		"chrono": "c",
+		"deque": "c",
+		"string": "c",
+		"unordered_map": "c",
+		"vector": "c",
+		"string_view": "c",
+		"format": "c",
+		"initializer_list": "c",
+		"span": "c",
+		"text_encoding": "c"
 	}
 }

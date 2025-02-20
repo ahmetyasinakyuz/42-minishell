@@ -6,11 +6,30 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 04:48:20 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/20 10:11:07 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+
+t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
+{
+	t_simple_cmds	*cmd;
+	int				word_count;
+
+	if (init_cmd(&cmd))
+		return (NULL);
+	handle_redirections(cmd, &start);
+	word_count = count_words(start, end);
+	cmd->str = malloc(sizeof(char *) * (word_count + 1));
+	if (!cmd->str)
+	{
+		free(cmd);
+		return (NULL);
+	}
+	fill_words(cmd, start, end);
+	return (cmd);
+}
 
 void	add_command(t_simple_cmds **cmd_list, t_simple_cmds *new_cmd)
 {
@@ -65,10 +84,34 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 	}
 }
 
+static void	handle_current_token(t_lexer **current, t_lexer **start,
+		t_simple_cmds **cmd_list, t_vars **vars)
+{
+	t_simple_cmds	*new_cmd;
+
+	if ((*current)->token == WORD)
+	{
+		found_var((*current)->str, vars);
+		(*current)->str = is_dolar((*current)->str, vars);
+	}
+	if ((*current)->token == PIPE)
+	{
+		new_cmd = create_command(*start, *current);
+		new_cmd->pipe = 1;
+		add_command(cmd_list, new_cmd);
+		*start = (*current)->next;
+	}
+	else if (!(*current)->next)
+	{
+		new_cmd = create_command(*start, (*current)->next);
+		new_cmd->pipe = 0;
+		add_command(cmd_list, new_cmd);
+	}
+}
+
 void	parse_commands(t_lexer *token_list, t_vars **vars)
 {
 	t_simple_cmds	*cmd_list;
-	t_simple_cmds	*new_cmd;
 	t_lexer			*start;
 	t_lexer			*current;
 
@@ -77,24 +120,7 @@ void	parse_commands(t_lexer *token_list, t_vars **vars)
 	current = token_list;
 	while (current)
 	{
-		if (current->token == WORD)
-		{
-			found_var(current->str, vars);
-			current->str = is_dolar(current->str, vars);
-		}
-		if (current->token == PIPE)
-		{
-			new_cmd = create_command(start, current);
-			new_cmd->pipe = 1;
-			add_command(&cmd_list, new_cmd);
-			start = current->next;
-		}
-		else if (current->next == NULL)
-		{
-			new_cmd = create_command(start, current->next);
-			new_cmd->pipe = 0;
-			add_command(&cmd_list, new_cmd);
-		}
+		handle_current_token(&current, &start, &cmd_list, vars);
 		current = current->next;
 	}
 	print_cmd_list(cmd_list);
@@ -107,7 +133,7 @@ void	parser(char *input, t_vars **vars)
 
 	token_list = lexer(input);
 	if (!token_list)
-		return;
+		return ;
 	parse_commands(token_list, vars);
 	free_lexer_list(token_list);
 }
