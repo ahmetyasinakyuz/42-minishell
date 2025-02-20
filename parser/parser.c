@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 01:51:54 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/20 04:48:20 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,16 +101,13 @@ void	parse_commands(t_lexer *token_list, t_vars **vars)
 	free_command_list(cmd_list);
 }
 
-void	parser(char *input, t_vars *vars)
+void	parser(char *input, t_vars **vars)
 {
-	t_lexer			*token_list;
-	static t_vars	*vars_list = NULL;
+	t_lexer	*token_list;
 
-	if (!vars_list)
-		vars_list = vars;
 	token_list = lexer(input);
 	if (!token_list)
-		return ;
-	parse_commands(token_list, &vars_list);
+		return;
+	parse_commands(token_list, vars);
 	free_lexer_list(token_list);
 }

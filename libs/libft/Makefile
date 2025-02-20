@@ -6,7 +6,7 @@
 #    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/07 15:09:02 by aakyuz            #+#    #+#              #
-#    Updated: 2024/10/13 16:25:49 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/02/20 04:22:14 by aakyuz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ $(NAME):		$(OBJS)
 				@ar rcs $(NAME) $(OBJS)
 
 $(OBJS) $(BONUS_OBJS): %.o: %.c
-				$(CC) $(CFLAGS) -c $< -o $@
+				@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 				@$(RM) $(OBJS) $(BONUS_OBJS)

@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 01:51:54 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/20 04:48:20 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	main(int argc, char **argv)
 			}
 			if (ft_strlen(input) > 0)
 				add_history(input);
-			parser(input, vars);
+			parser(input, &vars);
 			free(input);
 		}
 		rl_clear_history();

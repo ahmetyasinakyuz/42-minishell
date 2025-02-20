@@ -6,7 +6,7 @@
 #    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/22 18:49:51 by aakyuz            #+#    #+#              #
-#    Updated: 2024/10/23 00:41:14 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/02/20 04:23:35 by aakyuz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ SRC	=	ft_printf.c		\
 
 OBJS = $(SRC:.c=.o)
 
-CC = cc
+CC = @cc
 CFLAGS = -Wall -Werror -Wextra
 RM = rm -f
 AR = ar crs
@@ -32,13 +32,13 @@ AR = ar crs
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(AR) $(NAME) $(OBJS)
+	@$(AR) $(NAME) $(OBJS)
 
 clean:
-	$(RM) $(OBJS)
+	@$(RM) $(OBJS)
 
 fclean:	clean
-	$(RM) $(NAME)
+	@$(RM) $(NAME)
 
 re:	fclean all
 
