@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 07:54:12 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/22 13:10:44 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	main(int argc, char **argv)
 	{
 		while (1)
 		{
-			input = readline("minihellin> ");
+			input = readline("minihell> ");
 			if (!input)
 				break ;
 			if (ft_strncmp(input, "exit", 5) == 0)

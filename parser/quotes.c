@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 10:41:42 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/22 13:47:01 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,33 +70,36 @@ char	*extract_token(char *input, int *i)
 	token = malloc(ft_strlen(input) + 2);
 	if (!token)
 		return (NULL);
-	ft_memset(token, 0, ft_strlen(input) + 2); // Buffer'ı temizle
+	ft_memset(token, 0, ft_strlen(input) + 2);
 	if (input[*i] == '\'')
 	{
 		has_single_quote = 1;
-		(*i)++;
+		token[j++] = input[(*i)++];
+		while (input[*i] && input[*i] != '\'')
+			token[j++] = input[(*i)++];
+		if (input[*i] == '\'')
+			token[j++] = input[(*i)++];
 	}
-	while (input[*i])
+	else
 	{
-		if (input[*i] == '\'' || input[*i] == '\"')
+		while (input[*i])
 		{
-			quote = input[*i];
-			if (quote == '\'' && !has_single_quote)
-				has_single_quote = 1;
-			(*i)++;
-			while (input[*i] && input[*i] != quote)
+			if (input[*i] == '\'' || input[*i] == '\"')
+			{
+				quote = input[*i];
+				(*i)++;
+				while (input[*i] && input[*i] != quote)
+					token[j++] = input[(*i)++];
+				if (input[*i])
+					(*i)++;
+			}
+			else if (input[*i] == ' ' && !has_single_quote && j > 0)
+				break ;
+			else if (input[*i] != ' ' || has_single_quote)
 				token[j++] = input[(*i)++];
-			if (input[*i])
+			else
 				(*i)++;
 		}
-		else if (input[*i] == ' ' && j > 0)
-			break ;
-		else if (input[*i] != ' ')
-			token[j++] = input[(*i)++];
-		else
-			(*i)++;
 	}
-	if (has_single_quote)
-		token[j] = '1';
 	return (token);
 }

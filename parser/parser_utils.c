@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 09:47:30 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/22 19:24:32 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ void	fill_words(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 {
 	int		i;
 	t_lexer	*current;
+	char	*temp;
+	int		len;
 
 	i = 0;
 	current = start;
@@ -82,7 +84,13 @@ void	fill_words(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 	{
 		if (current->token == WORD && (!current->prev
 				|| !is_redirection(current->prev->token)))
-			cmd->str[i++] = ft_strdup(current->str);
+		{
+			temp = ft_strdup(current->str);
+			len = ft_strlen(temp);
+			if (len > 0 && temp[len - 1] == '1' && temp[0] == '\'')
+				temp[len - 1] = '\0';
+			cmd->str[i++] = temp;
+		}
 		current = current->next;
 	}
 	cmd->str[i] = NULL;
