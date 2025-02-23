@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:12:25 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/22 18:19:22 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/23 14:43:40 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,43 +46,48 @@ char	*get_var(char *key, t_vars **vars)
 
 char	*is_dolar(char *str, t_vars **vars)
 {
-	char	*env;
-	char	*env_var;
-	char	*result;
-	char	*temp;
 	int		i;
-	int		j;
+	int		in_single_quote;
+	char	*result;
 
 	if (!str || !*str)
 		return (ft_strdup(""));
-	temp = ft_strdup(str);
+	result = ft_strdup(str);
 	i = 0;
-	while (temp[i])
+	in_single_quote = 0;
+	while (result[i])
 	{
-		if (temp[i] == '$')
+		if (result[i] == '\'')
+			in_single_quote = !in_single_quote;
+		else if (result[i] == '$' && !in_single_quote)
 		{
-			env_var = ft_strdup(&temp[i + 1]);
-			j = 0;
-			while (env_var[j] && env_var[j] != ' ')
+			char *env_var = ft_strdup(&result[i + 1]);
+			int j = 0;
+			while (env_var[j] && env_var[j] != ' ' && env_var[j] != '\"' && env_var[j] != '\'')
 				j++;
 			env_var[j] = '\0';
+
+			char *env_value = NULL;
 			if (is_in_vars(env_var, vars))
-				env = get_var(env_var, vars);
+				env_value = get_var(env_var, vars);
 			else
-				env = getenv(env_var);
-			if (env)
+				env_value = getenv(env_var);
+
+			if (env_value)
 			{
-				result = ft_strdup(temp);
-				result[i] = '\0';
-				result = ft_strjoin(result, env);
-				result = ft_strjoin(result, &temp[i + j + 1]);
+				char *temp = ft_strdup(result);
+				temp[i] = '\0';
+				char *new_result = ft_strjoin(temp, env_value);
+				new_result = ft_strjoin(new_result, &result[i + j + 1]);
 				free(temp);
-				temp = result;
+				free(result);
+				result = new_result;
+				i--; // Yeni eklenen değeri de kontrol etmek için
 			}
 			free(env_var);
 		}
 		i++;
 	}
 	free(str);
-	return (temp);
+	return (result);
 }
