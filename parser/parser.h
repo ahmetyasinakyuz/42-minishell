@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 10:23:51 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/23 12:17:54 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_lexer
 typedef struct s_simple_cmds
 {
 	char					**str;
+	char					**flag;
 	int						num_redirections;
 	char					*hd_file_name;
 	int						pipe;
@@ -85,5 +86,10 @@ void			clear_vars(t_vars **vars);
 int				init_cmd(t_simple_cmds **cmd);
 void			fill_words(t_simple_cmds *cmd, t_lexer *start, t_lexer *end);
 int				count_words(t_lexer *start, t_lexer *end);
+
+// Flag işleme fonksiyonları için prototipleri ekle
+int				is_flag(char *str);
+int				count_flags(t_lexer *start, t_lexer *end);
+void			fill_flags(t_simple_cmds *cmd, t_lexer *start, t_lexer *end);
 
 #endif

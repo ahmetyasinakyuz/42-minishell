@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/22 18:24:28 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/23 12:17:06 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,28 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 {
 	t_simple_cmds	*cmd;
 	int				word_count;
+	int				flag_count;
 
 	if (init_cmd(&cmd))
 		return (NULL);
 	handle_redirections(cmd, &start);
+	
+	// Flags için bellek ayır
+	flag_count = count_flags(start, end);
+	cmd->flag = malloc(sizeof(char *) * (flag_count + 1));
+	if (!cmd->flag)
+	{
+		free(cmd);
+		return (NULL);
+	}
+	fill_flags(cmd, start, end);
+
+	// Normal komutlar için bellek ayır
 	word_count = count_words(start, end);
 	cmd->str = malloc(sizeof(char *) * (word_count + 1));
 	if (!cmd->str)
 	{
+		free(cmd->flag);
 		free(cmd);
 		return (NULL);
 	}
@@ -62,6 +76,12 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 		while (current_cmd->str[i])
 		{
 			printf("cmd: %s\n", current_cmd->str[i]);
+			i++;
+		}
+		i = 0;
+		while (current_cmd->flag && current_cmd->flag[i])
+		{
+			printf("flag: %s\n", current_cmd->flag[i]);
 			i++;
 		}
 		current_redir = current_cmd->redirections;

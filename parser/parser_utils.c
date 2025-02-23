@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/22 19:24:32 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/23 12:54:07 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	init_cmd(t_simple_cmds **cmd)
 	(*cmd)->prev = NULL;
 	(*cmd)->pipe = 0;
 	(*cmd)->str = NULL;
+	(*cmd)->flag = NULL;
 	return (0);
 }
 
@@ -63,8 +64,9 @@ int	count_words(t_lexer *start, t_lexer *end)
 	current = start;
 	while (current != end && current)
 	{
-		if (current->token == WORD && (!current->prev
-				|| !is_redirection(current->prev->token)))
+		if (current->token == WORD && 
+			(!current->prev || !is_redirection(current->prev->token)) &&
+			!is_flag(current->str))  // Flag değilse say
 			word_count++;
 		current = current->next;
 	}
@@ -82,8 +84,9 @@ void	fill_words(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 	current = start;
 	while (current != end && current)
 	{
-		if (current->token == WORD && (!current->prev
-				|| !is_redirection(current->prev->token)))
+		if (current->token == WORD && 
+			(!current->prev || !is_redirection(current->prev->token)) &&
+			!is_flag(current->str))  // Flag değilse ekle
 		{
 			temp = ft_strdup(current->str);
 			len = ft_strlen(temp);
@@ -94,4 +97,43 @@ void	fill_words(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 		current = current->next;
 	}
 	cmd->str[i] = NULL;
+}
+
+int	is_flag(char *str)
+{
+	return (str && str[0] == '-');
+}
+
+int	count_flags(t_lexer *start, t_lexer *end)
+{
+	int		flag_count;
+	t_lexer	*current;
+
+	flag_count = 0;
+	current = start;
+	while (current != end && current)
+	{
+		if (current->token == WORD && is_flag(current->str) &&
+			(!current->prev || current->prev->token == WORD))
+			flag_count++;
+		current = current->next;
+	}
+	return (flag_count);
+}
+
+void	fill_flags(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
+{
+	int		i;
+	t_lexer	*current;
+
+	i = 0;
+	current = start;
+	while (current != end && current)
+	{
+		if (current->token == WORD && is_flag(current->str) &&
+			(!current->prev || current->prev->token == WORD))
+			cmd->flag[i++] = ft_strdup(current->str);
+		current = current->next;
+	}
+	cmd->flag[i] = NULL;
 }
