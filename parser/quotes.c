@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/23 14:43:40 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/24 23:30:12 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,36 +58,43 @@ int	check_special_chars(char *str)
 	return (0);
 }
 
+// boşluğa göre split yerine quote'lara göre split yapar
+static void	handle_quote_status(char *input, int *i, int *in_quotes,
+		char *quote_char)
+{
+	if ((input[*i] == '\'' || input[*i] == '\"') && !(*in_quotes))
+	{
+		*in_quotes = 1;
+		*quote_char = input[*i];
+	}
+	else if (input[*i] == *quote_char && *in_quotes)
+	{
+		*in_quotes = 0;
+		*quote_char = 0;
+	}
+}
+
 char	*extract_token(char *input, int *i)
 {
 	int		j;
 	char	*token;
-	int		in_single_quote;
-	int		in_double_quote;
+	int		in_quotes;
+	char	quote_char;
 
 	j = 0;
-	token = malloc(ft_strlen(input) + 2);
+	token = ft_calloc(ft_strlen(input) + 1, sizeof(char));
 	if (!token)
 		return (NULL);
-	ft_memset(token, 0, ft_strlen(input) + 2);
-	in_single_quote = 0;
-	in_double_quote = 0;
-
+	in_quotes = 0;
+	quote_char = 0;
 	while (input[*i])
 	{
-		if (input[*i] == '\'' && !in_double_quote)
-			in_single_quote = !in_single_quote;
-		else if (input[*i] == '\"' && !in_single_quote)
-			in_double_quote = !in_double_quote;
-		
-		if ((input[*i] == ' ' && !in_single_quote && !in_double_quote && j > 0))
-			break;
-		
+		handle_quote_status(input, i, &in_quotes, &quote_char);
+		if ((input[*i] == ' ' && !in_quotes && j > 0))
+			break ;
 		token[j++] = input[(*i)++];
 	}
-
 	if (input[*i] == ' ')
 		(*i)++;
-
 	return (token);
 }

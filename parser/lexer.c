@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:24 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 10:23:51 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/24 23:31:00 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,6 @@ t_tokens	check_token_type(char *str)
 	return (WORD);
 }
 
-t_lexer	*lexer_precheck(char *input)
-{
-	if (validate_quotes(input) == QUOTE_ERROR)
-	{
-		printf("Error: Unclosed quotes\n");
-		return (NULL);
-	}
-	if (check_special_chars(input))
-	{
-		printf("Error: Invalid special characters (\\, ;)\n");
-		return (NULL);
-	}
-	return ((t_lexer *)1);
-}
-
 t_lexer	*lexer_tokenize(char *input)
 {
 	t_lexer		*token_list;
@@ -64,6 +49,21 @@ t_lexer	*lexer_tokenize(char *input)
 		}
 	}
 	return (token_list);
+}
+
+t_lexer	*lexer_precheck(char *input)
+{
+	if (validate_quotes(input) == QUOTE_ERROR)
+	{
+		printf("Error: Unclosed quotes\n");
+		return (NULL);
+	}
+	if (check_special_chars(input))
+	{
+		printf("Error: Invalid special characters (\\, ;)\n");
+		return (NULL);
+	}
+	return ((t_lexer *)1);
 }
 
 t_lexer	*lexer(char *input)

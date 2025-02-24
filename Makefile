@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
+#    By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/02/22 19:35:26 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/02/24 23:54:57 by akyuz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,9 @@ CC = cc
 C_FLAGS = -Wall -Wextra -Werror
 
 SRCS =	libs/get_next_line/get_next_line.c  \
+		parser/flags.c                      \
+		parser/command.c                    \
+		parser/token.c                      \
 		parser/redirections.c               \
 		parser/quotes.c                     \
 		parser/parser_utils.c               \
@@ -58,4 +61,3 @@ a: re
 	clear
 
 .PHONY: all clean fclean re a
-
