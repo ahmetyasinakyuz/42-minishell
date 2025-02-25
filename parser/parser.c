@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/25 13:02:51 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/25 14:27:14 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,15 +103,21 @@ static void	handle_current_token(t_lexer **current, t_lexer **start,
 	if ((*current)->token == PIPE)
 	{
 		new_cmd = create_command(*start, *current);
-		new_cmd->pipe = 1;
-		add_command(cmd_list, new_cmd);
+		if (new_cmd)
+		{
+			new_cmd->pipe = 1;
+			add_command(cmd_list, new_cmd);
+		}
 		*start = (*current)->next;
 	}
 	else if (!(*current)->next)
 	{
 		new_cmd = create_command(*start, (*current)->next);
-		new_cmd->pipe = 0;
-		add_command(cmd_list, new_cmd);
+		if (new_cmd)
+		{
+			new_cmd->pipe = 0;
+			add_command(cmd_list, new_cmd);
+		}
 	}
 }
 

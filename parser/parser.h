@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/25 12:56:05 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/25 13:51:24 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ t_lexer			*copy_token(t_lexer *token);
 int				is_in_vars(char *key, t_vars **vars);
 char			*get_var(char *key, t_vars **vars);
 char			*is_dolar(char *str, t_vars **vars);
+char			*replace_env_var(char *result, int i, t_vars **vars);
 void			add_var(t_vars **vars, char *key, char *value);
 void			found_var(char *str, t_vars **vars);
 void			clear_vars(t_vars **vars);
