@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/24 23:35:13 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/02/25 13:02:51 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,33 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 		printf("--------------\n");
 		current_cmd = current_cmd->next;
 	}
+}
+
+char	*is_dolar(char *str, t_vars **vars)
+{
+	int		i;
+	char	*result;
+	int		in_single_quote;
+	int		in_double_quote;
+
+	if (!str || !*str)
+		return (ft_strdup(""));
+	result = ft_strdup(str);
+	i = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
+	while (result[i])
+	{
+		if (result[i] == '\'' && !in_double_quote)
+			in_single_quote = !in_single_quote;
+		else if (result[i] == '\"' && !in_single_quote)
+			in_double_quote = !in_double_quote;
+		else if (result[i] == '$' && !in_single_quote)
+			result = replace_env_var(result, i, vars);
+		i++;
+	}
+	free(str);
+	return (result);
 }
 
 static void	handle_word_token(t_lexer *current, t_vars **vars)
