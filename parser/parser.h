@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/25 13:51:24 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/28 15:51:34 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef enum e_tokens
 	REDIRECT_HEREDOC,
 	REDIRECT_OUT,
 	REDIRECT_APPEND,
+	EMPTY,
 }							t_tokens;
 
 typedef struct s_vars

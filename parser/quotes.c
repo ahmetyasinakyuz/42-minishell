@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/24 23:30:12 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/02/28 16:00:11 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ char	*extract_token(char *input, int *i)
 	char	quote_char;
 
 	j = 0;
+	while (input[*i] == ' ')
+		(*i)++;
 	token = ft_calloc(ft_strlen(input) + 1, sizeof(char));
 	if (!token)
 		return (NULL);
