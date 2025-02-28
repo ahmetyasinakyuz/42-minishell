@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 04:21:10 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/20 06:27:34 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/28 10:50:05 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ void	found_var(char *str, t_vars **vars)
 	while (str[i] && str[i] != '=')
 		i++;
 	key = ft_substr(str, 0, i);
-	if (str[i] == '=')
+	if (str[i] == '=' && is_in_vars(key, vars) != 1)
 		value = ft_strdup(str + i + 1);
+	else if (str[i] == '=' && is_in_vars(key, vars) == 1)
+		value = get_var(key, vars);
 	else
 		value = ft_strdup("");
 	if (is_alraday_declared(vars, key, value) == 1)

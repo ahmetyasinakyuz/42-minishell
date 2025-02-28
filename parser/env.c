@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:12:25 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/25 13:02:46 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/28 10:54:15 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,16 @@ static char	*get_env_value(char *env_var, t_vars **vars)
 
 	env_value = NULL;
 	if (is_in_vars(env_var, vars))
+	{
 		env_value = get_var(env_var, vars);
-	else
-		env_value = getenv(env_var);
-	return (env_value);
+		if (!env_value || !*env_value)
+			return (ft_strdup(""));
+		return (ft_strdup(env_value));
+	}
+	env_value = getenv(env_var);
+	if (!env_value)
+		return (ft_strdup(""));
+	return (ft_strdup(env_value));
 }
 
 static char	*join_env_parts(char *result, int i, char *env_value, int j)
@@ -61,10 +67,10 @@ static char	*join_env_parts(char *result, int i, char *env_value, int j)
 	char	*temp;
 	char	*final_result;
 
-	temp = ft_strdup(result);
-	temp[i] = '\0';
+	temp = ft_substr(result, 0, i);
 	final_result = ft_strjoin(temp, env_value);
 	free(temp);
+	free(env_value);
 	temp = ft_strjoin(final_result, &result[i + j + 1]);
 	free(final_result);
 	free(result);
@@ -77,15 +83,12 @@ char	*replace_env_var(char *result, int i, t_vars **vars)
 	int		j;
 	char	*env_value;
 
-	env_var = ft_strdup(&result[i + 1]);
-	j = 0;
-	while (env_var[j] && env_var[j] != ' ' && env_var[j] != '\"'
-		&& env_var[j] != '\'' && env_var[j] != '$')
+	j = 1;
+	while (result[i + j] && (ft_isalnum(result[i + j]) || result[i + j] == '_'))
 		j++;
-	env_var[j] = '\0';
+	env_var = ft_substr(result, i + 1, j - 1);
 	env_value = get_env_value(env_var, vars);
-	if (env_value)
-		result = join_env_parts(result, i, env_value, j);
 	free(env_var);
+	result = join_env_parts(result, i, env_value, j - 1);
 	return (result);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/25 14:27:14 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/28 10:54:15 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,22 +60,22 @@ char	*is_dolar(char *str, t_vars **vars)
 	int		i;
 	char	*result;
 	int		in_single_quote;
-	int		in_double_quote;
 
 	if (!str || !*str)
 		return (ft_strdup(""));
 	result = ft_strdup(str);
 	i = 0;
 	in_single_quote = 0;
-	in_double_quote = 0;
 	while (result[i])
 	{
-		if (result[i] == '\'' && !in_double_quote)
+		if (result[i] == '\'')
 			in_single_quote = !in_single_quote;
-		else if (result[i] == '\"' && !in_single_quote)
-			in_double_quote = !in_double_quote;
-		else if (result[i] == '$' && !in_single_quote)
+		else if (result[i] == '$' && !in_single_quote && result[i + 1]
+			&& (ft_isalnum(result[i + 1]) || result[i + 1] == '_'))
+		{
 			result = replace_env_var(result, i, vars);
+			i = -1;
+		}
 		i++;
 	}
 	free(str);
