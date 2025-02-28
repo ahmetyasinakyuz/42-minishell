@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 06:35:43 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/25 14:25:20 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/28 11:17:06 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,15 @@ void	free_command_list(t_simple_cmds *list)
 		temp = list;
 		list = list->next;
 		i = 0;
-		while (temp->str[i])
+		while (temp->str && temp->str[i])
 			free(temp->str[i++]);
-		free(temp->str);
+		if (temp->str)
+			free(temp->str);
+		i = 0;
+		while (temp->flag && temp->flag[i])
+			free(temp->flag[i++]);
+		if (temp->flag)
+			free(temp->flag);
 		if (temp->hd_file_name)
 			free(temp->hd_file_name);
 		if (temp->redirections)

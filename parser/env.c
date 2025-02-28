@@ -6,7 +6,7 @@
 /*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:12:25 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/28 10:54:15 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/02/28 11:20:23 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,21 @@ char	*get_var(char *key, t_vars **vars)
 static char	*get_env_value(char *env_var, t_vars **vars)
 {
 	char	*env_value;
+	char	*result;
 
-	env_value = NULL;
 	if (is_in_vars(env_var, vars))
 	{
 		env_value = get_var(env_var, vars);
 		if (!env_value || !*env_value)
 			return (ft_strdup(""));
-		return (ft_strdup(env_value));
+		result = ft_strdup(env_value);
+		return (result);
 	}
 	env_value = getenv(env_var);
 	if (!env_value)
 		return (ft_strdup(""));
-	return (ft_strdup(env_value));
+	result = ft_strdup(env_value);
+	return (result);
 }
 
 static char	*join_env_parts(char *result, int i, char *env_value, int j)
@@ -68,9 +70,20 @@ static char	*join_env_parts(char *result, int i, char *env_value, int j)
 	char	*final_result;
 
 	temp = ft_substr(result, 0, i);
+	if (!temp)
+	{
+		free(env_value);
+		free(result);
+		return (NULL);
+	}
 	final_result = ft_strjoin(temp, env_value);
 	free(temp);
 	free(env_value);
+	if (!final_result)
+	{
+		free(result);
+		return (NULL);
+	}
 	temp = ft_strjoin(final_result, &result[i + j + 1]);
 	free(final_result);
 	free(result);

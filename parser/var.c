@@ -6,7 +6,7 @@
 /*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 04:21:10 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/28 10:50:05 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/02/28 11:28:20 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ int	is_alraday_declared(t_vars **vars, char *key, char *value)
 	{
 		if (ft_strncmp(temp->key, key, ft_strlen(key) + 1) == 0)
 		{
-			free(temp->value);
-			temp->value = value;
-			free(key);
+			free(temp->value);  // Önce eski değeri serbest bırak
+			temp->value = value;  // Yeni değeri doğrudan ata
+			free(key);  // key'i serbest bırak
 			return (1);
 		}
 		temp = temp->next;
@@ -79,13 +79,9 @@ void	found_var(char *str, t_vars **vars)
 	while (str[i] && str[i] != '=')
 		i++;
 	key = ft_substr(str, 0, i);
-	if (str[i] == '=' && is_in_vars(key, vars) != 1)
-		value = ft_strdup(str + i + 1);
-	else if (str[i] == '=' && is_in_vars(key, vars) == 1)
-		value = get_var(key, vars);
-	else
-		value = ft_strdup("");
-	if (is_alraday_declared(vars, key, value) == 1)
+	value = ft_strdup(str + i + 1);  // Her zaman yeni değeri al
+
+	if (is_alraday_declared(vars, key, value))
 		return ;
 	add_var(vars, key, value);
 }
