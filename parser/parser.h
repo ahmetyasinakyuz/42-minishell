@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/28 15:51:34 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/28 17:00:32 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,6 @@ void			clear_vars(t_vars **vars);
 int				init_cmd(t_simple_cmds **cmd);
 void			fill_words(t_simple_cmds *cmd, t_lexer *start, t_lexer *end);
 int				count_words(t_lexer *start, t_lexer *end);
-
-// Flag işleme fonksiyonları için prototipleri ekle
 int				is_flag(char *str);
 int				count_flags(t_lexer *start, t_lexer *end);
 void			fill_flags(t_simple_cmds *cmd, t_lexer *start, t_lexer *end);

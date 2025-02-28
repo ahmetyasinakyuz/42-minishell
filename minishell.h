@@ -6,14 +6,12 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/18 16:08:07 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/28 17:05:05 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
-# define READLINE_SUPPRESS_LEAK
 
 # include "libs/libft/libft.h"
 # include "libs/get_next_line/get_next_line.h"

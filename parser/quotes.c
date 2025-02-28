@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/28 16:00:11 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/02/28 17:00:38 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ int	check_special_chars(char *str)
 	return (0);
 }
 
-// boşluğa göre split yerine quote'lara göre split yapar
 static void	handle_quote_status(char *input, int *i, int *in_quotes,
 		char *quote_char)
 {
