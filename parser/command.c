@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 23:34:53 by akyuz             #+#    #+#             */
-/*   Updated: 2025/02/28 11:28:14 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/03/02 10:37:40 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd,
-		t_lexer *start, t_lexer *end)
+t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd, t_lexer *start,
+		t_lexer *end)
 {
 	int	flag_count;
 

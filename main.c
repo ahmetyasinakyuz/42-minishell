@@ -6,13 +6,13 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/25 13:09:04 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/02 10:37:28 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	run_shell(t_vars **vars)
+void	run_shell(t_vars **vars)
 {
 	char	*input;
 

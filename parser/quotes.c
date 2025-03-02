@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/28 17:00:38 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/02 10:38:02 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,27 +58,20 @@ int	check_special_chars(char *str)
 	return (0);
 }
 
-static void	handle_quote_status(char *input, int *i, int *in_quotes,
-		char *quote_char)
+void	handle_quote_status(char *input, int *i, int *in_squote, int *in_dquote)
 {
-	if ((input[*i] == '\'' || input[*i] == '\"') && !(*in_quotes))
-	{
-		*in_quotes = 1;
-		*quote_char = input[*i];
-	}
-	else if (input[*i] == *quote_char && *in_quotes)
-	{
-		*in_quotes = 0;
-		*quote_char = 0;
-	}
+	if (input[*i] == '\'' && !(*in_dquote))
+		*in_squote = !(*in_squote);
+	else if (input[*i] == '\"' && !(*in_squote))
+		*in_dquote = !(*in_dquote);
 }
 
 char	*extract_token(char *input, int *i)
 {
 	int		j;
 	char	*token;
-	int		in_quotes;
-	char	quote_char;
+	int		in_squote;
+	int		in_dquote;
 
 	j = 0;
 	while (input[*i] == ' ')
@@ -86,12 +79,12 @@ char	*extract_token(char *input, int *i)
 	token = ft_calloc(ft_strlen(input) + 1, sizeof(char));
 	if (!token)
 		return (NULL);
-	in_quotes = 0;
-	quote_char = 0;
+	in_squote = 0;
+	in_dquote = 0;
 	while (input[*i])
 	{
-		handle_quote_status(input, i, &in_quotes, &quote_char);
-		if ((input[*i] == ' ' && !in_quotes && j > 0))
+		handle_quote_status(input, i, &in_squote, &in_dquote);
+		if ((input[*i] == ' ' && !in_squote && !in_dquote && j > 0))
 			break ;
 		token[j++] = input[(*i)++];
 	}

@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:12:25 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/28 16:56:29 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/02 10:38:06 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*get_var(char *key, t_vars **vars)
 	return (NULL);
 }
 
-static char	*get_env_value(char *env_var, t_vars **vars)
+char	*get_env_value(char *env_var, t_vars **vars)
 {
 	char	*env_value;
 	char	*result;
@@ -64,7 +64,7 @@ static char	*get_env_value(char *env_var, t_vars **vars)
 	return (result);
 }
 
-static char	*join_env_parts(char *result, int i, char *env_value, int j)
+char	*join_env_parts(char *result, int i, char *env_value, int j)
 {
 	char	*temp;
 	char	*final_result;
