@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/28 17:05:05 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/02 14:56:21 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,14 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+# include <signal.h>
+
+// Global signal variable declaration
+extern volatile sig_atomic_t	g_received_signal;
+
+void	run_shell(t_vars **vars);
+void	setup_signals(void);
+void	reset_signal_handling(void);
+void	handle_sigint(int signum);
 
 #endif

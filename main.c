@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/02 10:37:28 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/02 14:56:21 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,16 @@ void	run_shell(t_vars **vars)
 {
 	char	*input;
 
+	setup_signals();
 	while (1)
 	{
+		reset_signal_handling();
 		input = readline("bash$ ");
 		if (!input)
+		{
+			printf("exit\n");
 			break ;
+		}
 		if (ft_strncmp(input, "exit", 5) == 0)
 		{
 			free(input);

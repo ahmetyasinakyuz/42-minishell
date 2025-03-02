@@ -6,7 +6,7 @@
 #    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/02/28 17:03:17 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/03/02 14:58:57 by aakyuz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRCS =	libs/get_next_line/get_next_line.c  \
 		parser/var.c                        \
 		parser/free.c                       \
 		main.c                              \
+		signal_handler.c                    \
 
 OBJ =$(SRCS:.c=.o)
 
