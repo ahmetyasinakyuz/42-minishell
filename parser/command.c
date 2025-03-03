@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 23:34:53 by akyuz             #+#    #+#             */
-/*   Updated: 2025/03/02 10:37:40 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/03 09:52:55 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,18 @@ void	add_command(t_simple_cmds **cmd_list, t_simple_cmds *new_cmd)
 	if (!*cmd_list)
 	{
 		*cmd_list = new_cmd;
-		return ;
 	}
-	temp = *cmd_list;
-	while (temp->next)
-		temp = temp->next;
-	temp->next = new_cmd;
-	new_cmd->prev = temp;
+	else
+	{
+		temp = *cmd_list;
+		while (temp->next)
+			temp = temp->next;
+		temp->next = new_cmd;
+		new_cmd->prev = temp;
+		if (temp->pipe)
+		{
+			temp->output_type = IO_PIPE;
+			new_cmd->input_type = IO_PIPE;
+		}
+	}
 }

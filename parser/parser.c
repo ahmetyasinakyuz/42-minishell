@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/02 10:37:54 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/03 09:57:13 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,22 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 	{
 		printf("\n--- Command ---\n");
 		printf("Pipe: %d\n", current_cmd->pipe);
+		printf("Input Type: ");
+		if (current_cmd->input_type == IO_STDIN)
+			printf("STDIN\n");
+		else if (current_cmd->input_type == IO_PIPE)
+			printf("PIPE\n");
+		else if (current_cmd->input_type == IO_FILE)
+			printf("FILE\n");
+		else if (current_cmd->input_type == IO_HEREDOC)
+			printf("HEREDOC\n");
+		printf("Output Type: ");
+		if (current_cmd->output_type == IO_STDOUT)
+			printf("STDOUT\n");
+		else if (current_cmd->output_type == IO_PIPE)
+			printf("PIPE\n");
+		else if (current_cmd->output_type == IO_FILE)
+			printf("FILE\n");
 		i = 0;
 		while (current_cmd->str[i])
 		{
@@ -61,26 +77,28 @@ char	*is_dolar(char *str, t_vars **vars)
 	char	*result;
 	int		in_single_quote;
 
+	if (!str || !*str)
+		return (ft_strdup(""));
 	result = ft_strdup(str);
-	free(str);
 	i = 0;
 	in_single_quote = 0;
 	while (result[i])
 	{
 		if (result[i] == '\'')
 			in_single_quote = !in_single_quote;
-		if (result[i] == '$' && result[i + 1] && (ft_isalnum(result[i + 1])
-				|| result[i + 1] == '_'))
+		else if (result[i] == '$' && !in_single_quote && result[i + 1]
+			&& (ft_isalnum(result[i + 1]) || result[i + 1] == '_'))
 		{
 			result = replace_env_var(result, i, vars);
 			i = -1;
 		}
 		i++;
 	}
+	free(str);
 	return (result);
 }
 
-void	handle_word_token(t_lexer *current, t_vars **vars)
+static void	handle_word_token(t_lexer *current, t_vars **vars)
 {
 	char	*str;
 
@@ -91,7 +109,7 @@ void	handle_word_token(t_lexer *current, t_vars **vars)
 	current->str = is_dolar(str, vars);
 }
 
-void	handle_current_token(t_lexer **current, t_lexer **start,
+static void	handle_current_token(t_lexer **current, t_lexer **start,
 		t_simple_cmds **cmd_list, t_vars **vars)
 {
 	t_simple_cmds	*new_cmd;

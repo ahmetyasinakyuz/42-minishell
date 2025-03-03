@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/28 11:30:56 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/03/03 09:57:28 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	init_cmd(t_simple_cmds **cmd)
 	(*cmd)->pipe = 0;
 	(*cmd)->str = NULL;
 	(*cmd)->flag = NULL;
+	(*cmd)->input_type = IO_STDIN;
+	(*cmd)->output_type = IO_STDOUT;
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/02 11:07:21 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/03 09:56:48 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,15 @@ typedef enum e_tokens
 	REDIRECT_APPEND,
 	EMPTY,
 }							t_tokens;
+
+typedef enum e_io_type
+{
+	IO_STDIN,
+	IO_STDOUT,
+	IO_PIPE,
+	IO_FILE,
+	IO_HEREDOC
+}							t_io_type;
 
 typedef struct s_vars
 {
@@ -55,6 +64,8 @@ typedef struct s_simple_cmds
 	char					*hd_file_name;
 	int						pipe;
 	t_lexer					*redirections;
+	t_io_type				input_type;
+	t_io_type				output_type;
 	struct s_simple_cmds	*next;
 	struct s_simple_cmds	*prev;
 }							t_simple_cmds;
