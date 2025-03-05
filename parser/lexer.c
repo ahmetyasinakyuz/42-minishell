@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:24 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/28 16:24:58 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/05 15:38:43 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ t_lexer	*lexer_tokenize(char *input)
 			add_token(&token_list, create_token(token, token_type, i));
 			free(token);
 		}
+		else if (token)
+			free(token);
 	}
 	return (token_list);
 }

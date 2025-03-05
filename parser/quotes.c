@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/02 10:38:02 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/05 16:15:25 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,38 @@ void	handle_quote_status(char *input, int *i, int *in_squote, int *in_dquote)
 		*in_dquote = !(*in_dquote);
 }
 
+char	*remove_quotes(char *str)
+{
+	int		i;
+	int		j;
+	char	*result;
+	int		in_squote;
+	int		in_dquote;
+
+	if (!str)
+		return (NULL);
+	result = malloc(sizeof(char) * (ft_strlen(str) + 1));
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	in_squote = 0;
+	in_dquote = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' && !in_dquote)
+			in_squote = !in_squote;
+		else if (str[i] == '\"' && !in_squote)
+			in_dquote = !in_dquote;
+		else
+			result[j++] = str[i];
+		i++;
+	}
+	result[j] = '\0';
+	free(str);
+	return (result);
+}
+
 char	*extract_token(char *input, int *i)
 {
 	int		j;
@@ -83,7 +115,17 @@ char	*extract_token(char *input, int *i)
 	in_dquote = 0;
 	while (input[*i])
 	{
-		handle_quote_status(input, i, &in_squote, &in_dquote);
+		if (input[*i] == '\'' && !in_dquote)
+			in_squote = !in_squote;
+		else if (input[*i] == '\"' && !in_squote)
+			in_dquote = !in_dquote;
+		if (input[*i] == '|' && !in_squote && !in_dquote)
+		{
+			if (j > 0)
+				break ;
+			token[j++] = input[(*i)++];
+			break ;
+		}
 		if ((input[*i] == ' ' && !in_squote && !in_dquote && j > 0))
 			break ;
 		token[j++] = input[(*i)++];

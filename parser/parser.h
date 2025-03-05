@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/03 09:56:48 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/05 17:13:03 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,6 @@ typedef enum e_tokens
 	REDIRECT_APPEND,
 	EMPTY,
 }							t_tokens;
-
-typedef enum e_io_type
-{
-	IO_STDIN,
-	IO_STDOUT,
-	IO_PIPE,
-	IO_FILE,
-	IO_HEREDOC
-}							t_io_type;
 
 typedef struct s_vars
 {
@@ -64,8 +55,6 @@ typedef struct s_simple_cmds
 	char					*hd_file_name;
 	int						pipe;
 	t_lexer					*redirections;
-	t_io_type				input_type;
-	t_io_type				output_type;
 	struct s_simple_cmds	*next;
 	struct s_simple_cmds	*prev;
 }							t_simple_cmds;
@@ -92,6 +81,7 @@ int				validate_quotes(char *str);
 int				check_special_chars(char *str);
 int				handle_quoted_string(char *str, int *i, char quote);
 char			*extract_token(char *input, int *i);
+char			*remove_quotes(char *str);
 t_lexer			*copy_token(t_lexer *token);
 int				is_in_vars(char *key, t_vars **vars);
 char			*get_var(char *key, t_vars **vars);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   flags.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 23:53:22 by akyuz             #+#    #+#             */
-/*   Updated: 2025/02/24 23:53:31 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/03/05 16:15:48 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,16 @@
 
 int	is_flag(char *str)
 {
-	return (str && str[0] == '-');
+	char	*unquoted;
+	int		result;
+
+	if (!str)
+		return (0);
+	unquoted = remove_quotes(ft_strdup(str));
+	result = (unquoted && unquoted[0] == '-' && unquoted[1]
+			&& unquoted[1] != '-');
+	free(unquoted);
+	return (result);
 }
 
 int	count_flags(t_lexer *start, t_lexer *end)
@@ -38,6 +47,7 @@ void	fill_flags(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 {
 	int		i;
 	t_lexer	*current;
+	char	*unquoted;
 
 	i = 0;
 	current = start;
@@ -45,7 +55,10 @@ void	fill_flags(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 	{
 		if (current->token == WORD && is_flag(current->str) && (!current->prev
 				|| current->prev->token == WORD))
-			cmd->flag[i++] = ft_strdup(current->str);
+		{
+			unquoted = remove_quotes(ft_strdup(current->str));
+			cmd->flag[i++] = unquoted;
+		}
 		current = current->next;
 	}
 	cmd->flag[i] = NULL;

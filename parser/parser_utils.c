@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/03 09:57:28 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/05 17:13:03 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ int	init_cmd(t_simple_cmds **cmd)
 	(*cmd)->pipe = 0;
 	(*cmd)->str = NULL;
 	(*cmd)->flag = NULL;
-	(*cmd)->input_type = IO_STDIN;
-	(*cmd)->output_type = IO_STDOUT;
 	return (0);
 }
 
@@ -52,22 +50,24 @@ void	fill_words(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 {
 	int		i;
 	t_lexer	*current;
+	char	*unquoted;
 	char	*temp;
-	int		len;
 
 	i = 0;
 	current = start;
 	while (current != end && current)
 	{
 		if (current->token == WORD && (!current->prev
-				|| !is_redirection(current->prev->token))
-			&& !is_flag(current->str))
+				|| !is_redirection(current->prev->token)))
 		{
 			temp = ft_strdup(current->str);
-			len = ft_strlen(temp);
-			if (len > 0 && temp[len - 1] == '1' && temp[0] == '\'')
-				temp[len - 1] = '\0';
-			cmd->str[i++] = temp;
+			if (!is_flag(temp))
+			{
+				unquoted = remove_quotes(temp);
+				cmd->str[i++] = unquoted;
+			}
+			else
+				free(temp);
 		}
 		current = current->next;
 	}
