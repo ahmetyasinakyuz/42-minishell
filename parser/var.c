@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 04:21:10 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/05 18:06:19 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/05 20:24:26 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,28 @@ void	found_var(char *str, t_vars **vars)
 	if (is_alraday_declared(vars, key, value))
 		return ;
 	add_var(vars, key, value);
+}
+
+char	*handle_dollar_char(char *result, int *i, t_vars **vars)
+{
+	int		j;
+	char	*temp;
+
+	if (result[*i + 1] && ft_isalpha(result[*i + 1]))
+	{
+		result = replace_env_var(result, *i, vars);
+		*i = -1;
+	}
+	else
+	{
+		j = *i;
+		while (result[j] && !ft_isalpha(result[j]))
+			j++;
+		temp = ft_strdup(result);
+		free(result);
+		result = ft_strjoin(ft_substr(temp, 0, *i), temp + j);
+		free(temp);
+		*i = -1;
+	}
+	return (result);
 }

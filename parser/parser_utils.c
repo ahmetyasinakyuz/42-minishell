@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/05 17:13:03 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/05 20:33:53 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,22 @@ void	fill_words(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 		current = current->next;
 	}
 	cmd->str[i] = NULL;
+}
+
+char	*remove_quotes(char *str)
+{
+	int		i;
+	int		j;
+	char	*result;
+
+	if (!str)
+		return (NULL);
+	result = malloc(sizeof(char) * (ft_strlen(str) + 1));
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	process_quotes(str, result, &i, &j);
+	free(str);
+	return (result);
 }

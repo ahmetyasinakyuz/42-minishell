@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/05 18:07:45 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/05 20:23:49 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,6 @@ char	*is_dolar(char *str, t_vars **vars)
 {
 	int		i;
 	char	*result;
-	char	*temp;
-	int		j;
 
 	result = ft_strdup(str);
 	free(str);
@@ -68,24 +66,7 @@ char	*is_dolar(char *str, t_vars **vars)
 	while (result[i])
 	{
 		if (result[i] == '$')
-		{
-			if (result[i + 1] && ft_isalpha(result[i + 1]))
-			{
-				result = replace_env_var(result, i, vars);
-				i = -1;
-			}
-			else
-			{
-				j = i;
-				while (result[j] && !ft_isalpha(result[j]))
-					j++;
-				temp = ft_strdup(result);
-				free(result);
-				result = ft_strjoin(ft_substr(temp, 0, i), temp + j);
-				free(temp);
-				i = -1;
-			}
-		}
+			result = handle_dollar_char(result, &i, vars);
 		i++;
 	}
 	return (result);
