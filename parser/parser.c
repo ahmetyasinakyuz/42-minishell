@@ -6,11 +6,31 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/05 20:23:49 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/06 09:20:05 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+
+void	print_io_type(t_io_type type)
+{
+	if (type == IO_STDIN)
+		printf("IO_STDIN");
+	else if (type == IO_STDOUT)
+		printf("IO_STDOUT");
+	else if (type == IO_PIPE_IN)
+		printf("IO_PIPE_IN");
+	else if (type == IO_PIPE_OUT)
+		printf("IO_PIPE_OUT");
+	else if (type == IO_FILE_IN)
+		printf("IO_FILE_IN");
+	else if (type == IO_FILE_OUT)
+		printf("IO_FILE_OUT");
+	else if (type == IO_HEREDOC)
+		printf("IO_HEREDOC");
+	else if (type == IO_APPEND)
+		printf("IO_APPEND");
+}
 
 void	print_cmd_list(t_simple_cmds *cmd_list)
 {
@@ -23,6 +43,12 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 	{
 		printf("\n--- Command ---\n");
 		printf("Pipe: %d\n", current_cmd->pipe);
+		printf("Input type: ");
+		print_io_type(current_cmd->input_type);
+		printf(" (fd: %d)\n", current_cmd->input_fd);
+		printf("Output type: ");
+		print_io_type(current_cmd->output_type);
+		printf(" (fd: %d)\n", current_cmd->output_fd);
 		i = 0;
 		while (current_cmd->str[i])
 		{
@@ -55,6 +81,18 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 	}
 }
 
+static char	*process_dollar(char *result, int *i, t_vars **vars)
+{
+	if (result[*i + 1] && ft_isalpha(result[*i + 1]))
+	{
+		result = replace_env_var(result, *i, vars);
+		*i = -1;
+	}
+	else
+		result = handle_non_alpha_dollar(result, i);
+	return (result);
+}
+
 char	*is_dolar(char *str, t_vars **vars)
 {
 	int		i;
@@ -66,49 +104,21 @@ char	*is_dolar(char *str, t_vars **vars)
 	while (result[i])
 	{
 		if (result[i] == '$')
-			result = handle_dollar_char(result, &i, vars);
+			result = process_dollar(result, &i, vars);
 		i++;
 	}
 	return (result);
 }
 
-void	handle_word_token(t_lexer *current, t_vars **vars)
-{
-	char	*str;
-
-	str = current->str;
-	if (str[0] == '\'')
-		return ;
-	found_var(str, vars);
-	current->str = is_dolar(str, vars);
-}
-
 void	handle_current_token(t_lexer **current, t_lexer **start,
 		t_simple_cmds **cmd_list, t_vars **vars)
 {
-	t_simple_cmds	*new_cmd;
-
 	if ((*current)->token == WORD)
 		handle_word_token(*current, vars);
 	if ((*current)->token == PIPE)
-	{
-		new_cmd = create_command(*start, *current);
-		if (new_cmd)
-		{
-			new_cmd->pipe = 1;
-			add_command(cmd_list, new_cmd);
-		}
-		*start = (*current)->next;
-	}
+		handle_pipe_token(current, start, cmd_list);
 	else if (!(*current)->next)
-	{
-		new_cmd = create_command(*start, (*current)->next);
-		if (new_cmd)
-		{
-			new_cmd->pipe = 0;
-			add_command(cmd_list, new_cmd);
-		}
-	}
+		handle_last_token(start, (*current)->next, cmd_list);
 }
 
 void	parse_commands(t_lexer *token_list, t_vars **vars)

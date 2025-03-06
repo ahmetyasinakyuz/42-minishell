@@ -6,11 +6,35 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:45:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/02/22 18:21:36 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/06 08:19:28 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+
+static void	update_io_type(t_simple_cmds *cmd, t_tokens token)
+{
+	if (token == REDIRECT_IN)
+	{
+		cmd->input_type = IO_FILE_IN;
+		cmd->input_fd = -1;
+	}
+	else if (token == REDIRECT_OUT)
+	{
+		cmd->output_type = IO_FILE_OUT;
+		cmd->output_fd = -1;
+	}
+	else if (token == REDIRECT_APPEND)
+	{
+		cmd->output_type = IO_APPEND;
+		cmd->output_fd = -1;
+	}
+	else if (token == REDIRECT_HEREDOC)
+	{
+		cmd->input_type = IO_HEREDOC;
+		cmd->input_fd = -1;
+	}
+}
 
 void	handle_redirections(t_simple_cmds *cmd, t_lexer **token_list)
 {
@@ -24,6 +48,7 @@ void	handle_redirections(t_simple_cmds *cmd, t_lexer **token_list)
 		if (is_redirection(current->token))
 		{
 			cmd->num_redirections++;
+			update_io_type(cmd, current->token);
 			if (next && next->token == WORD)
 			{
 				add_redirection(&cmd->redirections, copy_token(current));

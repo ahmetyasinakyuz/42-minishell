@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/05 20:40:58 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/06 09:20:05 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,18 @@ typedef enum e_tokens
 	REDIRECT_APPEND,
 	EMPTY,
 }							t_tokens;
+
+typedef enum e_io_type
+{
+	IO_STDIN,
+	IO_STDOUT,
+	IO_PIPE_IN,
+	IO_PIPE_OUT,
+	IO_FILE_IN,
+	IO_FILE_OUT,
+	IO_HEREDOC,
+	IO_APPEND,
+}							t_io_type;
 
 typedef struct s_vars
 {
@@ -55,6 +67,10 @@ typedef struct s_simple_cmds
 	char					*hd_file_name;
 	int						pipe;
 	t_lexer					*redirections;
+	t_io_type				input_type;
+	t_io_type				output_type;
+	int						input_fd;
+	int						output_fd;
 	struct s_simple_cmds	*next;
 	struct s_simple_cmds	*prev;
 }							t_simple_cmds;
@@ -98,5 +114,11 @@ int				handle_quoted_string(char *str, int *i, char quote);
 void			handle_quote_status(char *input, int *i, int *in_squote,
 					int *in_dquote);
 void			process_quotes(char *str, char *result, int *i, int *j);
+void			handle_word_token(t_lexer *current, t_vars **vars);
+void			handle_pipe_token(t_lexer **current, t_lexer **start,
+					t_simple_cmds **cmd_list);
+void			handle_last_token(t_lexer **start, t_lexer *end,
+					t_simple_cmds **cmd_list);
+char			*handle_non_alpha_dollar(char *result, int *i);
 
 #endif
