@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:14:44 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/06 09:15:36 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/10 07:59:46 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*handle_non_alpha_dollar(char *result, int *i)
 	char	*temp;
 
 	j = *i;
-	while (result[j] && !ft_isalpha(result[j]))
+	while (result[j] && !ft_isalnum(result[j]))
 		j++;
 	temp = ft_strdup(result);
 	free(result);

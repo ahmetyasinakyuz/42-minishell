@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:12:25 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/02 10:38:06 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/10 08:00:49 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,12 @@ char	*replace_env_var(char *result, int i, t_vars **vars)
 	char	*env_value;
 
 	j = 1;
-	while (result[i + j] && (ft_isalnum(result[i + j]) || result[i + j] == '_'))
+	if (ft_isdigit(result[i + j]))
 		j++;
+	else
+		while (result[i + j] && (ft_isalnum(result[i + j]) || result[i
+					+ j] == '_'))
+			j++;
 	env_var = ft_substr(result, i + 1, j - 1);
 	env_value = get_env_value(env_var, vars);
 	free(env_var);
