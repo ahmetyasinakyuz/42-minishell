@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/10 08:01:15 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/10 08:14:28 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ void	parser(char *input, t_vars **vars)
 {
 	t_lexer	*token_list;
 
+	add_static_var(vars, "0", "minishell");
 	token_list = lexer(input);
 	if (!token_list)
 		return ;

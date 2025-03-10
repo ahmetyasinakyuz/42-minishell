@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/06 09:20:05 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/10 08:14:28 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,6 @@ void			handle_pipe_token(t_lexer **current, t_lexer **start,
 void			handle_last_token(t_lexer **start, t_lexer *end,
 					t_simple_cmds **cmd_list);
 char			*handle_non_alpha_dollar(char *result, int *i);
+void			add_static_var(t_vars **vars, char *key, char *value);
 
 #endif

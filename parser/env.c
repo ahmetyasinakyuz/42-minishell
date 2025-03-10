@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:12:25 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/10 08:00:49 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/10 08:14:28 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,30 @@ char	*replace_env_var(char *result, int i, t_vars **vars)
 	free(env_var);
 	result = join_env_parts(result, i, env_value, j - 1);
 	return (result);
+}
+
+void	add_static_var(t_vars **vars, char *key, char *value)
+{
+	t_vars	*new_var;
+	t_vars	*temp;
+
+	if (is_in_vars(key, vars))
+		return;
+	new_var = malloc(sizeof(t_vars));
+	if (!new_var)
+		return;
+	new_var->key = ft_strdup(key);
+	new_var->value = ft_strdup(value);
+	new_var->next = NULL;
+	new_var->prev = NULL;
+	if (!*vars)
+	{
+		*vars = new_var;
+		return;
+	}
+	temp = *vars;
+	while (temp->next)
+		temp = temp->next;
+	temp->next = new_var;
+	new_var->prev = temp;
 }
