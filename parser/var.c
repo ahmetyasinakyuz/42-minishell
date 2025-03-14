@@ -12,6 +12,15 @@
 
 #include "parser.h"
 
+/**
+ * Değişken listesine yeni bir değişken ekler.
+ * Bu fonksiyon, verilen anahtar (key) ve değer (value) ile yeni bir değişken düğümü oluşturur 
+ * ve bu düğümü değişken listesine ekler. Liste boşsa, yeni değişken liste başlangıcı olur.
+ * 
+ * @param vars Değişkenin ekleneceği liste referansı
+ * @param key Değişken adı
+ * @param value Değişken değeri
+ */
 void	add_var(t_vars **vars, char *key, char *value)
 {
 	t_vars	*new_var;
@@ -36,6 +45,14 @@ void	add_var(t_vars **vars, char *key, char *value)
 	new_var->prev = temp;
 }
 
+/**
+ * Bir metnin değişken tanımlama formatında olup olmadığını kontrol eder.
+ * Bu fonksiyon, verilen metinde bir eşittir (=) işareti olup olmadığını kontrol ederek
+ * metnin bir değişken tanımı olup olmadığını belirler (örn: "ISIM=Ahmet").
+ * 
+ * @param str Kontrol edilecek metin
+ * @return 1: Metin bir değişken tanımı, 0: Değil
+ */
 int	is_declare(char *str)
 {
 	int	i;
@@ -48,6 +65,16 @@ int	is_declare(char *str)
 	return (0);
 }
 
+/**
+ * Bir değişkenin zaten tanımlı olup olmadığını kontrol eder.
+ * Bu fonksiyon, verilen anahtarın değişken listesinde var olup olmadığını kontrol eder.
+ * Eğer varsa, değişkenin değerini günceller ve eski anahtar belleğini serbest bırakır.
+ * 
+ * @param vars Kontrol edilecek değişken listesi
+ * @param key Kontrol edilecek değişken adı
+ * @param value Değişken zaten tanımlıysa atanacak yeni değer
+ * @return 1: Değişken zaten tanımlı ve güncellendi, 0: Değişken tanımlı değil
+ */
 int	is_alraday_declared(t_vars **vars, char *key, char *value)
 {
 	t_vars	*temp;
@@ -67,6 +94,14 @@ int	is_alraday_declared(t_vars **vars, char *key, char *value)
 	return (0);
 }
 
+/**
+ * Metinden değişken tanımlarını bulur ve değişken listesine ekler.
+ * Bu fonksiyon, verilen metni inceleyerek değişken tanımlama formatında olup olmadığını kontrol eder.
+ * Eğer bir değişken tanımı bulunursa, bu değişkeni anahtar ve değer olarak ayırıp listeye ekler.
+ * 
+ * @param str İncelenecek metin
+ * @param vars Değişken ekleme işlemi yapılacak liste
+ */
 void	found_var(char *str, t_vars **vars)
 {
 	char	*key;
@@ -85,6 +120,17 @@ void	found_var(char *str, t_vars **vars)
 	add_var(vars, key, value);
 }
 
+/**
+ * Dolar işareti karakterlerini işler.
+ * Bu fonksiyon, metindeki dolar işaretlerini işler. Eğer dolar işaretinden sonra alfabetik bir karakter
+ * varsa, çevresel değişken değerini metin içerisine yerleştirir. Aksi takdirde, dolar işareti
+ * ve sonrasındaki alfanumerik olmayan karakterleri kaldırır.
+ * 
+ * @param result İşlenecek metin
+ * @param i İşlenecek metin içindeki konum referansı
+ * @param vars Değişken listesi
+ * @return İşlenmiş metin
+ */
 char	*handle_dollar_char(char *result, int *i, t_vars **vars)
 {
 	int		j;

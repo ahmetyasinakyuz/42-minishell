@@ -12,6 +12,13 @@
 
 #include "parser.h"
 
+/**
+ * Lexer listesini serbest bırakır.
+ * Bu fonksiyon, lexer analiz aşamasında oluşturulan bağlı listeyi temizler.
+ * Her düğümün içindeki string değeri ve ardından düğümün kendisini serbest bırakır.
+ * 
+ * @param list Serbest bırakılacak lexer listesinin başlangıç pointer'ı
+ */
 void	free_lexer_list(t_lexer *list)
 {
 	t_lexer	*temp;
@@ -25,6 +32,17 @@ void	free_lexer_list(t_lexer *list)
 	}
 }
 
+/**
+ * Komut listesini serbest bırakır.
+ * Bu fonksiyon, parser aşamasında oluşturulan komut listesini temizler.
+ * Her komut yapısının içindeki tüm dinamik olarak ayrılmış bellek alanlarını serbest bırakır:
+ * - Komut dizileri (str)
+ * - Flag dizileri
+ * - Heredoc dosya isimleri
+ * - Yönlendirmeler için ayrılmış lexer yapıları
+ * 
+ * @param list Serbest bırakılacak komut listesinin başlangıç pointer'ı
+ */
 void	free_command_list(t_simple_cmds *list)
 {
 	t_simple_cmds	*temp;
@@ -52,6 +70,14 @@ void	free_command_list(t_simple_cmds *list)
 	}
 }
 
+/**
+ * Değişken listesini temizler.
+ * Bu fonksiyon, kabukta tanımlanan değişkenlerin bulunduğu listeyi serbest bırakır.
+ * Her değişken düğümünün anahtar (key), değer (value) alanlarını ve 
+ * ardından düğümün kendisini serbest bırakır.
+ * 
+ * @param vars Temizlenecek değişken listesinin pointer'ının referansı
+ */
 void	clear_vars(t_vars **vars)
 {
 	t_vars	*temp;

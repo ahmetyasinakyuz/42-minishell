@@ -12,6 +12,13 @@
 
 #include "parser.h"
 
+/**
+ * G/Ç (I/O) tipini insan tarafından okunabilir biçimde yazdırır.
+ * Bu fonksiyon, debugging amaçlı olarak kullanılır ve
+ * belirtilen G/Ç tipini konsola yazdırır.
+ * 
+ * @param type Yazdırılacak olan G/Ç tipi enum değeri
+ */
 void	print_io_type(t_io_type type)
 {
 	if (type == IO_STDIN)
@@ -32,6 +39,14 @@ void	print_io_type(t_io_type type)
 		printf("IO_APPEND");
 }
 
+/**
+ * Komut listesinin detaylarını konsola yazdırır.
+ * Bu fonksiyon, debugging amaçlı olarak kullanılır ve
+ * komut listesindeki her komutun ayrıntılarını (pipe durumu, G/Ç yönlendirmeleri,
+ * komut dizileri, bayraklar ve yönlendirmeler) konsola yazdırır.
+ * 
+ * @param cmd_list Yazdırılacak komut listesi
+ */
 void	print_cmd_list(t_simple_cmds *cmd_list)
 {
 	t_simple_cmds	*current_cmd;
@@ -81,6 +96,17 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 	}
 }
 
+/**
+ * Dolar işareti (değişken) işlemlerini gerçekleştirir.
+ * Bu fonksiyon, metin içinde $ karakteri bulunduğunda çağrılır ve
+ * değişken adını değişken değeriyle değiştirir veya
+ * alfasayısal olmayan dolar işaretlerini işler.
+ * 
+ * @param result İşlenecek metin
+ * @param i Metin içindeki konum referansı
+ * @param vars Değişken listesi
+ * @return İşlenmiş metin
+ */
 static char	*process_dollar(char *result, int *i, t_vars **vars)
 {
 	if (result[*i + 1] && (ft_isalpha(result[*i + 1]) || ft_isdigit(result[*i + 1])))
@@ -93,6 +119,16 @@ static char	*process_dollar(char *result, int *i, t_vars **vars)
 	return (result);
 }
 
+/**
+ * Bir metindeki tüm dolar işaretlerini işler.
+ * Bu fonksiyon, verilen metni tarar ve $ karakteri
+ * bulduğunda process_dollar fonksiyonunu çağırarak
+ * değişken değerleriyle değiştirir.
+ * 
+ * @param str İşlenecek metin
+ * @param vars Değişken listesi
+ * @return Tüm değişken referansları çözümlenmiş metin
+ */
 char	*is_dolar(char *str, t_vars **vars)
 {
 	int		i;
@@ -110,6 +146,18 @@ char	*is_dolar(char *str, t_vars **vars)
 	return (result);
 }
 
+/**
+ * Geçerli token'ı tipine göre işler.
+ * Bu fonksiyon, token tipine göre uygun işlem fonksiyonunu çağırır:
+ * - WORD token'ları için değişken işleme
+ * - PIPE token'ları için pipe işleme
+ * - Son token için komut oluşturma
+ * 
+ * @param current İşlenecek token'ın referansı
+ * @param start Geçerli komutun başlangıç token'ı
+ * @param cmd_list Komut listesi
+ * @param vars Değişken listesi
+ */
 void	handle_current_token(t_lexer **current, t_lexer **start,
 		t_simple_cmds **cmd_list, t_vars **vars)
 {
@@ -121,6 +169,15 @@ void	handle_current_token(t_lexer **current, t_lexer **start,
 		handle_last_token(start, (*current)->next, cmd_list);
 }
 
+/**
+ * Token listesinden komut yapılarını oluşturur.
+ * Bu fonksiyon, lexer analizi sonucu oluşturulan token listesini alır
+ * ve token'ları komut yapılarına dönüştürür. Oluşturulan komutları
+ * yazdırır ve sonrasında belleği serbest bırakır.
+ * 
+ * @param token_list Lexer analizi sonucu oluşturulan token listesi
+ * @param vars Değişken listesi
+ */
 void	parse_commands(t_lexer *token_list, t_vars **vars)
 {
 	t_simple_cmds	*cmd_list;
@@ -139,6 +196,15 @@ void	parse_commands(t_lexer *token_list, t_vars **vars)
 	free_command_list(cmd_list);
 }
 
+/**
+ * Girilen komutu tam olarak ayrıştırır.
+ * Bu fonksiyon, kullanıcı tarafından girilen ham komutu alır,
+ * önce lexer ile token'lara ayırır, ardından parse_commands ile
+ * komut yapıları oluşturur ve sonunda belleği temizler.
+ * 
+ * @param input Kullanıcı tarafından girilen komut metni
+ * @param vars Değişken listesi
+ */
 void	parser(char *input, t_vars **vars)
 {
 	t_lexer	*token_list;

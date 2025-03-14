@@ -12,6 +12,14 @@
 
 #include "parser.h"
 
+/**
+ * Komutun G/Ç (I/O) tipini günceller.
+ * Bu fonksiyon, belirtilen token tipine göre komutun input veya output
+ * tipini ve dosya tanımlayıcısını günceller.
+ * 
+ * @param cmd Güncellenecek komut
+ * @param token Yönlendirme token tipi
+ */
 static void	update_io_type(t_simple_cmds *cmd, t_tokens token)
 {
 	if (token == REDIRECT_IN)
@@ -36,6 +44,14 @@ static void	update_io_type(t_simple_cmds *cmd, t_tokens token)
 	}
 }
 
+/**
+ * Token listesindeki yönlendirmeleri işler.
+ * Bu fonksiyon, token listesini tarar ve yönlendirme token'larını bulur.
+ * Bulunan yönlendirmeleri komut yapısına ekler ve komutun G/Ç (I/O) tiplerini günceller.
+ * 
+ * @param cmd Yönlendirmelerin ekleneceği komut
+ * @param token_list Taranacak token listesinin referansı
+ */
 void	handle_redirections(t_simple_cmds *cmd, t_lexer **token_list)
 {
 	t_lexer	*current;
@@ -59,12 +75,28 @@ void	handle_redirections(t_simple_cmds *cmd, t_lexer **token_list)
 	}
 }
 
+/**
+ * Bir token'ın yönlendirme token'ı olup olmadığını kontrol eder.
+ * Bu fonksiyon, verilen token tipinin giriş (<), çıkış (>),
+ * ekleme (>>) veya heredoc (<<) yönlendirme token'ı olup olmadığını belirler.
+ * 
+ * @param token Kontrol edilecek token tipi
+ * @return 1: Token bir yönlendirme token'ı, 0: Değil
+ */
 int	is_redirection(t_tokens token)
 {
 	return (token == REDIRECT_IN || token == REDIRECT_OUT
 		|| token == REDIRECT_APPEND || token == REDIRECT_HEREDOC);
 }
 
+/**
+ * Yönlendirme listesine yeni bir yönlendirme token'ı ekler.
+ * Bu fonksiyon, komut yapısının yönlendirme listesine yeni bir token ekler.
+ * Liste boşsa, token liste başlangıcı olarak ayarlanır.
+ * 
+ * @param redirection_list Yönlendirme listesinin referansı
+ * @param token Eklenecek yönlendirme token'ı
+ */
 void	add_redirection(t_lexer **redirection_list, t_lexer *token)
 {
 	t_lexer	*temp;

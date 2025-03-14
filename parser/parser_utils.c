@@ -12,6 +12,14 @@
 
 #include "parser.h"
 
+/**
+ * Yeni bir komut yapısı oluşturur ve başlatır.
+ * Bu fonksiyon, parser tarafından kullanılmak üzere yeni bir
+ * komut yapısı için bellek ayırır ve tüm alanlarını varsayılan değerlerle başlatır.
+ * 
+ * @param cmd Başlatılacak komut yapısının referansı
+ * @return 0: Başarılı, 1: Bellek hatası
+ */
 int	init_cmd(t_simple_cmds **cmd)
 {
 	*cmd = malloc(sizeof(t_simple_cmds));
@@ -32,6 +40,16 @@ int	init_cmd(t_simple_cmds **cmd)
 	return (0);
 }
 
+/**
+ * Belirli bir token aralığındaki kelimelerin sayısını hesaplar.
+ * Bu fonksiyon, verilen başlangıç ve bitiş token'ları arasında
+ * komut yapısına eklenecek kelime sayısını hesaplar.
+ * Yönlendirme argümanlarını ve bayrak olan kelimeleri saymaz.
+ * 
+ * @param start Sayılmaya başlanacak ilk token
+ * @param end Sayımın biteceği token (dahil değil)
+ * @return Bulunan kelime sayısı
+ */
 int	count_words(t_lexer *start, t_lexer *end)
 {
 	int		word_count;
@@ -50,6 +68,16 @@ int	count_words(t_lexer *start, t_lexer *end)
 	return (word_count);
 }
 
+/**
+ * Komut yapısının kelime dizisini doldurur.
+ * Bu fonksiyon, belirtilen token aralığından alınan kelimeleri
+ * komut yapısının str dizisine kopyalar. Kopyalama sırasında
+ * kelimelerdeki tırnak işaretleri kaldırılır.
+ * 
+ * @param cmd Doldurulacak komut yapısı
+ * @param start Kelimelerin alınacağı ilk token
+ * @param end Kelimelerin alınacağı son token (dahil değil)
+ */
 void	fill_words(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 {
 	int		i;
@@ -78,6 +106,14 @@ void	fill_words(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 	cmd->str[i] = NULL;
 }
 
+/**
+ * Bir metinden tırnak işaretlerini kaldırır.
+ * Bu fonksiyon, verilen metindeki tek ve çift tırnak işaretlerini
+ * kaldırarak yeni bir metin oluşturur.
+ * 
+ * @param str Tırnak işaretleri kaldırılacak metin
+ * @return Tırnak işaretleri kaldırılmış yeni metin
+ */
 char	*remove_quotes(char *str)
 {
 	int		i;

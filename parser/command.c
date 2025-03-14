@@ -12,6 +12,14 @@
 
 #include "parser.h"
 
+/**
+ * Komut yapısı için bayrak (flag) ayarlaması yapar.
+ * 
+ * @param cmd Bayrakların ekleneceği komut yapısı.
+ * @param start İşlenecek lexer listesinin başlangıç noktası.
+ * @param end İşlenecek lexer listesinin bitiş noktası.
+ * @return Bayrağı düzenlenmiş komut yapısı veya bellek hatası durumunda NULL.
+ */
 t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd, t_lexer *start,
 		t_lexer *end)
 {
@@ -32,6 +40,13 @@ t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd, t_lexer *start,
 	return (cmd);
 }
 
+/**
+ * Verilen lexer düğümleri arasından yeni bir komut yapısı oluşturur.
+ * 
+ * @param start İşlenecek lexer listesinin başlangıç noktası.
+ * @param end İşlenecek lexer listesinin bitiş noktası.
+ * @return Oluşturulan komut yapısı veya hata durumunda NULL.
+ */
 t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 {
 	t_simple_cmds	*cmd;
@@ -60,6 +75,12 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 	return (cmd);
 }
 
+/**
+ * Yeni bir komutu mevcut komut listesine ekler.
+ * 
+ * @param cmd_list Komut listesinin adresi.
+ * @param new_cmd Listeye eklenecek yeni komut.
+ */
 void	add_command(t_simple_cmds **cmd_list, t_simple_cmds *new_cmd)
 {
 	t_simple_cmds	*temp;

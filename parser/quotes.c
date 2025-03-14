@@ -12,6 +12,16 @@
 
 #include "parser.h"
 
+/**
+ * Tırnaklı bir metni işler.
+ * Bu fonksiyon, bir metinde tırnak işaretiyle başlayan bir bölümü işler.
+ * Tırnağın kapanışını arar ve eğer kapanış tırnak işareti bulunamazsa hata döndürür.
+ * 
+ * @param str İşlenecek metin
+ * @param i Metin içindeki konum referansı
+ * @param quote İşlenecek tırnak karakteri (' veya ")
+ * @return SUCCESS: İşlem başarılı, QUOTE_ERROR: Kapanmamış tırnak hatası
+ */
 int	handle_quoted_string(char *str, int *i, char quote)
 {
 	(*i)++;
@@ -22,6 +32,14 @@ int	handle_quoted_string(char *str, int *i, char quote)
 	return (SUCCESS);
 }
 
+/**
+ * Bir metindeki tırnak işaretlerinin doğru kapatılıp kapatılmadığını kontrol eder.
+ * Bu fonksiyon, metindeki tek ve çift tırnak işaretlerinin doğru şekilde
+ * açılıp kapandığını doğrular.
+ * 
+ * @param str Doğrulanacak metin
+ * @return SUCCESS: Tırnak işaretleri doğru, QUOTE_ERROR: Hatalı tırnak işareti kullanımı
+ */
 int	validate_quotes(char *str)
 {
 	int	i;
@@ -44,6 +62,14 @@ int	validate_quotes(char *str)
 	return (SUCCESS);
 }
 
+/**
+ * Metinde izin verilmeyen özel karakterlerin varlığını kontrol eder.
+ * Bu fonksiyon, metinde ters eğik çizgi (\) ve noktalı virgül (;) gibi
+ * minishell'de desteklenmeyen özel karakterleri arar.
+ * 
+ * @param str Kontrol edilecek metin
+ * @return 1: İzin verilmeyen karakter bulundu, 0: Sorun yok
+ */
 int	check_special_chars(char *str)
 {
 	int	i;
@@ -58,6 +84,16 @@ int	check_special_chars(char *str)
 	return (0);
 }
 
+/**
+ * Tırnak işareti durumunu günceller.
+ * Bu fonksiyon, metin işlenirken tırnak işareti durumunu (tek tırnak içinde mi,
+ * çift tırnak içinde mi) takip eder ve gerektiğinde günceller.
+ * 
+ * @param input İşlenen metin
+ * @param i Metin içindeki konum referansı
+ * @param in_squote Tek tırnak içinde olma durumu referansı
+ * @param in_dquote Çift tırnak içinde olma durumu referansı
+ */
 void	handle_quote_status(char *input, int *i, int *in_squote, int *in_dquote)
 {
 	if (input[*i] == '\'' && !(*in_dquote))
@@ -66,6 +102,16 @@ void	handle_quote_status(char *input, int *i, int *in_squote, int *in_dquote)
 		*in_dquote = !(*in_dquote);
 }
 
+/**
+ * Bir metinden tırnak işaretlerini kaldırır ve sonucu yeni bir diziye kopyalar.
+ * Bu fonksiyon, metni tarar ve tırnak işaretlerini kaldırarak içeriği
+ * yeni bir sonuç dizisine kopyalar.
+ * 
+ * @param str İşlenecek metin
+ * @param result Tırnak işaretleri kaldırılmış içeriğin yazılacağı dizi
+ * @param i Kaynak metin içindeki konum referansı
+ * @param j Sonuç dizisi içindeki konum referansı
+ */
 void	process_quotes(char *str, char *result, int *i, int *j)
 {
 	int	in_squote;

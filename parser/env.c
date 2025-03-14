@@ -12,6 +12,13 @@
 
 #include "parser.h"
 
+/**
+ * Belirtilen anahtarın çevre değişkenleri listesinde olup olmadığını kontrol eder.
+ * 
+ * @param key Kontrol edilecek anahtar.
+ * @param vars Çevre değişkenleri listesinin adresi.
+ * @return Anahtar listede bulunuyorsa 1, bulunmuyorsa 0 döner.
+ */
 int	is_in_vars(char *key, t_vars **vars)
 {
 	t_vars	*temp;
@@ -28,6 +35,13 @@ int	is_in_vars(char *key, t_vars **vars)
 	return (0);
 }
 
+/**
+ * Belirtilen anahtarın değerini çevre değişkenleri listesinden alır.
+ * 
+ * @param key İstenen değişkenin anahtarı.
+ * @param vars Çevre değişkenleri listesinin adresi.
+ * @return Değişkenin değeri veya bulunamazsa NULL.
+ */
 char	*get_var(char *key, t_vars **vars)
 {
 	t_vars	*temp;
@@ -44,6 +58,14 @@ char	*get_var(char *key, t_vars **vars)
 	return (NULL);
 }
 
+/**
+ * Belirtilen çevre değişkeninin değerini alır. Önce iç değişkenler listesini,
+ * bulamazsa sistem çevre değişkenlerini kontrol eder.
+ * 
+ * @param env_var Değeri istenen çevre değişkeninin adı.
+ * @param vars İç değişkenler listesinin adresi.
+ * @return Değişkenin değerinin kopyası veya bulunamazsa boş string.
+ */
 char	*get_env_value(char *env_var, t_vars **vars)
 {
 	char	*env_value;
@@ -64,6 +86,15 @@ char	*get_env_value(char *env_var, t_vars **vars)
 	return (result);
 }
 
+/**
+ * Çevre değişkeni yerleştirmesi için metinde parçaları birleştirir.
+ * 
+ * @param result Üzerinde işlem yapılacak orijinal metin.
+ * @param i Değişken adının başladığı konum.
+ * @param env_value Yerleştirilecek değişkenin değeri.
+ * @param j Değişken adının uzunluğu.
+ * @return Değişken değeri yerleştirilmiş yeni metin veya hata durumunda NULL.
+ */
 char	*join_env_parts(char *result, int i, char *env_value, int j)
 {
 	char	*temp;
@@ -90,6 +121,14 @@ char	*join_env_parts(char *result, int i, char *env_value, int j)
 	return (temp);
 }
 
+/**
+ * Metindeki çevre değişkeni referansını ($ENV_VAR) gerçek değeriyle değiştirir.
+ * 
+ * @param result İşlenecek metin.
+ * @param i '$' işaretinin konumu.
+ * @param vars Çevre değişkenleri listesi.
+ * @return Değişken yerleştirilmiş yeni metin.
+ */
 char	*replace_env_var(char *result, int i, t_vars **vars)
 {
 	char	*env_var;
@@ -110,6 +149,14 @@ char	*replace_env_var(char *result, int i, t_vars **vars)
 	return (result);
 }
 
+/**
+ * Değişkenler listesine yeni bir statik değişken ekler.
+ * Eğer anahtar zaten listede varsa, işlem yapılmaz.
+ * 
+ * @param vars Değişkenler listesinin adresi.
+ * @param key Yeni değişkenin anahtarı.
+ * @param value Yeni değişkenin değeri.
+ */
 void	add_static_var(t_vars **vars, char *key, char *value)
 {
 	t_vars	*new_var;

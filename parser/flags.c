@@ -12,6 +12,14 @@
 
 #include "parser.h"
 
+/**
+ * Verilen metnin bir bayrak (flag) olup olmadığını kontrol eder.
+ * Bayrak formatı: '-' ile başlayıp ardından en az bir karakter gelmelidir.
+ * '--' ile başlayan metinler bayrak olarak kabul edilmez.
+ * 
+ * @param str Kontrol edilecek metin.
+ * @return Metin bir bayrak ise 1, değilse 0 döner.
+ */
 int	is_flag(char *str)
 {
 	char	*unquoted;
@@ -26,6 +34,13 @@ int	is_flag(char *str)
 	return (result);
 }
 
+/**
+ * Verilen lexer aralığındaki bayrak sayısını hesaplar.
+ * 
+ * @param start İşlenecek lexer listesinin başlangıç noktası.
+ * @param end İşlenecek lexer listesinin bitiş noktası.
+ * @return Bulunan bayrak sayısı.
+ */
 int	count_flags(t_lexer *start, t_lexer *end)
 {
 	int		flag_count;
@@ -43,6 +58,13 @@ int	count_flags(t_lexer *start, t_lexer *end)
 	return (flag_count);
 }
 
+/**
+ * Komut yapısının bayrak dizisini, lexer listesindeki bayraklarla doldurur.
+ * 
+ * @param cmd Bayrakları doldurulacak komut yapısı.
+ * @param start İşlenecek lexer listesinin başlangıç noktası.
+ * @param end İşlenecek lexer listesinin bitiş noktası.
+ */
 void	fill_flags(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 {
 	int		i;
