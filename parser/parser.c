@@ -6,11 +6,12 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/22 12:18:53 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/19 14:56:51 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+#include <fcntl.h>
 
 /**
  * G/Ç (I/O) tipini insan tarafından okunabilir biçimde yazdırır.
@@ -37,6 +38,34 @@ void	print_io_type(t_io_type type)
 		printf("IO_HEREDOC");
 	else if (type == IO_APPEND)
 		printf("IO_APPEND");
+}
+
+/**
+ * Heredoc dosyasının içeriğini okur ve ekrana yazdırır.
+ * 
+ * @param filename Okunacak heredoc dosyasının adı
+ */
+void	print_heredoc_content(char *filename)
+{
+	int		fd;
+	char	*line;
+
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+	{
+		printf("(empty heredoc)\n");
+		return ;
+	}
+	
+	printf("heredoc content:\n");
+	line = get_next_line(fd);
+	while (line)
+	{
+		printf("%s", line);
+		free(line);
+		line = get_next_line(fd);
+	}
+	close(fd);
 }
 
 /**
@@ -88,7 +117,13 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 				printf("REDIRECT_APPEND\n");
 			else if (current_redir->token == REDIRECT_HEREDOC)
 				printf("REDIRECT_HEREDOC\n");
-			printf("redirection file: %s\n", current_redir->next->str);
+			
+			// If it's a heredoc and we have a heredoc file, print its content
+			if (current_redir->token == REDIRECT_HEREDOC && current_cmd->hd_file_name)
+				print_heredoc_content(current_cmd->hd_file_name);
+			else
+				printf("redirection file: %s\n", current_redir->next->str);
+			
 			current_redir = current_redir->next->next;
 		}
 		printf("--------------\n");

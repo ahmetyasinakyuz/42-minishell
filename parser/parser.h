@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/19 11:32:54 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/19 14:57:26 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PARSER_H
 
 # include "../libs/libft/libft.h"
+# include "../libs/get_next_line/get_next_line.h"
 # include <stdio.h>
 
 # define QUOTE_ERROR 1
@@ -120,5 +121,10 @@ void			handle_last_token(t_lexer **start, t_lexer *end,
 					t_simple_cmds **cmd_list);
 char			*handle_non_alpha_dollar(char *result, int *i);
 void			add_static_var(t_vars **vars, char *key, char *value);
+
+// Add these function prototypes before the end of the header
+char			*create_heredoc_file(char *delimiter);
+void			handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections);
+void			process_heredoc_input(int fd, char *delimiter);
 
 #endif

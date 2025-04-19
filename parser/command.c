@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 23:34:53 by akyuz             #+#    #+#             */
-/*   Updated: 2025/03/02 10:37:40 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/19 14:54:32 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd, t_lexer *start,
 	int	flag_count;
 
 	handle_redirections(cmd, &start);
+	
+	// Add this line to process heredoc if present
+	if (cmd->redirections)
+		handle_heredoc(cmd, cmd->redirections);
+	
 	flag_count = count_flags(start, end);
 	if (flag_count > 0)
 	{
