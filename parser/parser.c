@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/10 08:14:28 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/03/22 12:18:53 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ static char	*process_dollar(char *result, int *i, t_vars **vars)
 /**
  * Bir metindeki tüm dolar işaretlerini işler.
  * Bu fonksiyon, verilen metni tarar ve $ karakteri
- * bulduğunda process_dollar fonksiyonunu çağırarak
+ * bulduğunda process_dollar fonksiyonunu çağırarak	
  * değişken değerleriyle değiştirir.
  * 
  * @param str İşlenecek metin

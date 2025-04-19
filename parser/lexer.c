@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:24 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/05 20:32:35 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/19 11:33:30 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,6 @@ t_lexer	*lexer_precheck(char *input)
 	if (validate_quotes(input) == QUOTE_ERROR)
 	{
 		printf("Error: Unclosed quotes\n");
-		return (NULL);
-	}
-	if (check_special_chars(input))
-	{
-		printf("Error: Invalid special characters (\\, ;)\n");
 		return (NULL);
 	}
 	return ((t_lexer *)1);

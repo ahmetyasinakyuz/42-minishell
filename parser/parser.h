@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/10 08:14:28 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/19 11:32:54 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ void			add_redirection(t_lexer **redirection_list, t_lexer *token);
 void			remove_token(t_lexer **list, t_lexer *token);
 int				is_redirection(t_tokens token);
 int				validate_quotes(char *str);
-int				check_special_chars(char *str);
 int				handle_quoted_string(char *str, int *i, char quote);
 char			*extract_token(char *input, int *i);
 char			*remove_quotes(char *str);

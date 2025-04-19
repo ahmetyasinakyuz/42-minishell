@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/05 20:33:25 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/19 11:32:47 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,28 +60,6 @@ int	validate_quotes(char *str)
 		i++;
 	}
 	return (SUCCESS);
-}
-
-/**
- * Metinde izin verilmeyen özel karakterlerin varlığını kontrol eder.
- * Bu fonksiyon, metinde ters eğik çizgi (\) ve noktalı virgül (;) gibi
- * minishell'de desteklenmeyen özel karakterleri arar.
- * 
- * @param str Kontrol edilecek metin
- * @return 1: İzin verilmeyen karakter bulundu, 0: Sorun yok
- */
-int	check_special_chars(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\\' || str[i] == ';')
-			return (1);
-		i++;
-	}
-	return (0);
 }
 
 /**
