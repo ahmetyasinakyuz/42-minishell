@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/06 09:15:57 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/19 18:15:22 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	init_cmd(t_simple_cmds **cmd)
 	(*cmd)->output_type = IO_STDOUT;
 	(*cmd)->input_fd = 0;
 	(*cmd)->output_fd = 1;
+	(*cmd)->return_value = 0;
 	return (0);
 }
 

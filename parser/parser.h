@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/19 14:57:26 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/19 18:15:12 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ typedef struct s_simple_cmds
 	t_lexer					*redirections;
 	t_io_type				input_type;
 	t_io_type				output_type;
+	int						return_value;
 	int						input_fd;
 	int						output_fd;
 	struct s_simple_cmds	*next;

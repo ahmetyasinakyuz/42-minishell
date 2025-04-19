@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/19 14:56:51 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/19 18:14:53 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,6 +227,10 @@ void	parse_commands(t_lexer *token_list, t_vars **vars)
 		handle_current_token(&current, &start, &cmd_list, vars);
 		current = current->next;
 	}
+	//Tam olarak burada executer fonksiyonunu çağırılacak
+	// while (cmd_list)
+	// 	cmd_list = cmd_list->next;
+	// add_static_var(vars, "?", ft_itoa(cmd_list->return_value));
 	print_cmd_list(cmd_list);
 	free_command_list(cmd_list);
 }
