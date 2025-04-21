@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/19 18:15:22 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/21 15:35:37 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../minishell.h"
 
 /**
  * Yeni bir komut yapısı oluşturur ve başlatır.
@@ -38,6 +38,7 @@ int	init_cmd(t_simple_cmds **cmd)
 	(*cmd)->input_fd = 0;
 	(*cmd)->output_fd = 1;
 	(*cmd)->return_value = 0;
+	(*cmd)->  = 0;
 	return (0);
 }
 

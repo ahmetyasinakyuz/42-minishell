@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/03/22 15:24:18 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/21 15:20:33 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "libs/get_next_line/get_next_line.h"
 # include "libs/libft/libft.h"
 # include "parser/parser.h"
+# include "execute/execute.h"
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>

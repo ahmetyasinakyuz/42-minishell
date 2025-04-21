@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/19 18:14:53 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/21 15:37:03 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../minishell.h"
 #include <fcntl.h>
 
 /**
@@ -219,6 +219,7 @@ void	parse_commands(t_lexer *token_list, t_vars **vars)
 	t_lexer			*start;
 	t_lexer			*current;
 
+
 	cmd_list = NULL;
 	start = token_list;
 	current = token_list;
@@ -227,10 +228,12 @@ void	parse_commands(t_lexer *token_list, t_vars **vars)
 		handle_current_token(&current, &start, &cmd_list, vars);
 		current = current->next;
 	}
+	builtin_control(cmd_list,env);
 	//Tam olarak burada executer fonksiyonunu çağırılacak
 	// while (cmd_list)
 	// 	cmd_list = cmd_list->next;
 	// add_static_var(vars, "?", ft_itoa(cmd_list->return_value));
+	builtin_control(cmd_list);
 	print_cmd_list(cmd_list);
 	free_command_list(cmd_list);
 }

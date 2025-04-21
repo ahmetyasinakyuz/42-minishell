@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
+#    By: aycami <aycami@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/04/19 14:42:17 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/04/21 15:18:16 by aycami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,8 @@ SRCS =	libs/get_next_line/get_next_line.c  \
 		parser/free.c                       \
 		parser/handle.c                     \
 		parser/heredoc.c                    \
+		execute/builtin_control.c           \
+		execute/none_built_in.c             \
 		main.c                              \
 		signal_handler.c                    \
 

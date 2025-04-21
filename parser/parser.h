@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.h                                           :+:      :+:    :+:   */
+/*   minishell.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/19 18:15:12 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/21 15:20:01 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
-# include "../libs/libft/libft.h"
-# include "../libs/get_next_line/get_next_line.h"
+# include "../minishell.h"
 # include <stdio.h>
 
 # define QUOTE_ERROR 1
@@ -73,6 +72,7 @@ typedef struct s_simple_cmds
 	int						return_value;
 	int						input_fd;
 	int						output_fd;
+	char					**env;
 	struct s_simple_cmds	*next;
 	struct s_simple_cmds	*prev;
 }							t_simple_cmds;
