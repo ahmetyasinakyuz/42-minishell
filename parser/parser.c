@@ -6,11 +6,12 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 15:37:03 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:06:34 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "parser.h"
+#include "../execute/execute.h"
 #include <fcntl.h>
 
 /**
@@ -228,12 +229,13 @@ void	parse_commands(t_lexer *token_list, t_vars **vars)
 		handle_current_token(&current, &start, &cmd_list, vars);
 		current = current->next;
 	}
-	builtin_control(cmd_list,env);
+	// builtin_control(cmd_list, env);
 	//Tam olarak burada executer fonksiyonunu çağırılacak
 	// while (cmd_list)
 	// 	cmd_list = cmd_list->next;
 	// add_static_var(vars, "?", ft_itoa(cmd_list->return_value));
-	builtin_control(cmd_list);
+
+	execute(cmd_list);
 	print_cmd_list(cmd_list);
 	free_command_list(cmd_list);
 }

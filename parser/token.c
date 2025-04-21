@@ -6,11 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 23:35:39 by akyuz             #+#    #+#             */
-/*   Updated: 2025/04/21 15:21:36 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:06:42 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "parser.h"
 
 /**
  * Bir token'ı listeden çıkarır.

@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 18:14:52 by aycami           ###   ########.fr       */
+/*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
+/*   Updated: 2025/04/21 17:55:28 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "execute.h"
 
-# include "parser/parser.h"
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <signal.h>
-# include "structs.h"
+void	execute(t_simple_cmds *cmd_list)
+{
+	t_simple_cmds	*current_cmd;
 
-extern volatile sig_atomic_t	g_received_signal;
+	current_cmd = cmd_list;
+	while(current_cmd->pipe = 1)
+	{
+		builtin_control(current_cmd);
+		current_cmd = current_cmd->next;
+	}
+	builtin_control(current_cmd);
 
-void	run_shell(t_vars **vars);
-void	setup_signals(void);
-void	reset_signal_handling(void);
-void	handle_sigint(int signum);
-
-#endif
+}

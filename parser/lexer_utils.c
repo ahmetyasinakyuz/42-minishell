@@ -6,11 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 06:50:01 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 15:21:38 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:06:12 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "parser.h"
 
 /**
  * Yeni bir token (sözcük birimi) oluşturur.

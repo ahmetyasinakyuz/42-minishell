@@ -6,11 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 23:53:22 by akyuz             #+#    #+#             */
-/*   Updated: 2025/04/21 15:21:27 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:06:03 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "parser.h"
 
 /**
  * Verilen metnin bir bayrak (flag) olup olmadığını kontrol eder.

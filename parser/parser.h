@@ -1,81 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                           :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 18:27:19 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 15:20:01 by aycami           ###   ########.fr       */
+/*   Created: 2025/04/21 18:13:27 by aycami            #+#    #+#             */
+/*   Updated: 2025/04/21 18:13:30 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
-# include "../minishell.h"
+# include "../structs.h"
 # include <stdio.h>
 
 # define QUOTE_ERROR 1
 # define SUCCESS 0
-
-typedef enum e_tokens
-{
-	WORD,
-	PIPE,
-	REDIRECT_IN,
-	REDIRECT_HEREDOC,
-	REDIRECT_OUT,
-	REDIRECT_APPEND,
-	EMPTY,
-}							t_tokens;
-
-typedef enum e_io_type
-{
-	IO_STDIN,
-	IO_STDOUT,
-	IO_PIPE_IN,
-	IO_PIPE_OUT,
-	IO_FILE_IN,
-	IO_FILE_OUT,
-	IO_HEREDOC,
-	IO_APPEND,
-}							t_io_type;
-
-typedef struct s_vars
-{
-	char					*key;
-	char					*value;
-	struct s_vars			*next;
-	struct s_vars			*prev;
-}							t_vars;
-
-typedef struct s_lexer
-{
-	char					*str;
-	t_tokens				token;
-	int						i;
-	struct s_lexer			*next;
-	struct s_lexer			*prev;
-}							t_lexer;
-
-typedef struct s_simple_cmds
-{
-	char					**str;
-	char					**flag;
-	int						num_redirections;
-	char					*hd_file_name;
-	int						pipe;
-	t_lexer					*redirections;
-	t_io_type				input_type;
-	t_io_type				output_type;
-	int						return_value;
-	int						input_fd;
-	int						output_fd;
-	char					**env;
-	struct s_simple_cmds	*next;
-	struct s_simple_cmds	*prev;
-}							t_simple_cmds;
 
 void			parser(char *input, t_vars **vars);
 t_lexer			*lexer(char *input);
@@ -122,8 +64,6 @@ void			handle_last_token(t_lexer **start, t_lexer *end,
 					t_simple_cmds **cmd_list);
 char			*handle_non_alpha_dollar(char *result, int *i);
 void			add_static_var(t_vars **vars, char *key, char *value);
-
-// Add these function prototypes before the end of the header
 char			*create_heredoc_file(char *delimiter);
 void			handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections);
 void			process_heredoc_input(int fd, char *delimiter);

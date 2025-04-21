@@ -6,11 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 23:34:53 by akyuz             #+#    #+#             */
-/*   Updated: 2025/04/21 15:21:22 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:05:56 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "parser.h"
 
 /**
  * Komut yapısı için bayrak (flag) ayarlaması yapar.
@@ -77,6 +77,16 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 		return (NULL);
 	}
 	fill_words(cmd, start, end);
+	cmd->raw_command = ft_strdup(start->str);
+	t_lexer *current = start->next;
+	while (current != end && current)
+	{
+		char *temp = cmd->raw_command;
+		cmd->raw_command = ft_strjoin(cmd->raw_command, " ");
+		cmd->raw_command = ft_strjoin(cmd->raw_command, current->str);
+		free(temp);
+		current = current->next;
+	}
 	return (cmd);
 }
 

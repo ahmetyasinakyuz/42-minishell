@@ -6,11 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:12:25 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 15:21:27 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:06:01 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "parser.h"
 
 /**
  * Belirtilen anahtarın çevre değişkenleri listesinde olup olmadığını kontrol eder.
