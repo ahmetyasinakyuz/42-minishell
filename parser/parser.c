@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 19:03:24 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 22:25:02 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,17 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 		{
 			printf("flag: %s\n", current_cmd->flag[i]);
 			i++;
+			}
+		
+		// Print the content array (all inputs in order)
+		i = 0;
+		printf("Content array (all inputs in order):\n");
+		while (current_cmd->content && current_cmd->content[i])
+		{
+			printf("content[%d]: %s\n", i, current_cmd->content[i]);
+			i++;
 		}
+		
 		current_redir = current_cmd->redirections;
 		while (current_redir && current_redir->next)
 		{

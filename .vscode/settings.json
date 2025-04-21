@@ -1,14 +1,5 @@
 {
     "files.associations": {
-        "minishell.h": "c",
-        "fcntl.h": "c",
-        "parser.h": "c",
-        "signal.h": "c",
-        "readline.h": "c",
-        "stdio.h": "c",
-        "execute.h": "c",
-        "ft_printf.h": "c",
-        "structs.h": "c",
-        "history.h": "c"
+        "get_next_line.h": "c"
     }
 }

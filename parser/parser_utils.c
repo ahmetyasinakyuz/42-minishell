@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 18:33:10 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 20:41:41 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	init_cmd(t_simple_cmds **cmd)
 	(*cmd)->pipe = 0;
 	(*cmd)->str = NULL;
 	(*cmd)->flag = NULL;
+	(*cmd)->content = NULL;  // Initialize the new content field
 	(*cmd)->input_type = IO_STDIN;
 	(*cmd)->output_type = IO_STDOUT;
 	(*cmd)->input_fd = 0;

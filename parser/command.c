@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 23:34:53 by akyuz             #+#    #+#             */
-/*   Updated: 2025/04/21 18:32:52 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 20:41:41 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,52 @@ t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd, t_lexer *start,
 }
 
 /**
+ * Counts the total number of tokens between start and end.
+ * 
+ * @param start Beginning of the token range
+ * @param end End of the token range
+ * @return Number of tokens found
+ */
+int	count_content(t_lexer *start, t_lexer *end)
+{
+	int		count;
+	t_lexer	*current;
+
+	count = 0;
+	current = start;
+	while (current != end && current)
+	{
+		count++;
+		current = current->next;
+	}
+	return (count);
+}
+
+/**
+ * Fills the content array with all tokens in order.
+ * 
+ * @param cmd Command structure to fill
+ * @param start Beginning of the token range
+ * @param end End of the token range
+ */
+void	fill_content(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
+{
+	int		i;
+	t_lexer	*current;
+	char	*unquoted;
+
+	i = 0;
+	current = start;
+	while (current != end && current)
+	{
+		unquoted = remove_quotes(ft_strdup(current->str));
+		cmd->content[i++] = unquoted;
+		current = current->next;
+	}
+	cmd->content[i] = NULL;
+}
+
+/**
  * Verilen lexer düğümleri arasından yeni bir komut yapısı oluşturur.
  * 
  * @param start İşlenecek lexer listesinin başlangıç noktası.
@@ -56,6 +102,7 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 {
 	t_simple_cmds	*cmd;
 	int				word_count;
+	int				content_count;
 
 	if (init_cmd(&cmd))
 		return (NULL);
@@ -77,6 +124,23 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 		return (NULL);
 	}
 	fill_words(cmd, start, end);
+	
+	// Add content storage - all inputs in order
+	content_count = count_content(start, end);
+	if (content_count > 0)
+	{
+		cmd->content = malloc(sizeof(char *) * (content_count + 1));
+		if (!cmd->content)
+		{
+			free(cmd->str);
+			free(cmd->flag);
+			free(cmd);
+			return (NULL);
+		}
+		fill_content(cmd, start, end);
+	}
+	
+	// Original raw command handling
 	cmd->raw_command = ft_strdup(start->str);
 	t_lexer *current = start->next;
 	while (current != end && current)

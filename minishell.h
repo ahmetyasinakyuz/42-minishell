@@ -6,13 +6,14 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 19:06:51 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 22:22:07 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdio.h>
 # include "libs/ft_printf/ft_printf.h"
 # include "libs/get_next_line/get_next_line.h"
 # include "libs/libft/libft.h"
@@ -65,6 +66,7 @@ typedef struct s_lexer
 
 typedef struct s_simple_cmds
 {
+	char					**content;
 	char					**str;
 	char					**flag;
 	int						num_redirections;
