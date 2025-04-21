@@ -6,21 +6,20 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/21 18:01:55 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 19:06:45 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "../minishell.h"
 
 void builtin_control(t_simple_cmds *cmd_list)
 {
 	t_simple_cmds	*current_cmd;
 
 	current_cmd = cmd_list;
-	if(ft_strncmp("echo", *current_cmd->str, 5) == 0
-		&& (ft_strncmp("-n", current_cmd->flag[0], 3) == 0
-		||	!(current_cmd->flag)))
-			echo_builtin(current_cmd);
+	// printf("RAW_COMMAND:%s \n", current_cmd->raw_command);
+	if(ft_strncmp("echo", *current_cmd->str, 5) == 0)
+		echo_builtin(current_cmd);
 	// if(ft_strncmp("pwd", *current_cmd->str, 4) == 0
 	// 	&& !(*current_cmd->flag))
 	// 	//pwd_builtin(current_cmd);
@@ -39,5 +38,5 @@ void builtin_control(t_simple_cmds *cmd_list)
 	// 	//exit_builtin(current_cmd);
     // // none_built_in(current_cmd);
     // none_built_in(current_cmd);
-	printf("selam");
+	// printf("builtin_control fonksiyonu içindesin");
 }

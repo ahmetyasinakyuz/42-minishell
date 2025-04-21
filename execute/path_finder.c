@@ -6,11 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/21 17:55:42 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:32:47 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "../minishell.h"
 
 char	*find_path_in_paths(char *cmd, char **paths)
 {

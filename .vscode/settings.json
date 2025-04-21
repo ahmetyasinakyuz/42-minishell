@@ -8,6 +8,7 @@
         "stdio.h": "c",
         "execute.h": "c",
         "ft_printf.h": "c",
-        "structs.h": "c"
+        "structs.h": "c",
+        "history.h": "c"
     }
 }

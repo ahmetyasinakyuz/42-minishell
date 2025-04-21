@@ -6,11 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:24 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 18:06:15 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:33:08 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../minishell.h"
 
 /**
  * Bir metin parçasının token tipini belirler.

@@ -6,7 +6,7 @@
 #    By: aycami <aycami@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/04/21 15:18:16 by aycami           ###   ########.fr        #
+#    Updated: 2025/04/21 19:01:08 by aycami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,8 @@ SRCS =	libs/get_next_line/get_next_line.c  \
 		parser/heredoc.c                    \
 		execute/builtin_control.c           \
 		execute/none_built_in.c             \
+		execute/execute.c					\
+		execute/echo_builtin.c				\
 		main.c                              \
 		signal_handler.c                    \
 

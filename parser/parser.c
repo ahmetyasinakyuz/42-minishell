@@ -6,12 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 18:06:34 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 19:03:24 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include "../execute/execute.h"
+#include "../minishell.h"
 #include <fcntl.h>
 
 /**
@@ -236,7 +235,7 @@ void	parse_commands(t_lexer *token_list, t_vars **vars)
 	// add_static_var(vars, "?", ft_itoa(cmd_list->return_value));
 
 	execute(cmd_list);
-	print_cmd_list(cmd_list);
+	// print_cmd_list(cmd_list);
 	free_command_list(cmd_list);
 }
 

@@ -6,11 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 04:21:10 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 18:06:44 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:33:38 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../minishell.h"
 
 /**
  * Değişken listesine yeni bir değişken ekler.

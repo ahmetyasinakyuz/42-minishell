@@ -6,11 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/21 18:07:56 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:32:44 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "../minishell.h"
 
 // void none_built_in(t_simple_cmds *cmd_list)
 // {

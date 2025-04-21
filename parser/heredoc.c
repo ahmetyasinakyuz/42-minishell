@@ -6,11 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:30:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 18:06:10 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:33:04 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../minishell.h"
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <stdlib.h>

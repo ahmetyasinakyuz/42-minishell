@@ -6,11 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 18:06:17 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/21 18:33:10 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../minishell.h"
 
 /**
  * Yeni bir komut yapısı oluşturur ve başlatır.
