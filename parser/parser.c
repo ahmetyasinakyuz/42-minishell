@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/22 11:40:32 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/22 14:10:45 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,7 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 		{
 			printf("flag: %s\n", current_cmd->flag[i]);
 			i++;
-			}
-		
-		// Print the content array (all inputs in order)
+		}
 		i = 0;
 		printf("Content array (all inputs in order):\n");
 		while (current_cmd->content && current_cmd->content[i])
@@ -127,8 +125,6 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 				printf("REDIRECT_APPEND\n");
 			else if (current_redir->token == REDIRECT_HEREDOC)
 				printf("REDIRECT_HEREDOC\n");
-			
-			// If it's a heredoc and we have a heredoc file, print its content
 			if (current_redir->token == REDIRECT_HEREDOC && current_cmd->hd_file_name)
 				print_heredoc_content(current_cmd->hd_file_name);
 			else
@@ -154,13 +150,14 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
  */
 static char	*process_dollar(char *result, int *i, t_vars **vars)
 {
-	if (result[*i + 1] && (ft_isalpha(result[*i + 1]) || ft_isdigit(result[*i + 1])))
+	if (result[*i + 1] && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_' || 
+		(ft_isdigit(result[*i + 1]) && result[*i + 1] != ' ')))
 	{
 		result = replace_env_var(result, *i, vars);
 		*i = -1;
 	}
 	else
-		result = handle_non_alpha_dollar(result, i);
+		(*i)++;
 	return (result);
 }
 

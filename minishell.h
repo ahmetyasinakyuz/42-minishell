@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/22 11:38:44 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/22 14:07:16 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ typedef struct s_simple_cmds
 	int						return_value;
 	int						input_fd;
 	int						output_fd;
-	char					*raw_command;
 	char					**env;
 	struct s_simple_cmds	*next;
 	struct s_simple_cmds	*prev;

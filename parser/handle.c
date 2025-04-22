@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:14:44 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/22 11:54:52 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/22 14:09:51 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,24 +27,18 @@ void	handle_word_token(t_lexer *current, t_vars **vars)
 	str = current->str;
 	if (str[0] == '\'')
 		return ;
-	
-	// Don't process variable assignments unless they're part of export command
 	if (ft_strchr(str, '=') && current->prev)
 	{
 		t_lexer *start = current;
-		// Go to the start of the command
 		while (start->prev && start->prev->token != PIPE)
 			start = start->prev;
 		
-		// Check if the command starts with "export"
 		if (!start->str || ft_strncmp(start->str, "export", 7) != 0)
 		{
-			// If not export, skip variable processing
 			current->str = is_dolar(str, vars);
 			return;
 		}
 	}
-	
 	found_var(str, vars);
 	current->str = is_dolar(str, vars);
 }
@@ -117,6 +111,12 @@ void	handle_last_token(t_lexer **start, t_lexer *end,
  */
 char	*handle_non_alpha_dollar(char *result, int *i)
 {
+	if (result[*i + 1] == ' ' || result[*i + 1] == '\0' || 
+		result[*i + 1] == '<' || result[*i + 1] == '>')
+	{
+		(*i)++;
+		return result;
+	}
 	int		j;
 	char	*temp;
 

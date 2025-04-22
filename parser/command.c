@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 23:34:53 by akyuz             #+#    #+#             */
-/*   Updated: 2025/04/22 11:54:52 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/22 14:08:51 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd, t_lexer *start,
 	int	flag_count;
 
 	handle_redirections(cmd, &start);
-	
-	// Add this line to process heredoc if present
 	if (cmd->redirections)
 		handle_heredoc(cmd, cmd->redirections);
 	
@@ -124,8 +122,6 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 		return (NULL);
 	}
 	fill_words(cmd, start, end);
-	
-	// Add content storage - all inputs in order
 	content_count = count_content(start, end);
 	if (content_count > 0)
 	{
@@ -138,22 +134,6 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 			return (NULL);
 		}
 		fill_content(cmd, start, end);
-	}
-	
-	// Fix raw command handling to properly join with spaces
-	cmd->raw_command = ft_strdup(start->str);
-	t_lexer *current = start->next;
-	while (current != end && current)
-	{
-		char *temp = cmd->raw_command;
-		char *with_space = ft_strjoin(temp, " ");
-		free(temp);
-		
-		temp = with_space;
-		cmd->raw_command = ft_strjoin(with_space, current->str);
-		free(temp);
-		
-		current = current->next;
 	}
 	return (cmd);
 }

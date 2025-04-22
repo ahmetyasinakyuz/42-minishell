@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 23:35:39 by akyuz             #+#    #+#             */
-/*   Updated: 2025/04/21 18:33:35 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/22 14:06:29 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,12 +93,22 @@ void	process_token_char(char *token, char *input, int *i, int *j)
 	in_dquote = 0;
 	while (input[*i])
 	{
-		handle_quote_status(input, i, &in_squote, &in_dquote);
+		if (input[*i] == '\'' && !in_dquote)
+			in_squote = !in_squote;
+		else if (input[*i] == '\"' && !in_squote)
+			in_dquote = !in_dquote;
 		if (input[*i] == '|' && !in_squote && !in_dquote)
 			if (handle_pipe_char(token, input, i, j))
-				break ;
+				break;
+		if (input[*i] == '<' && input[*i+1] == '<' && !in_squote && !in_dquote && *j == 0)
+		{
+			token[(*j)++] = input[(*i)++];
+			token[(*j)++] = input[(*i)++];
+			break;
+		}
 		if ((input[*i] == ' ' && !in_squote && !in_dquote && *j > 0))
-			break ;
+			break;
+			
 		token[(*j)++] = input[(*i)++];
 	}
 }
