@@ -6,7 +6,7 @@
 #    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/04/22 13:56:06 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/04/22 19:00:39 by aakyuz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,8 +32,9 @@ SRCS =	libs/get_next_line/get_next_line.c  \
 		parser/heredoc.c                    \
 		execute/builtin_control.c           \
 		execute/none_built_in.c             \
-		execute/execute.c					\
-		execute/echo_builtin.c				\
+		execute/execute.c                   \
+		execute/path_finder.c               \
+		execute/echo_builtin.c              \
 		main.c                              \
 		signal_handler.c                    \
 

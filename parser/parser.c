@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/22 15:33:42 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/22 18:27:57 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,13 +220,12 @@ void	handle_current_token(t_lexer **current, t_lexer **start,
  * @param token_list Lexer analizi sonucu oluşturulan token listesi
  * @param vars Değişken listesi
  */
-void	parse_commands(t_lexer *token_list, t_vars **vars)
+void	parse_commands(t_lexer *token_list, t_vars **vars, char **envp)
 {
 	t_simple_cmds	*cmd_list;
 	t_simple_cmds	*cmd_start;
 	t_lexer			*start;
 	t_lexer			*current;
-
 
 	cmd_list = NULL;
 	start = token_list;
@@ -237,11 +236,11 @@ void	parse_commands(t_lexer *token_list, t_vars **vars)
 		current = current->next;
 	}
 	cmd_start = cmd_list;
-	execute(cmd_list);
+	execute(cmd_list, envp);
 	while (cmd_list->pipe == 1)
 		cmd_list = cmd_list->next;
 	add_static_var(vars, "?", ft_itoa(cmd_list->return_value));
-	print_cmd_list(cmd_start);
+	//print_cmd_list(cmd_start);
 	free_command_list(cmd_start);
 }
 
@@ -254,7 +253,7 @@ void	parse_commands(t_lexer *token_list, t_vars **vars)
  * @param input Kullanıcı tarafından girilen komut metni
  * @param vars Değişken listesi
  */
-void	parser(char *input, t_vars **vars)
+void	parser(char *input, t_vars **vars, char **envp)
 {
 	t_lexer	*token_list;
 
@@ -262,6 +261,6 @@ void	parser(char *input, t_vars **vars)
 	token_list = lexer(input);
 	if (!token_list)
 		return ;
-	parse_commands(token_list, vars);
+	parse_commands(token_list, vars, envp);
 	free_lexer_list(token_list);
 }

@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:59:20 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/22 15:28:22 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/22 18:57:39 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,23 @@ void	echo_builtin(t_simple_cmds *cmd_list)
 
 	i = 1;
 	flag = 0;
-	if(cmd_list->content[1][0] == '-' && cmd_list->content[1][1] == 'n')
+	if (cmd_list->content && cmd_list->content[1] && 
+		cmd_list->content[1][0] == '-' && cmd_list->content[1][1] == 'n')
 	{
 		flag = 1;
 		i = 2;
 	}
-	while(cmd_list->content[i] && cmd_list->content[i + 1])
+	if (cmd_list->content)
 	{
-		printf("%s ", cmd_list->content[i]);
-		i++;
+		while (cmd_list->content[i] && cmd_list->content[i + 1])
+		{
+			printf("%s ", cmd_list->content[i]);
+			i++;
+		}
+		if (cmd_list->content[i])
+			printf("%s", cmd_list->content[i]);
 	}
-	printf("%s", cmd_list->content[i]);
-	if(flag == 0)
+	if (flag == 0)
 		printf("\n");
 	cmd_list->return_value = 0;
 }
