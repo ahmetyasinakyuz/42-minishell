@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:12:25 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 18:32:55 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/22 11:54:52 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,4 +181,25 @@ void	add_static_var(t_vars **vars, char *key, char *value)
 		temp = temp->next;
 	temp->next = new_var;
 	new_var->prev = temp;
+}
+
+/**
+ * Checks if a string is in the format of a variable assignment (key=value)
+ * 
+ * @param str String to check
+ * @return 1 if it's a variable assignment, 0 otherwise
+ */
+int	is_var_assignment(char *str)
+{
+	int	i;
+
+	if (!str)
+		return (0);
+	i = 0;
+	if (!ft_isalpha(str[i]) && str[i] != '_')
+		return (0);
+	i++;
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+		i++;
+	return (str[i] == '=');
 }
