@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/22 14:10:45 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/22 15:33:42 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 static char	*process_dollar(char *result, int *i, t_vars **vars)
 {
 	if (result[*i + 1] && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_' || 
-		(ft_isdigit(result[*i + 1]) && result[*i + 1] != ' ')))
+		(ft_isdigit(result[*i + 1]) && result[*i + 1] != ' ') || result[*i + 1] == '?'))
 	{
 		result = replace_env_var(result, *i, vars);
 		*i = -1;
@@ -223,6 +223,7 @@ void	handle_current_token(t_lexer **current, t_lexer **start,
 void	parse_commands(t_lexer *token_list, t_vars **vars)
 {
 	t_simple_cmds	*cmd_list;
+	t_simple_cmds	*cmd_start;
 	t_lexer			*start;
 	t_lexer			*current;
 
@@ -235,15 +236,13 @@ void	parse_commands(t_lexer *token_list, t_vars **vars)
 		handle_current_token(&current, &start, &cmd_list, vars);
 		current = current->next;
 	}
-	// builtin_control(cmd_list, env);
-	//Tam olarak burada executer fonksiyonunu çağırılacak
-	// while (cmd_list)
-	// 	cmd_list = cmd_list->next;
-	// add_static_var(vars, "?", ft_itoa(cmd_list->return_value));
-
+	cmd_start = cmd_list;
 	execute(cmd_list);
-	print_cmd_list(cmd_list);
-	free_command_list(cmd_list);
+	while (cmd_list->pipe == 1)
+		cmd_list = cmd_list->next;
+	add_static_var(vars, "?", ft_itoa(cmd_list->return_value));
+	print_cmd_list(cmd_start);
+	free_command_list(cmd_start);
 }
 
 /**
