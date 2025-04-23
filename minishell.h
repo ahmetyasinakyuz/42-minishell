@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/22 18:49:26 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/23 11:09:05 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,15 @@
 # include "libs/libft/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <sys/stat.h>
+# include <unistd.h>
 # include <signal.h>
+# include <stdlib.h>
+# include <string.h>
+# include <fcntl.h>
+# include <errno.h>
 
 # define QUOTE_ERROR 1
 # define SUCCESS 0
