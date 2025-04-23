@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/23 12:41:39 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:17:08 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,7 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char **envp)
 	t_simple_cmds	*cmd_start;
 	t_lexer			*start;
 	t_lexer			*current;
+	char			*return_value;
 
 	cmd_list = NULL;
 	start = token_list;
@@ -239,7 +240,9 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char **envp)
 	execute(cmd_list, envp);
 	while (cmd_list->pipe == 1)
 		cmd_list = cmd_list->next;
-	add_static_var(vars, "?", ft_itoa(cmd_list->return_value));
+	return_value = ft_itoa(cmd_list->return_value);
+	add_static_var(vars, "?", return_value);
+	free(return_value);
 	//print_cmd_list(cmd_start);
 	free_command_list(cmd_start);
 }

@@ -3,14 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   path_finder.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/21 18:32:47 by aycami           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:20:58 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	free_paths(char **paths)
+{
+	int	i;
+
+	i = 0;
+	while (paths[i])
+	{
+		free(paths[i]);
+		i++;
+	}
+	free(paths);
+}
 
 char	*find_path_in_paths(char *cmd, char **paths)
 {
@@ -55,5 +68,6 @@ char	*path_finder(char *cmd, char **envp)
 	if (!paths)
 		return (NULL);
 	path = find_path_in_paths(cmd, paths);
+	free_paths(paths);
 	return (path);
 }

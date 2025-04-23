@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/23 11:16:44 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:12:48 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,3 +52,5 @@ int	main(int argc, char **argv, char **envp)
 		printf("Usage: ./minishell\n");
 	return (0);
 }
+
+//valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell

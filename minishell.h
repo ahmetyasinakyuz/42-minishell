@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/23 11:09:05 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:20:00 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,5 +155,6 @@ void	builtin_control(t_simple_cmds *cmd_list, char **envp);
 void	echo_builtin(t_simple_cmds *cmd_list);
 char	*path_finder(char *cmd, char **envp);
 void	none_built_in(t_simple_cmds *cmd_list, char **envp);
+void	free_paths(char **paths);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/23 12:54:30 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:35:38 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 {
 	char	*path;
 	char	**cmd;
+	int		merged_alloc = 0;
+	int		should_free_path = 0;
 
 	if(cmd_list->str[0] == NULL)
 	{
@@ -57,9 +59,15 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 	if (cmd_list->str[0][0] == '/' ||
 		(cmd_list->str[0][0] == '.' && cmd_list->str[0][1] == '/') ||
 		(cmd_list->str[0][0] == '.' && cmd_list->str[0][1] == '.' && cmd_list->str[0][2] == '/'))
-			path = cmd_list->str[0];
+	{
+		path = cmd_list->str[0];
+		should_free_path = 0;
+	}
 	else
+	{
 		path = path_finder(cmd_list->str[0], envp);
+		should_free_path = 1;
+	}
 	if (path == NULL)
 	{
 		ft_putstr_fd("minishell: ", 2);
@@ -71,7 +79,10 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 	if(cmd_list->flag == NULL)
 		cmd = cmd_list->str;
 	else
+	{
 		cmd = merge_cmd_and_flags(cmd_list->str, cmd_list->flag);
+		merged_alloc = 1;
+	}
 	pid_t pid = fork();
 	if (pid == 0)
 	{
@@ -82,7 +93,7 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 	else if (pid < 0)
 	{
 		perror("fork");
-		exit(EXIT_FAILURE);
+		cmd_list->return_value = 1;
 	}
 	else
 	{
@@ -93,4 +104,8 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 		else if (WIFSIGNALED(status))
 			cmd_list->return_value = 128 + WTERMSIG(status);
 	}
+	if (should_free_path)
+		free(path);
+	if (merged_alloc)
+		free(cmd); // Only free the array, not the strings inside
 }
