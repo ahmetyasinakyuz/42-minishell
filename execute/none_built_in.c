@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/23 16:35:38 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/23 17:16:53 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,19 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 		int status;
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
+		{
 			cmd_list->return_value = WEXITSTATUS(status);
+			printf("Child process exited with status: %d\n", cmd_list->return_value);
+		}
 		else if (WIFSIGNALED(status))
+		{
 			cmd_list->return_value = 128 + WTERMSIG(status);
+			printf("Child process exited by signal: %d (return_value: %d)\n", WTERMSIG(status), cmd_list->return_value);
+		}
 	}
 	if (should_free_path)
 		free(path);
 	if (merged_alloc)
-		free(cmd); // Only free the array, not the strings inside
+		free(cmd);
+	printf("Child process exited with status: %d\n", cmd_list->return_value);
 }
