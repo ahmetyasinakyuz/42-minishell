@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/22 20:11:23 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/23 12:28:31 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,6 @@ void builtin_control(t_simple_cmds *cmd_list, char **envp)
 	// 	&& !(*current_cmd->flag))
 	// 	//exit_builtin(current_cmd);
 	// // none_built_in(current_cmd);
-	none_built_in(current_cmd, envp);
+	else
+		none_built_in(current_cmd, envp);
 }

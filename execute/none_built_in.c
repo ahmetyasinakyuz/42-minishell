@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/23 11:52:58 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/23 12:34:02 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,11 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 	char	*path;
 	char	**cmd;
 
+	if(cmd_list->str[0] == NULL)
+	{
+		cmd_list->return_value = 127;
+		return ;
+	}
 	path = path_finder(cmd_list->str[0] , envp);
 	if (path == NULL)
 	{
@@ -58,9 +63,11 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 		cmd_list->return_value = 127;
 		return ;
 	}
+	if(cmd_list->flag == NULL)
+		cmd = cmd_list->str;
+	else
+		cmd = merge_cmd_and_flags(cmd_list->str, cmd_list->flag);
 	pid_t pid = fork();
-	//cmd_list->str ile cmd_list->flagi birleştir ondan sonra execve'ye gönder
-	cmd = merge_cmd_and_flags(cmd_list->str, cmd_list->flag);
 	if (pid == 0)
 	{
 		execve(path, cmd, envp);
@@ -79,6 +86,6 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 		if (WIFEXITED(status))
 			cmd_list->return_value = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			cmd_list->return_value = 126 + WTERMSIG(status);
+			cmd_list->return_value = 128 + WTERMSIG(status);
 	}
 }

@@ -5,7 +5,7 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/19 14:12:25 by aakyuz            #+#    #+#             */
+/*   Created: 2025/02/19 14:12:25 by aakyuz            #+#             */
 /*   Updated: 2025/04/22 15:33:19 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -151,7 +151,7 @@ char	*replace_env_var(char *result, int i, t_vars **vars)
 
 /**
  * Değişkenler listesine yeni bir statik değişken ekler.
- * Eğer anahtar zaten listede varsa, işlem yapılmaz.
+ * Eğer anahtar zaten listede varsa, değeri güncellenir.
  * 
  * @param vars Değişkenler listesinin adresi.
  * @param key Yeni değişkenin anahtarı.
@@ -162,8 +162,19 @@ void	add_static_var(t_vars **vars, char *key, char *value)
 	t_vars	*new_var;
 	t_vars	*temp;
 
-	if (is_in_vars(key, vars))
+	if (!vars)
 		return;
+	temp = *vars;
+	while (temp)
+	{
+		if (temp->key && ft_strncmp(temp->key, key, ft_strlen(key) + 1) == 0)
+		{
+			free(temp->value);
+			temp->value = ft_strdup(value);
+			return;
+		}
+		temp = temp->next;
+	}
 	new_var = malloc(sizeof(t_vars));
 	if (!new_var)
 		return;
