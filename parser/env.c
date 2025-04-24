@@ -121,14 +121,6 @@ char	*join_env_parts(char *result, int i, char *env_value, int j)
 	return (temp);
 }
 
-/**
- * Metindeki çevre değişkeni referansını ($ENV_VAR) gerçek değeriyle değiştirir.
- * 
- * @param result İşlenecek metin.
- * @param i '$' işaretinin konumu.
- * @param vars Çevre değişkenleri listesi.
- * @return Değişken yerleştirilmiş yeni metin.
- */
 char	*replace_env_var(char *result, int i, t_vars **vars)
 {
 	char	*env_var;
@@ -149,14 +141,6 @@ char	*replace_env_var(char *result, int i, t_vars **vars)
 	return (result);
 }
 
-/**
- * Değişkenler listesine yeni bir statik değişken ekler.
- * Eğer anahtar zaten listede varsa, değeri güncellenir.
- * 
- * @param vars Değişkenler listesinin adresi.
- * @param key Yeni değişkenin anahtarı.
- * @param value Yeni değişkenin değeri.
- */
 void	add_static_var(t_vars **vars, char *key, char *value)
 {
 	t_vars	*new_var;
@@ -165,6 +149,7 @@ void	add_static_var(t_vars **vars, char *key, char *value)
 	if (!vars)
 		return;
 	temp = *vars;
+	// zaten var ise güncelle
 	while (temp)
 	{
 		if (temp->key && ft_strncmp(temp->key, key, ft_strlen(key) + 1) == 0)
@@ -175,6 +160,7 @@ void	add_static_var(t_vars **vars, char *key, char *value)
 		}
 		temp = temp->next;
 	}
+	// yoksa ekle
 	new_var = malloc(sizeof(t_vars));
 	if (!new_var)
 		return;
@@ -182,11 +168,13 @@ void	add_static_var(t_vars **vars, char *key, char *value)
 	new_var->value = ft_strdup(value);
 	new_var->next = NULL;
 	new_var->prev = NULL;
+	// tek basinysa başa ekle
 	if (!*vars)
 	{
 		*vars = new_var;
 		return;
 	}
+	// tek degilse sona ekle
 	temp = *vars;
 	while (temp->next)
 		temp = temp->next;

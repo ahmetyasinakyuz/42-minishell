@@ -12,33 +12,35 @@
 
 #include "../minishell.h"
 
-/**
- * Sözcük token'larını işler.
- * Bu fonksiyon, lexer analizi sonucu oluşturulan bir sözcük token'ını işler.
- * Eğer tek tırnak içinde değilse, içindeki değişken referanslarını bulur ve değerleri ile değiştirir.
- * 
- * @param current İşlenecek token
- * @param vars Değişken listesi
- */
+
 void	handle_word_token(t_lexer *current, t_vars **vars)
 {
 	char	*str;
 
 	str = current->str;
+	// Eğer token bir tek tırnak (') ile başlıyorsa, işleme devam etme
 	if (str[0] == '\'')
 		return ;
+	// eğer token içinde = varsa ve kendisinden önce bir token varsa
 	if (ft_strchr(str, '=') && current->prev)
 	{
 		t_lexer *start = current;
+		// Önceki token'ı kontrol et
+		// Eğer önceki token bir pipe olana kadar veya bitine kadar, başa git
 		while (start->prev && start->prev->token != PIPE)
 			start = start->prev;
-		
+		// Eğer kendsinden önceki token bir export değilse
+		// ve kendisinden önce bir token varsa
+		// içindeki dolar işareti varsa işle ve bitir
 		if (!start->str || ft_strncmp(start->str, "export", 7) != 0)
 		{
 			current->str = is_dolar(str, vars);
 			return;
 		}
 	}
+	// Eğer token içinde = varsa ve kendisinden önce bir token yoksa
+	// veya kendisinden önceki token export ise
+	// değişkeni bul ve işle
 	found_var(str, vars);
 	current->str = is_dolar(str, vars);
 }

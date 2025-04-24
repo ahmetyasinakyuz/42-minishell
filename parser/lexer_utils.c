@@ -12,16 +12,7 @@
 
 #include "../minishell.h"
 
-/**
- * Yeni bir token (sözcük birimi) oluşturur.
- * Bu fonksiyon, lexer analizi sırasında belirlenen bir metni
- * token yapısına dönüştürür. Token, komut satırı girişinin anlamlı bir parçasıdır.
- * 
- * @param str Token'ın içeriği olacak metin
- * @param token_type Token'ın türü (komut, argüman, pipe, yönlendirme, vs.)
- * @param index Token'ın orijinal komut satırındaki indeksi/konumu
- * @return Oluşturulan yeni token. Bellek yetersizliği durumunda NULL döner
- */
+// stuctin iceriklerini ayarlamak icin kullanilan fonksiyon
 t_lexer	*create_token(char *str, t_tokens token_type, int index)
 {
 	t_lexer	*new_token;
@@ -37,15 +28,7 @@ t_lexer	*create_token(char *str, t_tokens token_type, int index)
 	return (new_token);
 }
 
-/**
- * Token'ı mevcut listeye ekler.
- * Bu fonksiyon, oluşturulan bir token'ı çift yönlü bağlı listeye ekler.
- * Eğer liste boşsa, token ilk eleman olarak ayarlanır.
- * Liste doluysa, token listenin sonuna eklenir.
- * 
- * @param list Token'ın ekleneceği listenin referansı
- * @param new_token Listeye eklenecek yeni token
- */
+// yeni bir token olusturup listeye ekler
 void	add_token(t_lexer **list, t_lexer *new_token)
 {
 	t_lexer	*temp;
