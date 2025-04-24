@@ -29,9 +29,6 @@
 # include <fcntl.h>
 # include <errno.h>
 
-# define QUOTE_ERROR 1
-# define SUCCESS 0
-
 typedef enum e_tokens
 {
 	WORD,
