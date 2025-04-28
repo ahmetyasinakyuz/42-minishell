@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aysesudecami <aysesudecami@student.42.f    +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:59:20 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/28 14:36:01 by aysesudecam      ###   ########.fr       */
+/*   Updated: 2025/04/28 13:16:44 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,5 @@ void	echo_builtin(t_simple_cmds *cmd_list)
 	if (flag == 0)
 		printf("\n");
 	cmd_list->return_value = 0;
+
 }
