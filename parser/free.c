@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 06:35:43 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/28 13:31:09 by codespace        ###   ########.fr       */
+/*   Updated: 2025/04/28 14:13:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,23 @@ void	free_command_list(t_simple_cmds *list)
 	}
 }
 
-void	clear_vars(t_vars **vars)
+void clear_vars(t_vars **vars)
 {
-	t_vars	*temp;
-
-	while (*vars)
-	{
-		temp = *vars;
-		*vars = (*vars)->next;
-		free(temp->key);
-		free(temp->value);
-		free(temp);
-	}
+    t_vars *temp;
+    
+    if (!vars || !*vars)
+        return;
+        
+    while (*vars)
+    {
+        temp = *vars;
+        *vars = (*vars)->next;
+        if (temp->key)
+            free(temp->key);
+        if (temp->value)
+            free(temp->value);
+        free(temp);
+    }
+    
+    *vars = NULL;
 }

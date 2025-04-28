@@ -6,14 +6,14 @@
 #    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/04/28 13:55:18 by codespace        ###   ########.fr        #
+#    Updated: 2025/04/28 14:16:42 by codespace        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = cc
-C_FLAGS = 
+C_FLAGS = -Wall -Wextra -Werror
 
 SRCS =	libs/get_next_line/get_next_line.c  \
 		parser/flags.c                      \
