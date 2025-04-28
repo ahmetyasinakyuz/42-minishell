@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/28 13:23:15 by codespace        ###   ########.fr       */
+/*   Updated: 2025/04/28 14:08:43 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 	next->input_type = IO_PIPE_IN;
 }
 
-void execute(t_simple_cmds *cmd_list, char **envp)
+void execute(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list)
 {
 	t_simple_cmds *current_cmd;
 	t_simple_cmds *last_cmd;
@@ -62,7 +62,7 @@ void execute(t_simple_cmds *cmd_list, char **envp)
 		if (pids[i] == 0)
 		{
 			io_handle(current_cmd);
-			builtin_control(current_cmd, envp);
+			builtin_control(current_cmd, envp, token_list, pids);
 			exit(current_cmd->return_value);
 		}
 		if (current_cmd->output_type == IO_PIPE_OUT)

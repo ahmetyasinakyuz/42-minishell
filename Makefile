@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
+#    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/04/22 19:00:39 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/04/28 13:55:18 by codespace        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = cc
-C_FLAGS = -Wall -Wextra -Werror
+C_FLAGS = 
 
 SRCS =	libs/get_next_line/get_next_line.c  \
 		parser/flags.c                      \

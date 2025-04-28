@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/23 16:20:00 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/28 14:09:17 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,11 +146,11 @@ void			handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections);
 void			process_heredoc_input(int fd, char *delimiter);
 
 //--------------------------EXECUTE-----------------------------------
-void	execute(t_simple_cmds *cmd_list, char **envp);
-void	builtin_control(t_simple_cmds *cmd_list, char **envp);
-void	echo_builtin(t_simple_cmds *cmd_list);
+void	execute(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list);
+void	builtin_control(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids);
+void	echo_builtin(t_simple_cmds *cmd_list, t_lexer *token_list);
 char	*path_finder(char *cmd, char **envp);
-void	none_built_in(t_simple_cmds *cmd_list, char **envp);
+void	none_built_in(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list);
 void	free_paths(char **paths);
 void	io_handle(t_simple_cmds *cmd_list);
 #endif

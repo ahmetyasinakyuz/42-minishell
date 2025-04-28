@@ -6,13 +6,13 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:59:20 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/28 13:16:44 by codespace        ###   ########.fr       */
+/*   Updated: 2025/04/28 14:06:36 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	echo_builtin(t_simple_cmds *cmd_list)
+void	echo_builtin(t_simple_cmds *cmd_list, t_lexer *token_list)
 {
 	int	i;
 	int	flag;
@@ -38,5 +38,4 @@ void	echo_builtin(t_simple_cmds *cmd_list)
 	if (flag == 0)
 		printf("\n");
 	cmd_list->return_value = 0;
-
 }

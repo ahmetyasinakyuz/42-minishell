@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/28 13:23:15 by codespace        ###   ########.fr       */
+/*   Updated: 2025/04/28 14:06:36 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	**merge_cmd_and_flags(char **cmd, char **flags)
 }
 
 
-void none_built_in(t_simple_cmds *cmd_list, char **envp)
+void none_built_in(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list)
 {
 	char	*path;
 	char	**cmd;

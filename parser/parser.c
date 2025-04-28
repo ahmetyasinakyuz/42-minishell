@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/28 13:23:15 by codespace        ###   ########.fr       */
+/*   Updated: 2025/04/28 13:59:06 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char **envp)
 		current = current->next;
 	}
 	cmd_start = cmd_list;
-	execute(cmd_list, envp);
+	execute(cmd_list, envp, token_list);
 	while (cmd_list->pipe == 1)
 		cmd_list = cmd_list->next;
 	return_value = ft_itoa(cmd_list->return_value);
