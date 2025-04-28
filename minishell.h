@@ -140,7 +140,6 @@ void			handle_pipe_token(t_lexer **current, t_lexer **start,
 					t_simple_cmds **cmd_list);
 void			handle_last_token(t_lexer **start, t_lexer *end,
 					t_simple_cmds **cmd_list);
-char			*handle_non_alpha_dollar(char *result, int *i);
 void			add_static_var(t_vars **vars, char *key, char *value);
 char			*create_heredoc_file(char *delimiter);
 void			handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections);

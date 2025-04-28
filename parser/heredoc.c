@@ -88,12 +88,7 @@ char	*create_heredoc_file(char *delimiter)
 	return (filename);
 }
 
-/**
- * Komutun heredoc yönlendirmelerini işler.
- * 
- * @param cmd Heredoc'un işleneceği komut
- * @param redirections Yönlendirme listesi
- */
+
 void	handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections)
 {
 	t_lexer	*current;

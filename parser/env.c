@@ -12,13 +12,7 @@
 
 #include "../minishell.h"
 
-/**
- * Belirtilen anahtarın çevre değişkenleri listesinde olup olmadığını kontrol eder.
- * 
- * @param key Kontrol edilecek anahtar.
- * @param vars Çevre değişkenleri listesinin adresi.
- * @return Anahtar listede bulunuyorsa 1, bulunmuyorsa 0 döner.
- */
+//varsa 1 yoksa 0
 int	is_in_vars(char *key, t_vars **vars)
 {
 	t_vars	*temp;
@@ -35,13 +29,8 @@ int	is_in_vars(char *key, t_vars **vars)
 	return (0);
 }
 
-/**
- * Belirtilen anahtarın değerini çevre değişkenleri listesinden alır.
- * 
- * @param key İstenen değişkenin anahtarı.
- * @param vars Çevre değişkenleri listesinin adresi.
- * @return Değişkenin değeri veya bulunamazsa NULL.
- */
+// değişkeni bul
+// eğer varsa değerini döner
 char	*get_var(char *key, t_vars **vars)
 {
 	t_vars	*temp;
@@ -58,19 +47,12 @@ char	*get_var(char *key, t_vars **vars)
 	return (NULL);
 }
 
-/**
- * Belirtilen çevre değişkeninin değerini alır. Önce iç değişkenler listesini,
- * bulamazsa sistem çevre değişkenlerini kontrol eder.
- * 
- * @param env_var Değeri istenen çevre değişkeninin adı.
- * @param vars İç değişkenler listesinin adresi.
- * @return Değişkenin değerinin kopyası veya bulunamazsa boş string.
- */
 char	*get_env_value(char *env_var, t_vars **vars)
 {
 	char	*env_value;
 	char	*result;
 
+	// Eğer vars yoksa getenv ile al
 	if (is_in_vars(env_var, vars))
 	{
 		env_value = get_var(env_var, vars);
@@ -86,15 +68,7 @@ char	*get_env_value(char *env_var, t_vars **vars)
 	return (result);
 }
 
-/**
- * Çevre değişkeni yerleştirmesi için metinde parçaları birleştirir.
- * 
- * @param result Üzerinde işlem yapılacak orijinal metin.
- * @param i Değişken adının başladığı konum.
- * @param env_value Yerleştirilecek değişkenin değeri.
- * @param j Değişken adının uzunluğu.
- * @return Değişken değeri yerleştirilmiş yeni metin veya hata durumunda NULL.
- */
+
 char	*join_env_parts(char *result, int i, char *env_value, int j)
 {
 	char	*temp;
@@ -115,6 +89,8 @@ char	*join_env_parts(char *result, int i, char *env_value, int j)
 		free(result);
 		return (NULL);
 	}
+	// Sonucu birleştir
+	// Sonraki kısmı birleştir
 	temp = ft_strjoin(final_result, &result[i + j + 1]);
 	free(final_result);
 	free(result);
@@ -131,8 +107,7 @@ char	*replace_env_var(char *result, int i, t_vars **vars)
 	if (ft_isdigit(result[i + j]))
 		j++;
 	else
-		while (result[i + j] && (ft_isalnum(result[i + j]) || result[i
-					+ j] == '_' || result[i + j] == '?'))
+		while (result[i + j] && (ft_isalnum(result[i + j]) || result[i + j] == '_' || result[i + j] == '?'))
 			j++;
 	env_var = ft_substr(result, i + 1, j - 1);
 	env_value = get_env_value(env_var, vars);
@@ -182,12 +157,6 @@ void	add_static_var(t_vars **vars, char *key, char *value)
 	new_var->prev = temp;
 }
 
-/**
- * Checks if a string is in the format of a variable assignment (key=value)
- * 
- * @param str String to check
- * @return 1 if it's a variable assignment, 0 otherwise
- */
 int	is_var_assignment(char *str)
 {
 	int	i;

@@ -12,14 +12,6 @@
 
 #include "../minishell.h"
 
-/**
- * Komut yapısı için bayrak (flag) ayarlaması yapar.
- * 
- * @param cmd Bayrakların ekleneceği komut yapısı.
- * @param start İşlenecek lexer listesinin başlangıç noktası.
- * @param end İşlenecek lexer listesinin bitiş noktası.
- * @return Bayrağı düzenlenmiş komut yapısı veya bellek hatası durumunda NULL.
- */
 t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd, t_lexer *start,
 		t_lexer *end)
 {
@@ -28,7 +20,6 @@ t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd, t_lexer *start,
 	handle_redirections(cmd, &start);
 	if (cmd->redirections)
 		handle_heredoc(cmd, cmd->redirections);
-	
 	flag_count = count_flags(start, end);
 	if (flag_count > 0)
 	{
@@ -43,13 +34,6 @@ t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd, t_lexer *start,
 	return (cmd);
 }
 
-/**
- * Counts the total number of tokens between start and end.
- * 
- * @param start Beginning of the token range
- * @param end End of the token range
- * @return Number of tokens found
- */
 int	count_content(t_lexer *start, t_lexer *end)
 {
 	int		count;
@@ -65,13 +49,7 @@ int	count_content(t_lexer *start, t_lexer *end)
 	return (count);
 }
 
-/**
- * Fills the content array with all tokens in order.
- * 
- * @param cmd Command structure to fill
- * @param start Beginning of the token range
- * @param end End of the token range
- */
+
 void	fill_content(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 {
 	int		i;
@@ -89,13 +67,6 @@ void	fill_content(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 	cmd->content[i] = NULL;
 }
 
-/**
- * Verilen lexer düğümleri arasından yeni bir komut yapısı oluşturur.
- * 
- * @param start İşlenecek lexer listesinin başlangıç noktası.
- * @param end İşlenecek lexer listesinin bitiş noktası.
- * @return Oluşturulan komut yapısı veya hata durumunda NULL.
- */
 t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 {
 	t_simple_cmds	*cmd;
@@ -138,12 +109,6 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 	return (cmd);
 }
 
-/**
- * Yeni bir komutu mevcut komut listesine ekler.
- * 
- * @param cmd_list Komut listesinin adresi.
- * @param new_cmd Listeye eklenecek yeni komut.
- */
 void	add_command(t_simple_cmds **cmd_list, t_simple_cmds *new_cmd)
 {
 	t_simple_cmds	*temp;

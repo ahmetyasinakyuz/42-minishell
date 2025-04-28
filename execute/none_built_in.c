@@ -12,6 +12,56 @@
 
 #include "../minishell.h"
 
+#include "../minishell.h"
+
+void i_handle(t_simple_cmds *cmd_list)
+{
+	if (cmd_list->input_type == IO_PIPE_IN)
+	{
+
+	}
+	else if (cmd_list->input_type == IO_FILE_IN)
+	{
+
+	}
+	else if (cmd_list->input_type == IO_HEREDOC)
+	{
+
+	}
+	else if (cmd_list->input_type == IO_APPEND)
+	{
+
+	}
+}
+
+void o_handle(t_simple_cmds *cmd_list)
+{
+	if (cmd_list->output_type == IO_PIPE_OUT)
+	{
+
+	}
+	else if (cmd_list->output_type == IO_FILE_OUT)
+	{
+
+	}
+	else if (cmd_list->output_type == IO_HEREDOC)
+	{
+
+	}
+	else if (cmd_list->output_type == IO_APPEND)
+	{
+
+	}
+}
+
+void	io_handle(t_simple_cmds *cmd_list)
+{
+	i_handle(cmd_list);
+	o_handle(cmd_list);
+
+}
+
+
 char	**merge_cmd_and_flags(char **cmd, char **flags)
 {
 	int		i;
@@ -43,6 +93,7 @@ char	**merge_cmd_and_flags(char **cmd, char **flags)
 	merged[i] = NULL;
 	return (merged);
 }
+
 
 void none_built_in(t_simple_cmds *cmd_list, char **envp)
 {
@@ -86,6 +137,7 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 	pid_t pid = fork();
 	if (pid == 0)
 	{
+		handle_io(cmd_list);
 		execve(path, cmd, envp);
 		perror("execve");
 		exit(EXIT_FAILURE);
@@ -102,17 +154,14 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 		if (WIFEXITED(status))
 		{
 			cmd_list->return_value = WEXITSTATUS(status);
-			printf("Child process exited with status: %d\n", cmd_list->return_value);
 		}
 		else if (WIFSIGNALED(status))
 		{
 			cmd_list->return_value = 128 + WTERMSIG(status);
-			printf("Child process exited by signal: %d (return_value: %d)\n", WTERMSIG(status), cmd_list->return_value);
 		}
 	}
 	if (should_free_path)
 		free(path);
 	if (merged_alloc)
 		free(cmd);
-	printf("Child process exited with status: %d\n", cmd_list->return_value);
 }

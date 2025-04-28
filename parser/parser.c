@@ -13,13 +13,6 @@
 #include "../minishell.h"
 #include <fcntl.h>
 
-/**
- * G/Ç (I/O) tipini insan tarafından okunabilir biçimde yazdırır.
- * Bu fonksiyon, debugging amaçlı olarak kullanılır ve
- * belirtilen G/Ç tipini konsola yazdırır.
- * 
- * @param type Yazdırılacak olan G/Ç tipi enum değeri
- */
 void	print_io_type(t_io_type type)
 {
 	if (type == IO_STDIN)
@@ -40,11 +33,6 @@ void	print_io_type(t_io_type type)
 		printf("IO_APPEND");
 }
 
-/**
- * Heredoc dosyasının içeriğini okur ve ekrana yazdırır.
- * 
- * @param filename Okunacak heredoc dosyasının adı
- */
 void	print_heredoc_content(char *filename)
 {
 	int		fd;
@@ -68,14 +56,6 @@ void	print_heredoc_content(char *filename)
 	close(fd);
 }
 
-/**
- * Komut listesinin detaylarını konsola yazdırır.
- * Bu fonksiyon, debugging amaçlı olarak kullanılır ve
- * komut listesindeki her komutun ayrıntılarını (pipe durumu, G/Ç yönlendirmeleri,
- * komut dizileri, bayraklar ve yönlendirmeler) konsola yazdırır.
- * 
- * @param cmd_list Yazdırılacak komut listesi
- */
 void	print_cmd_list(t_simple_cmds *cmd_list)
 {
 	t_simple_cmds	*current_cmd;
@@ -144,8 +124,8 @@ static char	*process_dollar(char *result, int *i, t_vars **vars)
 	if (result[*i + 1] && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_' || 
 		(ft_isdigit(result[*i + 1]) && result[*i + 1] != ' ') || result[*i + 1] == '?'))
 	{
-		//BURADA KALDIN NEDEN -1 VE REPLACE E BAK
 		result = replace_env_var(result, *i, vars);
+		// stringin en basşına dönmesi için
 		*i = -1;
 	}
 	else

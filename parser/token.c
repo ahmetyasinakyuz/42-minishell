@@ -68,13 +68,14 @@ void	process_token_char(char *token, char *input, int *i, int *j)
 		if (input[*i] == '|' && !in_squote && !in_dquote)
 			if (handle_pipe_char(token, input, i, j))
 				break;
-		// heredoc karakteri varsa ve tirnak icinde degilse
-		// ve tokenin icinde hicbir karakter yoksa
-		// dosya yonlendirme karakterini ekle ve break yap
-		if (input[*i] == '<' && input[*i+1] == '<' && !in_squote && !in_dquote && *j == 0)
+		// heredoc ve yönlendirme karakterlerini boşluk olmadan algıla
+		if ((input[*i] == '<' || input[*i] == '>') && !in_squote && !in_dquote)
 		{
+			if (*j > 0)
+				break;
 			token[(*j)++] = input[(*i)++];
-			token[(*j)++] = input[(*i)++];
+			if (input[*i] == '<' || input[*i] == '>')
+				token[(*j)++] = input[(*i)++];
 			break;
 		}
 		// *j > 0 olmasinin sebebi, eger tokenin icinde hicbir karakter yoksa
