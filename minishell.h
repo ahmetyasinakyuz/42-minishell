@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/28 14:17:38 by codespace        ###   ########.fr       */
+/*   Updated: 2025/04/28 14:50:12 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,4 +153,5 @@ char	*path_finder(char *cmd, char **envp);
 void	none_built_in(t_simple_cmds *cmd_list, char **envp);
 void	free_paths(char **paths);
 void	io_handle(t_simple_cmds *cmd_list);
+void	env_builtin(char **envp);
 #endif
