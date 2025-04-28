@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aysesudecami <aysesudecami@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:59:20 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/23 12:31:19 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/04/28 14:36:01 by aysesudecam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	echo_builtin(t_simple_cmds *cmd_list)
 
 	i = 1;
 	flag = 0;
-	if (cmd_list->content && cmd_list->content[1] && 
+	if (cmd_list->content && cmd_list->content[1] &&
 		cmd_list->content[1][0] == '-' && cmd_list->content[1][1] == 'n')
 	{
 		flag = 1;
