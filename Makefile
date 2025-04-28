@@ -35,6 +35,7 @@ SRCS =	libs/get_next_line/get_next_line.c  \
 		execute/execute.c                   \
 		execute/path_finder.c               \
 		execute/echo_builtin.c              \
+		execute/io_handle.c                 \
 		main.c                              \
 		signal_handler.c                    \
 

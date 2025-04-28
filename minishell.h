@@ -74,16 +74,16 @@ typedef struct s_simple_cmds
 	char					**content;
 	char					**str;
 	char					**flag;
-	int						num_redirections;
+	char					**env;
 	char					*hd_file_name;
+	int						num_redirections;
 	int						pipe;
-	t_lexer					*redirections;
-	t_io_type				input_type;
-	t_io_type				output_type;
 	int						return_value;
 	int						input_fd;
 	int						output_fd;
-	char					**env;
+	t_lexer					*redirections;
+	t_io_type				input_type;
+	t_io_type				output_type;
 	struct s_simple_cmds	*next;
 	struct s_simple_cmds	*prev;
 }						t_simple_cmds;
@@ -152,5 +152,5 @@ void	echo_builtin(t_simple_cmds *cmd_list);
 char	*path_finder(char *cmd, char **envp);
 void	none_built_in(t_simple_cmds *cmd_list, char **envp);
 void	free_paths(char **paths);
-
+void	io_handle(t_simple_cmds *cmd_list);
 #endif

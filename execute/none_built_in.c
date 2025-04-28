@@ -12,56 +12,6 @@
 
 #include "../minishell.h"
 
-#include "../minishell.h"
-
-void i_handle(t_simple_cmds *cmd_list)
-{
-	if (cmd_list->input_type == IO_PIPE_IN)
-	{
-
-	}
-	else if (cmd_list->input_type == IO_FILE_IN)
-	{
-
-	}
-	else if (cmd_list->input_type == IO_HEREDOC)
-	{
-
-	}
-	else if (cmd_list->input_type == IO_APPEND)
-	{
-
-	}
-}
-
-void o_handle(t_simple_cmds *cmd_list)
-{
-	if (cmd_list->output_type == IO_PIPE_OUT)
-	{
-
-	}
-	else if (cmd_list->output_type == IO_FILE_OUT)
-	{
-
-	}
-	else if (cmd_list->output_type == IO_HEREDOC)
-	{
-
-	}
-	else if (cmd_list->output_type == IO_APPEND)
-	{
-
-	}
-}
-
-void	io_handle(t_simple_cmds *cmd_list)
-{
-	i_handle(cmd_list);
-	o_handle(cmd_list);
-
-}
-
-
 char	**merge_cmd_and_flags(char **cmd, char **flags)
 {
 	int		i;
@@ -137,7 +87,7 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 	pid_t pid = fork();
 	if (pid == 0)
 	{
-		handle_io(cmd_list);
+		io_handle(cmd_list);
 		execve(path, cmd, envp);
 		perror("execve");
 		exit(EXIT_FAILURE);
