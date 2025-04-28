@@ -3,6 +3,8 @@
         "get_next_line.h": "c",
         "unistd.h": "c",
         "fcntl.h": "c",
-        "minishell.h": "c"
+        "minishell.h": "c",
+        "*.tcc": "c",
+        "fstream": "c"
     }
 }

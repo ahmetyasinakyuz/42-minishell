@@ -35,6 +35,7 @@ void builtin_control(t_simple_cmds *cmd_list, char **envp)
 	// 	&& !(*current_cmd->flag))
 	// 	//exit_builtin(current_cmd);
 	// // none_built_in(current_cmd);
+	
 	else
 		none_built_in(current_cmd, envp);
 }
