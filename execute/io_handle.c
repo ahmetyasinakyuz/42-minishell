@@ -6,7 +6,7 @@
 /*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/30 17:11:16 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/04/30 17:38:04 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,10 @@
 
 void i_handle(t_simple_cmds *cmd_list)
 {
+	t_lexer *current;
+
 	if (cmd_list->input_type == IO_PIPE_IN)
 	{
-		dup2(cmd_list->input_fd, STDIN_FILENO);
-	}
-	else if (cmd_list->input_type == IO_FILE_IN)
-	{
-		if (cmd_list->input_fd <= 0)
-		{
-			if (access(cmd_list->redirections->next->str, F_OK) != 0)
-			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(cmd_list->redirections->next->str, 2);
-				ft_putstr_fd(": No such file or directory\n", 2);
-				exit(1);
-			}
-			cmd_list->input_fd = open(cmd_list->redirections->next->str, O_RDONLY);
-			if (cmd_list->input_fd < 0)
-			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(cmd_list->redirections->next->str, 2);
-				ft_putstr_fd(": Permission denied\n", 2);
-				exit(1);
-			}
-		}
 		dup2(cmd_list->input_fd, STDIN_FILENO);
 	}
 	else if (cmd_list->input_type == IO_HEREDOC)
@@ -53,66 +33,94 @@ void i_handle(t_simple_cmds *cmd_list)
 			dup2(cmd_list->input_fd, STDIN_FILENO);
 		}
 	}
+
+	// Tüm yönlendirmeleri tarayıp input yönlendirmelerini işle
+	current = cmd_list->redirections;
+	while (current && current->next)
+	{
+		if (current->token == REDIRECT_IN)
+		{
+			if (access(current->next->str, F_OK) != 0)
+			{
+				ft_putstr_fd("minishell: ", 2);
+				ft_putstr_fd(current->next->str, 2);
+				ft_putstr_fd(": No such file or directory\n", 2);
+				exit(1);
+			}
+			cmd_list->input_fd = open(current->next->str, O_RDONLY);
+			if (cmd_list->input_fd < 0)
+			{
+				ft_putstr_fd("minishell: ", 2);
+				ft_putstr_fd(current->next->str, 2);
+				ft_putstr_fd(": Permission denied\n", 2);
+				exit(1);
+			}
+			dup2(cmd_list->input_fd, STDIN_FILENO);
+		}
+		if (current->next->next)
+			current = current->next->next;
+		else
+			break;
+	}
 }
 
 void o_handle(t_simple_cmds *cmd_list)
 {
+	t_lexer *current;
+
 	if (cmd_list->output_type == IO_PIPE_OUT)
 	{
 		dup2(cmd_list->output_fd, STDOUT_FILENO);
 	}
-	else if (cmd_list->output_type == IO_FILE_OUT)
+
+	// Tüm yönlendirmeleri tarayıp output yönlendirmelerini işle
+	current = cmd_list->redirections;
+	while (current && current->next)
 	{
-		if (cmd_list->output_fd <= 0)
+		if (current->token == REDIRECT_OUT)
 		{
-			cmd_list->output_fd = open(cmd_list->redirections->next->str,
+			cmd_list->output_fd = open(current->next->str,
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (cmd_list->output_fd < 0)
 			{
 				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(cmd_list->redirections->next->str, 2);
+				ft_putstr_fd(current->next->str, 2);
 				ft_putstr_fd(": Permission denied\n", 2);
 				exit(1);
 			}
+			dup2(cmd_list->output_fd, STDOUT_FILENO);
 		}
-		dup2(cmd_list->output_fd, STDOUT_FILENO);
-	}
-	else if (cmd_list->output_type == IO_APPEND)
-	{
-		if (cmd_list->output_fd <= 0)
+		else if (current->token == REDIRECT_APPEND)
 		{
-			cmd_list->output_fd = open(cmd_list->redirections->next->str,
+			// Dizini oluştur (eğer yoksa)
+			char *last_slash = ft_strrchr(current->next->str, '/');
+			if (last_slash && last_slash != current->next->str)
+			{
+				char *dir_path = ft_substr(current->next->str, 0, last_slash - current->next->str);
+				mkdir(dir_path, 0755);
+				free(dir_path);
+			}
+
+			cmd_list->output_fd = open(current->next->str,
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (cmd_list->output_fd < 0)
 			{
 				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(cmd_list->redirections->next->str, 2);
+				ft_putstr_fd(current->next->str, 2);
 				ft_putstr_fd(": Permission denied\n", 2);
 				exit(1);
 			}
+			dup2(cmd_list->output_fd, STDOUT_FILENO);
 		}
-		dup2(cmd_list->output_fd, STDOUT_FILENO);
-	}
-	else if (cmd_list->input_type == IO_APPEND)
-	{
-		if (cmd_list->output_fd <= 0)
-		{
-			cmd_list->output_fd = open(cmd_list->redirections->next->str,
-				O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (cmd_list->output_fd < 0)
-			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(cmd_list->redirections->next->str, 2);
-				ft_putstr_fd(": Permission denied\n", 2);
-				exit(1);
-			}
-		}
-		dup2(cmd_list->output_fd, STDOUT_FILENO);
+		if (current->next->next)
+			current = current->next->next;
+		else
+			break;
 	}
 }
 
 void	io_handle(t_simple_cmds *cmd_list)
 {
-	i_handle(cmd_list);
 	o_handle(cmd_list);
+	i_handle(cmd_list);
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
+#    By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/04/28 14:49:45 by codespace        ###   ########.fr        #
+#    Updated: 2025/04/30 17:12:48 by akyuz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,8 +37,8 @@ SRCS =	libs/get_next_line/get_next_line.c  \
 		execute/echo_builtin.c              \
 		execute/env_builtin.c               \
 		execute/io_handle.c                 \
-		main.c                              \
 		signal_handler.c                    \
+		main.c                              \
 
 OBJ =$(SRCS:.c=.o)
 
