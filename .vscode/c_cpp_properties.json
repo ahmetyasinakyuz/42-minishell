@@ -1,0 +1,23 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/akyuz/driverless/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/akyuz/driverless/src/ytu-racing-motion-planing/odometry/include/**",
+        "/home/akyuz/ytu_racing_driverless_simulator/src/velodyne_points/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

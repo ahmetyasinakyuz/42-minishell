@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/24 23:34:53 by akyuz             #+#    #+#             */
-/*   Updated: 2025/04/22 14:08:51 by aakyuz           ###   ########.fr       */
+/*   Created: 2025/02/24 23:34:53 by akyuz             #+#                */
+/*   Updated: 2025/04/30 17:05:57 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,19 @@ int	count_content(t_lexer *start, t_lexer *end)
 	current = start;
 	while (current != end && current)
 	{
-		count++;
+		// Eğer token bir yönlendirme ise, hem kendisini hem de bir sonraki token'ı atla
+		if (is_redirection(current->token) && current->next)
+		{
+			current = current->next;
+		}
+		else
+		{
+			count++;
+		}
 		current = current->next;
 	}
 	return (count);
 }
-
 
 void	fill_content(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 {
@@ -60,8 +67,16 @@ void	fill_content(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 	current = start;
 	while (current != end && current)
 	{
-		unquoted = remove_quotes(ft_strdup(current->str));
-		cmd->content[i++] = unquoted;
+		// Eğer token bir yönlendirme ise, hem kendisini hem de bir sonraki token'ı atla
+		if (is_redirection(current->token) && current->next)
+		{
+			current = current->next;
+		}
+		else
+		{
+			unquoted = remove_quotes(ft_strdup(current->str));
+			cmd->content[i++] = unquoted;
+		}
 		current = current->next;
 	}
 	cmd->content[i] = NULL;

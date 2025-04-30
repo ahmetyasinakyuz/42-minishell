@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_control.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/28 14:53:25 by codespace        ###   ########.fr       */
+/*   Updated: 2025/04/30 17:00:19 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void builtin_control(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, 
 	current_cmd = cmd_list;
 	if(ft_strncmp("echo", *current_cmd->str, 5) == 0)
 		echo_builtin(current_cmd);
-	if(ft_strncmp("env", *current_cmd->str, 4) == 0)
+	else if(ft_strncmp("env", *current_cmd->str, 4) == 0)
 	{
 		env_builtin(envp);
 	}

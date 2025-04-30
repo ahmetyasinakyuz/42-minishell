@@ -12,5 +12,13 @@
         "plaintext": false,
         "markdown": false,
         "scminput": false
-    }
+    },
+    "python.autoComplete.extraPaths": [
+        "/home/akyuz/driverless/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/akyuz/driverless/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ]
 }
