@@ -6,7 +6,7 @@
 /*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/30 17:38:04 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/04/30 19:18:40 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,15 +92,6 @@ void o_handle(t_simple_cmds *cmd_list)
 		}
 		else if (current->token == REDIRECT_APPEND)
 		{
-			// Dizini oluştur (eğer yoksa)
-			char *last_slash = ft_strrchr(current->next->str, '/');
-			if (last_slash && last_slash != current->next->str)
-			{
-				char *dir_path = ft_substr(current->next->str, 0, last_slash - current->next->str);
-				mkdir(dir_path, 0755);
-				free(dir_path);
-			}
-
 			cmd_list->output_fd = open(current->next->str,
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (cmd_list->output_fd < 0)
