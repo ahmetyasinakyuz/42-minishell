@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_builtin.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/01 14:40:27 by codespace         #+#    #+#             */
+/*   Updated: 2025/05/01 14:40:28 by codespace        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	**new_env_maker(char ***envp, int extra)
@@ -49,9 +61,9 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 
 	if (cmd_list->flag)
 	{
-		printf("This command only works without the flag.");
+		printf("This command only works without the flag.\n");
 		cmd_list->return_value = 1;
-		exit(0);
+		return;
 	}
 
 	while (cmd_list->str[j])
@@ -80,8 +92,6 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 		exit(1);
 	}
 
-	printf("1\n");
-
 	j = 1;
 
 	while (cmd_list->str[j])
@@ -91,7 +101,6 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 		len++;
 	}
 
-	printf("2\n");
 	(*envp)[len] = NULL;
 	i = 0;
 
@@ -100,8 +109,6 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 		printf("%s\n", (*envp)[i]);
 		i++;
 	}
-
-	printf("4\n");
 
 	cmd_list->return_value = 0;
 }

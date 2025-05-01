@@ -6,7 +6,7 @@
 #    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/01 14:14:09 by codespace        ###   ########.fr        #
+#    Updated: 2025/05/01 14:55:23 by codespace        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,7 @@ SRCS =	libs/get_next_line/get_next_line.c  \
 		execute/echo_builtin.c              \
 		execute/env_builtin.c               \
 		execute/export_builtin.c            \
+		execute/unset_builtin.c             \
 		execute/io_handle.c                 \
 		signal_handler.c                    \
 		main.c                              \

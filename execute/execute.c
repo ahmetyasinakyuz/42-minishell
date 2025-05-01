@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/01 14:10:40 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/01 14:54:40 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		{
 			export_builtin(current_cmd, envp);
 		}
+		else if(ft_strncmp("unset", *current_cmd->str, 6) == 0)
+			unset_builtin(current_cmd, envp);
 		else
 		{
 			if (current_cmd->next)
