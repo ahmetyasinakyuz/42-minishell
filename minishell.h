@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/01 14:05:33 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/01 13:12:35 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,13 +91,13 @@ typedef struct s_simple_cmds
 extern volatile sig_atomic_t	g_received_signal;
 
 //--------------------------ANA KISIM--------------------------------
-void	run_shell(t_vars **vars, char **envp);
+void	run_shell(t_vars **vars, char ***envp);
 void	setup_signals(void);
 void	reset_signal_handling(void);
 void	handle_sigint(int signum);
 
 //--------------------------PARSER-----------------------------------
-void			parser(char *input, t_vars **vars, char **envp);
+void			parser(char *input, t_vars **vars, char ***envp);
 t_lexer			*lexer(char *input);
 t_lexer			*create_token(char *str, t_tokens token_type, int index);
 void			add_token(t_lexer **list, t_lexer *new_token);
@@ -111,7 +111,7 @@ t_simple_cmds	*setup_command_str(t_simple_cmds *cmd, t_lexer *start,
 t_simple_cmds	*setup_command_content(t_simple_cmds *cmd, t_lexer *start,
 				t_lexer *end);
 void			add_command(t_simple_cmds **cmd_list, t_simple_cmds *new_cmd);
-void			parse_commands(t_lexer *token_list, t_vars **vars, char **envp);
+void			parse_commands(t_lexer *token_list, t_vars **vars, char ***envp);
 void			free_command_list(t_simple_cmds *list);
 void			handle_redirections(t_simple_cmds *cmd, t_lexer **token_list);
 void			add_redirection(t_lexer **redirection_list, t_lexer *token);
@@ -161,13 +161,13 @@ void			free_str_array(char **arr);
 void			free_command_content(t_simple_cmds *cmd);
 
 //--------------------------EXECUTE-----------------------------------
-void	execute(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, t_vars **vars);
-void	builtin_control(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars);
+void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars);
+void	builtin_control(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, pid_t *pids, t_vars **vars);
 void	echo_builtin(t_simple_cmds *cmd_list);
 char	*path_finder(char *cmd, char **envp);
-void	none_built_in(t_simple_cmds *cmd_list, char **envp);
+void	none_built_in(t_simple_cmds *cmd_list, char ***envp);
 void	free_paths(char **paths);
 void	io_handle(t_simple_cmds *cmd_list);
-void	env_builtin(t_simple_cmds *cmd_list, char **envp);
-void	export_builtin(t_simple_cmds *cmd_list, char **envp);
+void	env_builtin(t_simple_cmds *cmd_list, char ***envp);
+void	export_builtin(t_simple_cmds *cmd_list, char ***envp);
 #endif

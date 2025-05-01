@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/01 13:45:39 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/01 14:09:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	handle_current_token(t_lexer **current, t_lexer **start,
 		handle_last_token(start, (*current)->next, cmd_list);
 }
 
-void	parse_commands(t_lexer *token_list, t_vars **vars, char **envp)
+void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)
 {
 	t_simple_cmds	*cmd_list;
 	t_simple_cmds	*cmd_start;
@@ -184,7 +184,7 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char **envp)
 	free_command_list(cmd_start);
 }
 
-void	parser(char *input, t_vars **vars, char **envp)
+void	parser(char *input, t_vars **vars, char ***envp)
 {
 	t_lexer	*token_list;
 

@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/01 14:03:09 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/01 13:29:01 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char **g_local_envp;
-
-void	run_shell(t_vars **vars, char **envp)
+void	run_shell(t_vars **vars, char ***envp)
 {
 	char	*input;
 
@@ -66,12 +64,13 @@ char **env_maker(char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_vars	*vars;
+	char **local_envp;
 
-	g_local_envp = env_maker(envp);
+	local_envp = env_maker(envp);
 	vars = NULL;
 	(void)argv;
 	if (argc == 1)
-		run_shell(&vars, g_local_envp);
+		run_shell(&vars, &local_envp);
 	else
 		printf("Usage: ./minishell\n");
 	return (0);

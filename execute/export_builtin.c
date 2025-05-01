@@ -1,8 +1,6 @@
-
 #include "../minishell.h"
 
-char	**new_env_maker(char **envp, int extra)
-
+char	**new_env_maker(char ***envp, int extra)
 {
 	char **new;
 	int len;
@@ -13,21 +11,23 @@ char	**new_env_maker(char **envp, int extra)
 
 	len = 0;
 
-	while (envp && envp[len])
+	while (envp && (*envp)[len])
 		len++;
 
-	new = (char **)malloc(sizeof(char *) * (len + extra + 1));
+	new = malloc(sizeof(char *) * (len + extra + 1));
 
 	if (!new)
 		return (NULL);
 	i = 0;
 
+	// Duplicate existing env strings
 	while (i < len)
 	{
-		new[i] = envp[i];
+		new[i] = ft_strdup((*envp)[i]);
 		i++;
 	}
 
+	// Initialize extra slots
 	while (i < len + extra)
 	{
 		new[i] = NULL;
@@ -38,7 +38,7 @@ char	**new_env_maker(char **envp, int extra)
 	return (new);
 }
 
-void	export_builtin(t_simple_cmds *cmd_list, char **envp)
+void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 {
 	int i;
 	int j;
@@ -59,22 +59,22 @@ void	export_builtin(t_simple_cmds *cmd_list, char **envp)
 
 	len = 0;
 
-	while (envp && envp[len])
+	while ((*envp) && (*envp)[len])
 		len++;
 
-	envp = new_env_maker(envp, j);
+	*envp = new_env_maker(envp, j);
 
 	// printf("YENİ ENVP:");
 	// i = 0;
-	// while (envp[i])
+	// while (*envp[i])
 	//{
-	// printf("%s\n", envp[i]);
+	// printf("%s\n", *envp[i]);
 	// i++;
 	//}
 
 	printf("YENİ ENV OLUŞTURULDU\n");
 
-	if (!envp)
+	if (!(*envp))
 	{
 		perror("malloc");
 		exit(1);
@@ -86,18 +86,18 @@ void	export_builtin(t_simple_cmds *cmd_list, char **envp)
 
 	while (cmd_list->str[j])
 	{
-		envp[len] = cmd_list->str[j];
+		(*envp)[len] = ft_strdup(cmd_list->str[j]);
 		j++;
 		len++;
 	}
 
 	printf("2\n");
-	envp[len] = NULL;
+	(*envp)[len] = NULL;
 	i = 0;
 
-	while (envp[i])
+	while ((*envp)[i])
 	{
-		printf("%s\n", envp[i]);
+		printf("%s\n", (*envp)[i]);
 		i++;
 	}
 

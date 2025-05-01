@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/28 14:17:49 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/01 13:13:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	**merge_cmd_and_flags(char **cmd, char **flags)
 }
 
 
-void none_built_in(t_simple_cmds *cmd_list, char **envp)
+void none_built_in(t_simple_cmds *cmd_list, char ***envp)
 {
 	char	*path;
 	char	**cmd;
@@ -63,7 +63,7 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 	}
 	else
 	{
-		path = path_finder(cmd_list->str[0], envp);
+		path = path_finder(cmd_list->str[0], *envp);
 	}
 	if (path == NULL)
 	{
@@ -79,7 +79,7 @@ void none_built_in(t_simple_cmds *cmd_list, char **envp)
 	{
 		cmd = merge_cmd_and_flags(cmd_list->str, cmd_list->flag);
 	}
-	execve(path, cmd, envp);
+	execve(path, cmd, *envp);
 	perror("execve");
 	exit(EXIT_FAILURE);
 }

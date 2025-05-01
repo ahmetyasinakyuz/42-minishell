@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_control.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/01 14:02:54 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/01 13:42:05 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void builtin_control(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars)
+void builtin_control(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, pid_t *pids, t_vars **vars)
 {
 	t_simple_cmds	*current_cmd;
 
@@ -26,8 +26,8 @@ void builtin_control(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, 
 	// if(ft_strncmp("pwd", *current_cmd->str, 4) == 0
 	// 	&& !(*current_cmd->flag))
 	// 	//pwd_builtin(current_cmd);
-	if(ft_strncmp("export", *current_cmd->str, 7) == 0)
-		export_builtin(current_cmd, envp);
+	//if(ft_strncmp("export", *current_cmd->str, 7) == 0)
+	//	export_builtin(current_cmd, envp);
 	// if(ft_strncmp("unset", *current_cmd->str, 6) == 0
 	// 	&& !(*current_cmd->flag))
 	// 	//unset_builtin(current_cmd);

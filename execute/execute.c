@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/01 13:41:01 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/01 14:10:40 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 	next->input_type = IO_PIPE_IN;
 }
 
-void execute(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, t_vars **vars)
+void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars)
 {
 	t_simple_cmds *current_cmd;
 	t_simple_cmds *last_cmd;
@@ -38,7 +38,8 @@ void execute(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, t_vars *
 	current_cmd = cmd_list;
 	while (current_cmd)
 	{
-		cmd_count++;
+		if (ft_strncmp("export", *current_cmd->str, 7) != 0)
+			cmd_count++;
 		current_cmd = current_cmd->next;
 	}
 	pids = malloc(sizeof(pid_t) * cmd_count);
@@ -51,27 +52,34 @@ void execute(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, t_vars *
 	i = 0;
 	while (current_cmd)
 	{
-		if (current_cmd->next)
-			handle_pipe(current_cmd, current_cmd->next);
-		pids[i] = fork();
-		if (pids[i] == -1)
+		if (ft_strncmp("export", *current_cmd->str, 7) == 0)
 		{
-			perror("fork");
-			exit(1);
+			export_builtin(current_cmd, envp);
 		}
-		if (pids[i] == 0)
+		else
 		{
-			io_handle(current_cmd);
-			builtin_control(current_cmd, envp, token_list, pids, vars);
-			exit(current_cmd->return_value);
+			if (current_cmd->next)
+				handle_pipe(current_cmd, current_cmd->next);
+			pids[i] = fork();
+			if (pids[i] == -1)
+			{
+				perror("fork");
+				exit(1);
+			}
+			if (pids[i] == 0)
+			{
+				io_handle(current_cmd);
+				builtin_control(current_cmd, envp, token_list, pids, vars);
+				exit(current_cmd->return_value);
+			}
+			if (current_cmd->output_type == IO_PIPE_OUT)
+				close(current_cmd->output_fd);
+			if (current_cmd->input_type == IO_PIPE_IN)
+				close(current_cmd->input_fd);
+			i++;
 		}
-		if (current_cmd->output_type == IO_PIPE_OUT)
-			close(current_cmd->output_fd);
-		if (current_cmd->input_type == IO_PIPE_IN)
-			close(current_cmd->input_fd);
 		last_cmd = current_cmd;
 		current_cmd = current_cmd->next;
-		i++;
 	}
 
 	int status;
