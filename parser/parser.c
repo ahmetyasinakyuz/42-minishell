@@ -6,7 +6,7 @@
 /*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/01 12:10:14 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/01 13:45:39 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char **envp)
 		cmd_list = cmd_list->next;
 	return_value = ft_itoa(cmd_list->return_value);
 	add_static_var(vars, "?", return_value);
+	//print_cmd_list(cmd_start);
 	free(return_value);
 	free_command_list(cmd_start);
 }

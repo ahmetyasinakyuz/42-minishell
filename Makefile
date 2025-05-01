@@ -6,7 +6,7 @@
 #    By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/04/30 17:12:48 by akyuz            ###   ########.fr        #
+#    Updated: 2025/05/01 13:30:19 by akyuz            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,9 @@ C_FLAGS = -Wall -Wextra -Werror
 SRCS =	libs/get_next_line/get_next_line.c  \
 		parser/flags.c                      \
 		parser/command.c                    \
+		parser/command_ultis.c              \
 		parser/token.c                      \
+		parser/token_ultis.c                \
 		parser/redirections.c               \
 		parser/quotes.c                     \
 		parser/parser_utils.c               \
@@ -26,6 +28,7 @@ SRCS =	libs/get_next_line/get_next_line.c  \
 		parser/lexer.c                      \
 		parser/lexer_utils.c                \
 		parser/env.c                        \
+		parser/env_ultis.c                  \
 		parser/var.c                        \
 		parser/free.c                       \
 		parser/handle.c                     \
@@ -36,6 +39,7 @@ SRCS =	libs/get_next_line/get_next_line.c  \
 		execute/path_finder.c               \
 		execute/echo_builtin.c              \
 		execute/env_builtin.c               \
+		execute/export_builtin.c            \
 		execute/io_handle.c                 \
 		signal_handler.c                    \
 		main.c                              \

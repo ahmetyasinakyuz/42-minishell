@@ -6,7 +6,7 @@
 /*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/30 17:00:19 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/01 14:02:54 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,13 @@ void builtin_control(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, 
 		echo_builtin(current_cmd);
 	else if(ft_strncmp("env", *current_cmd->str, 4) == 0)
 	{
-		env_builtin(envp);
+		env_builtin(cmd_list, envp);
 	}
 	// if(ft_strncmp("pwd", *current_cmd->str, 4) == 0
 	// 	&& !(*current_cmd->flag))
 	// 	//pwd_builtin(current_cmd);
-	// if(ft_strncmp("export", *current_cmd->str, 7) == 0
-	// 	&& !(*current_cmd->flag))
-	// 	//export_builtin(current_cmd);
+	if(ft_strncmp("export", *current_cmd->str, 7) == 0)
+		export_builtin(current_cmd, envp);
 	// if(ft_strncmp("unset", *current_cmd->str, 6) == 0
 	// 	&& !(*current_cmd->flag))
 	// 	//unset_builtin(current_cmd);
