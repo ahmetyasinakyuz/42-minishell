@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:30:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/28 13:31:09 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/01 13:07:51 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/**
- * Geçici bir heredoc dosyası oluşturur.
- * 
- * @return Oluşturulan geçici dosyanın adı veya NULL (hata durumunda)
- */
 static char	*generate_temp_filename(void)
 {
 	static int	heredoc_count = 0;
@@ -35,14 +30,6 @@ static char	*generate_temp_filename(void)
 	return (filename);
 }
 
-/**
- * Heredoc için girişleri işler ve bir dosyaya yazar.
- * Belirtilen sınırlayıcı (delimiter) ile tam olarak eşleşen satır görülene
- * kadar kullanıcıdan giriş okur.
- * 
- * @param fd Yazılacak dosyanın tanımlayıcısı
- * @param delimiter Heredoc sınırlayıcısı
- */
 void	process_heredoc_input(int fd, char *delimiter)
 {
 	char	*line;
@@ -62,13 +49,6 @@ void	process_heredoc_input(int fd, char *delimiter)
 	}
 }
 
-/**
- * Belirtilen sınırlayıcı ile bir heredoc dosyası oluşturur.
- * Kullanıcıdan giriş alır ve geçici bir dosyaya yazar.
- * 
- * @param delimiter Heredoc sınırlayıcısı
- * @return Oluşturulan heredoc dosyasının adı
- */
 char	*create_heredoc_file(char *delimiter)
 {
 	char	*filename;
@@ -88,37 +68,39 @@ char	*create_heredoc_file(char *delimiter)
 	return (filename);
 }
 
+void	process_single_heredoc(t_simple_cmds *cmd, t_lexer *current)
+{
+	char	*delimiter;
+	char	*filename;
+
+	if (current->token == REDIRECT_HEREDOC && current->next)
+	{
+		delimiter = current->next->str;
+		delimiter = remove_quotes(ft_strdup(delimiter));
+		filename = create_heredoc_file(delimiter);
+		free(delimiter);
+		if (filename)
+		{
+			if (cmd->hd_file_name)
+				free(cmd->hd_file_name);
+			cmd->hd_file_name = filename;
+			cmd->input_type = IO_HEREDOC;
+			cmd->input_fd = -1;
+		}
+	}
+}
 
 void	handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections)
 {
 	t_lexer	*current;
-	char	*delimiter;
-	char	*filename;
 
 	current = redirections;
 	while (current)
 	{
-		if (current->token == REDIRECT_HEREDOC && current->next)
-		{
-			delimiter = current->next->str;
-			// Tırnak işaretlerini kaldır
-			delimiter = remove_quotes(ft_strdup(delimiter));
-			filename = create_heredoc_file(delimiter);
-			free(delimiter);
-			
-			if (filename)
-			{
-				// Önceki heredoc dosyasını temizle
-				if (cmd->hd_file_name)
-					free(cmd->hd_file_name);
-				cmd->hd_file_name = filename;
-				cmd->input_type = IO_HEREDOC;
-				cmd->input_fd = -1;
-			}
-		}
+		process_single_heredoc(cmd, current);
 		if (current->next)
 			current = current->next->next;
 		else
-			break;
+			break ;
 	}
 }

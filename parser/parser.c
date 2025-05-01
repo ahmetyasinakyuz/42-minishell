@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/28 14:14:04 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/01 12:10:14 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	print_heredoc_content(char *filename)
 		printf("(empty heredoc)\n");
 		return ;
 	}
-	
 	printf("heredoc content:\n");
 	line = get_next_line(fd);
 	while (line)
@@ -92,7 +91,6 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 			printf("content[%d]: %s\n", i, current_cmd->content[i]);
 			i++;
 		}
-		
 		current_redir = current_cmd->redirections;
 		while (current_redir && current_redir->next)
 		{
@@ -105,11 +103,11 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 				printf("REDIRECT_APPEND\n");
 			else if (current_redir->token == REDIRECT_HEREDOC)
 				printf("REDIRECT_HEREDOC\n");
-			if (current_redir->token == REDIRECT_HEREDOC && current_cmd->hd_file_name)
+			if (current_redir->token == REDIRECT_HEREDOC
+				&& current_cmd->hd_file_name)
 				print_heredoc_content(current_cmd->hd_file_name);
 			else
 				printf("redirection file: %s\n", current_redir->next->str);
-			
 			current_redir = current_redir->next->next;
 		}
 		printf("--------------\n");
@@ -117,15 +115,13 @@ void	print_cmd_list(t_simple_cmds *cmd_list)
 	}
 }
 
-
 static char	*process_dollar(char *result, int *i, t_vars **vars)
 {
-	// doların hemen arkasındaki karakteri kontrol et
-	if (result[*i + 1] && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_' || 
-		(ft_isdigit(result[*i + 1]) && result[*i + 1] != ' ') || result[*i + 1] == '?'))
+	if (result[*i + 1] && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_'
+			|| (ft_isdigit(result[*i + 1]) && result[*i + 1] != ' ')
+			|| result[*i + 1] == '?'))
 	{
 		result = replace_env_var(result, *i, vars);
-		// stringin en basşına dönmesi için
 		*i = -1;
 	}
 	else
@@ -184,7 +180,6 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char **envp)
 	return_value = ft_itoa(cmd_list->return_value);
 	add_static_var(vars, "?", return_value);
 	free(return_value);
-	//print_cmd_list(cmd_start);
 	free_command_list(cmd_start);
 }
 
@@ -192,9 +187,7 @@ void	parser(char *input, t_vars **vars, char **envp)
 {
 	t_lexer	*token_list;
 
-	// Ilk olarak, vars listesine "0" değişkenlerini ekliyoruz.
 	add_static_var(vars, "0", "minishell");
-	// Sonra, lexer fonksiyonunu çağırarak token listesini oluşturuyoruz.
 	token_list = lexer(input);
 	if (!token_list)
 		return ;

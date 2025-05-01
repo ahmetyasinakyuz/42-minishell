@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:24 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/22 13:55:13 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/01 12:04:03 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ t_lexer	*lexer_precheck(char *input)
 
 t_lexer	*lexer(char *input)
 {
-	//ilk olarak tirnaklarin kapali olip olamadigini kontrol ediyoruz
 	if (!lexer_precheck(input))
 		return (NULL);
 	return (lexer_tokenize(input));

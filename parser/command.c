@@ -43,7 +43,6 @@ int	count_content(t_lexer *start, t_lexer *end)
 	current = start;
 	while (current != end && current)
 	{
-		// Eğer token bir yönlendirme ise, hem kendisini hem de bir sonraki token'ı atla
 		if (is_redirection(current->token) && current->next)
 		{
 			current = current->next;
@@ -67,7 +66,6 @@ void	fill_content(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 	current = start;
 	while (current != end && current)
 	{
-		// Eğer token bir yönlendirme ise, hem kendisini hem de bir sonraki token'ı atla
 		if (is_redirection(current->token) && current->next)
 		{
 			current = current->next;
@@ -82,17 +80,11 @@ void	fill_content(t_simple_cmds *cmd, t_lexer *start, t_lexer *end)
 	cmd->content[i] = NULL;
 }
 
-t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
+t_simple_cmds	*setup_command_str(t_simple_cmds *cmd, t_lexer *start,
+		t_lexer *end)
 {
-	t_simple_cmds	*cmd;
-	int				word_count;
-	int				content_count;
+	int	word_count;
 
-	if (init_cmd(&cmd))
-		return (NULL);
-	cmd = setup_command_flags(cmd, start, end);
-	if (!cmd)
-		return (NULL);
 	word_count = count_words(start, end);
 	if (word_count == 0)
 	{
@@ -108,6 +100,14 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 		return (NULL);
 	}
 	fill_words(cmd, start, end);
+	return (cmd);
+}
+
+t_simple_cmds	*setup_command_content(t_simple_cmds *cmd, t_lexer *start,
+		t_lexer *end)
+{
+	int	content_count;
+
 	content_count = count_content(start, end);
 	if (content_count > 0)
 	{
@@ -122,20 +122,4 @@ t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
 		fill_content(cmd, start, end);
 	}
 	return (cmd);
-}
-
-void	add_command(t_simple_cmds **cmd_list, t_simple_cmds *new_cmd)
-{
-	t_simple_cmds	*temp;
-
-	if (!*cmd_list)
-	{
-		*cmd_list = new_cmd;
-		return ;
-	}
-	temp = *cmd_list;
-	while (temp->next)
-		temp = temp->next;
-	temp->next = new_cmd;
-	new_cmd->prev = temp;
 }

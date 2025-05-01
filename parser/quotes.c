@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/21 18:33:31 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/01 12:02:38 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ int	handle_quoted_string(char *str, int *i, char quote)
 	return (0);
 }
 
-// bir twk tirnak veya cft tirnak bulursa onu kapatani bulana kadar ilerle
-// bulamazsa hata bastir
 int	validate_quotes(char *str)
 {
 	int	i;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 06:35:43 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/28 14:13:10 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/01 13:31:47 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,55 +25,57 @@ void	free_lexer_list(t_lexer *list)
 	}
 }
 
+void	free_str_array(char **arr)
+{
+	int	i;
+
+	if (!arr)
+		return ;
+	i = 0;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
+}
+
+void	free_command_content(t_simple_cmds *cmd)
+{
+	free_str_array(cmd->str);
+	free_str_array(cmd->flag);
+	free_str_array(cmd->content);
+	if (cmd->hd_file_name)
+		free(cmd->hd_file_name);
+	if (cmd->redirections)
+		free_lexer_list(cmd->redirections);
+}
+
 void	free_command_list(t_simple_cmds *list)
 {
 	t_simple_cmds	*temp;
-	int				i;
 
 	while (list)
 	{
 		temp = list;
 		list = list->next;
-		i = 0;
-		while (temp->str && temp->str[i])
-			free(temp->str[i++]);
-		if (temp->str)
-			free(temp->str);
-		i = 0;
-		while (temp->flag && temp->flag[i])
-			free(temp->flag[i++]);
-		if (temp->flag)
-			free(temp->flag);
-		i = 0;
-		while (temp->content && temp->content[i])
-			free(temp->content[i++]);
-		if (temp->content)
-			free(temp->content);
-		if (temp->hd_file_name)
-			free(temp->hd_file_name);
-		if (temp->redirections)
-			free_lexer_list(temp->redirections);
+		free_command_content(temp);
 		free(temp);
 	}
 }
 
-void clear_vars(t_vars **vars)
+void	clear_vars(t_vars **vars)
 {
-    t_vars *temp;
-    
-    if (!vars || !*vars)
-        return;
-        
-    while (*vars)
-    {
-        temp = *vars;
-        *vars = (*vars)->next;
-        if (temp->key)
-            free(temp->key);
-        if (temp->value)
-            free(temp->value);
-        free(temp);
-    }
-    
-    *vars = NULL;
+	t_vars	*temp;
+
+	if (!vars || !*vars)
+		return ;
+	while (*vars)
+	{
+		temp = *vars;
+		*vars = (*vars)->next;
+		if (temp->key)
+			free(temp->key);
+		if (temp->value)
+			free(temp->value);
+		free(temp);
+	}
+	*vars = NULL;
 }

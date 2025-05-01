@@ -6,7 +6,7 @@
 /*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:45:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/04/30 17:32:14 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/01 12:17:00 by akyuz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static void	update_io_type(t_simple_cmds *cmd, t_tokens token)
 		cmd->input_fd = -1;
 	}
 }
-
 
 void	handle_redirections(t_simple_cmds *cmd, t_lexer **token_list)
 {
@@ -66,12 +65,10 @@ int	is_redirection(t_tokens token)
 		|| token == REDIRECT_APPEND || token == REDIRECT_HEREDOC);
 }
 
-/// Bu fonksiyon, yönlendirme listesinin sonuna yeni bir yönlendirme ekler.
 void	add_redirection(t_lexer **redirection_list, t_lexer *token)
 {
 	t_lexer	*temp;
 
-	// Eğer yönlendirme listesi boşsa, yeni yönlendirmeyi başa ekle
 	if (!*redirection_list)
 	{
 		*redirection_list = token;

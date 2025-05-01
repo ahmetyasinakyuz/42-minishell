@@ -12,63 +12,6 @@
 
 #include "../minishell.h"
 
-//varsa 1 yoksa 0
-int	is_in_vars(char *key, t_vars **vars)
-{
-	t_vars	*temp;
-
-	if (!vars || !*vars)
-		return (0);
-	temp = *vars;
-	while (temp)
-	{
-		if (temp->key && ft_strncmp(temp->key, key, ft_strlen(key) + 1) == 0)
-			return (1);
-		temp = temp->next;
-	}
-	return (0);
-}
-
-// değişkeni bul
-// eğer varsa değerini döner
-char	*get_var(char *key, t_vars **vars)
-{
-	t_vars	*temp;
-
-	if (!vars || !*vars)
-		return (NULL);
-	temp = *vars;
-	while (temp)
-	{
-		if (temp->key && ft_strncmp(temp->key, key, ft_strlen(key) + 1) == 0)
-			return (temp->value);
-		temp = temp->next;
-	}
-	return (NULL);
-}
-
-char	*get_env_value(char *env_var, t_vars **vars)
-{
-	char	*env_value;
-	char	*result;
-
-	// Eğer vars yoksa getenv ile al
-	if (is_in_vars(env_var, vars))
-	{
-		env_value = get_var(env_var, vars);
-		if (!env_value || !*env_value)
-			return (ft_strdup(""));
-		result = ft_strdup(env_value);
-		return (result);
-	}
-	env_value = getenv(env_var);
-	if (!env_value)
-		return (ft_strdup(""));
-	result = ft_strdup(env_value);
-	return (result);
-}
-
-
 char	*join_env_parts(char *result, int i, char *env_value, int j)
 {
 	char	*temp;
@@ -89,8 +32,6 @@ char	*join_env_parts(char *result, int i, char *env_value, int j)
 		free(result);
 		return (NULL);
 	}
-	// Sonucu birleştir
-	// Sonraki kısmı birleştir
 	temp = ft_strjoin(final_result, &result[i + j + 1]);
 	free(final_result);
 	free(result);
@@ -107,7 +48,8 @@ char	*replace_env_var(char *result, int i, t_vars **vars)
 	if (ft_isdigit(result[i + j]))
 		j++;
 	else
-		while (result[i + j] && (ft_isalnum(result[i + j]) || result[i + j] == '_' || result[i + j] == '?'))
+		while (result[i + j] && (ft_isalnum(result[i + j]) || result[i
+					+ j] == '_' || result[i + j] == '?'))
 			j++;
 	env_var = ft_substr(result, i + 1, j - 1);
 	env_value = get_env_value(env_var, vars);
@@ -116,58 +58,60 @@ char	*replace_env_var(char *result, int i, t_vars **vars)
 	return (result);
 }
 
-void	add_static_var(t_vars **vars, char *key, char *value)
+int	update_existing_var(t_vars **vars, char *key, char *value)
 {
-	t_vars	*new_var;
 	t_vars	*temp;
 
-	if (!vars)
-		return;
+	if (!vars || !*vars)
+		return (0);
 	temp = *vars;
-	// zaten var ise güncelle
 	while (temp)
 	{
 		if (temp->key && ft_strncmp(temp->key, key, ft_strlen(key) + 1) == 0)
 		{
 			free(temp->value);
 			temp->value = ft_strdup(value);
-			return;
+			return (1);
 		}
 		temp = temp->next;
 	}
-	// yoksa ekle
+	return (0);
+}
+
+t_vars	*create_var_node(char *key, char *value)
+{
+	t_vars	*new_var;
+
 	new_var = malloc(sizeof(t_vars));
 	if (!new_var)
-		return;
+		return (NULL);
 	new_var->key = ft_strdup(key);
 	new_var->value = ft_strdup(value);
 	new_var->next = NULL;
 	new_var->prev = NULL;
-	// tek basinysa başa ekle
+	return (new_var);
+}
+
+void	add_static_var(t_vars **vars, char *key, char *value)
+{
+	t_vars	*new_var;
+	t_vars	*temp;
+
+	if (!vars)
+		return ;
+	if (update_existing_var(vars, key, value))
+		return ;
+	new_var = create_var_node(key, value);
+	if (!new_var)
+		return ;
 	if (!*vars)
 	{
 		*vars = new_var;
-		return;
+		return ;
 	}
-	// tek degilse sona ekle
 	temp = *vars;
 	while (temp->next)
 		temp = temp->next;
 	temp->next = new_var;
 	new_var->prev = temp;
-}
-
-int	is_var_assignment(char *str)
-{
-	int	i;
-
-	if (!str)
-		return (0);
-	i = 0;
-	if (!ft_isalpha(str[i]) && str[i] != '_')
-		return (0);
-	i++;
-	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
-		i++;
-	return (str[i] == '=');
 }
