@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/02 19:39:05 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/02 20:17:05 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,6 @@ void	run_shell(t_vars **vars, char ***envp)
 		{
 			break ;
 		}
-		// if (ft_strncmp(input, "exit", 5) == 0)
-		// {
-		// 	free(input);
-		// 	break ;
-		// }
 		if (ft_strlen(input) > 0)
 			add_history(input);
 		parser(input, vars, envp);

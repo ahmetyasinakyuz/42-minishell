@@ -5,10 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/01 14:40:27 by codespace         #+#    #+#             */
-/*   Updated: 2025/05/02 20:06:16 by aakyuz           ###   ########.fr       */
+/*   Created: 2025/05/02 20:13:00 by aakyuz            #+#    #+#             */
+/*   Updated: 2025/05/02 20:13:02 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+
 
 #include "../minishell.h"
 
@@ -133,9 +135,8 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 			new_env[len] = new_entry;
 			new_env[len + 1] = NULL;
 			
-			// Use free_env instead of doing both operations
-			free_env(*envp);  // This properly frees each string and the array
-			
+			// Use free_env instead of free and free_env (don't do both)
+			free_env(*envp);
 			*envp = new_env;
 		}
 		free(key);

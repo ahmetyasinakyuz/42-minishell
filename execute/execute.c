@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 19:44:21 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/02 20:20:59 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,18 @@ void	free_env(char **env)
 
 void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars)
 {
-	write(STDOUT_FILENO, "exit\n", 5);
-	free_command_list(cmd_list);
-	free_lexer_list(token_list);
-	free(pids);
-	clear_vars(vars);
-	free_env(envp);
-	rl_clear_history();
-    exit(0);
+	if(!(cmd_list->prev) && !(cmd_list->next))
+	{
+		write(STDOUT_FILENO, "exit\n", 5);
+		free_command_list(cmd_list);
+		free_lexer_list(token_list);
+		free(pids);
+		clear_vars(vars);
+		free_env(envp);
+		rl_clear_history();
+		exit(0);
+	}
+
 }
 
 void handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
@@ -150,3 +154,4 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 
 //echo "test 42 minishell" | cat | grep "test" | cat | cat | grep "42" | cat | cat | grep "minishell" | cat
 //echo "42 minishell Ayse Sude" | tr 'a-z' 'A-Z' | tr ' ' '\n' | sort | uniq | rev | tr 'A-Z' 'a-z' | cat | cat | wc -l | cat
+// echo -n "This is a test" | cd /home/user | pwd | export | unset VAR_NAME | env | echo "Another test" | echo -n "Final output" | exit | echo "This should not be executed"
