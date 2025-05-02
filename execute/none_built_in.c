@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   none_built_in.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/01 13:13:24 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/02 16:57:58 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void none_built_in(t_simple_cmds *cmd_list, char ***envp)
 	{
 		cmd = merge_cmd_and_flags(cmd_list->str, cmd_list->flag);
 	}
+	setup_child_signals();
 	execve(path, cmd, *envp);
 	perror("execve");
 	exit(EXIT_FAILURE);

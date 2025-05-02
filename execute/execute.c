@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 16:04:15 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/02 17:01:10 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,18 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 	while (i < cmd_count)
 	{
 		waitpid(pids[i], &status, 0);
-		if (i == cmd_count - 1)
+		if (WIFSIGNALED(status))
 		{
-			if (WIFEXITED(status))
-				last_cmd->return_value = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
+			if (WTERMSIG(status) == SIGQUIT)
+				write(STDERR_FILENO, "Quit (core dumped)\n", 19);
+			else if (WTERMSIG(status) == SIGINT)
+				write(STDOUT_FILENO, "\n", 1);
+				
+			if (i == cmd_count - 1)
 				last_cmd->return_value = 128 + WTERMSIG(status);
 		}
+		else if (WIFEXITED(status) && i == cmd_count - 1)
+			last_cmd->return_value = WEXITSTATUS(status);
 		i++;
 	}
 	free(pids);

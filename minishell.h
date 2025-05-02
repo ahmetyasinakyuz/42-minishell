@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/02 15:31:02 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/02 16:57:43 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void	run_shell(t_vars **vars, char ***envp);
 void	setup_signals(void);
 void	reset_signal_handling(void);
 void	handle_sigint(int signum);
+void	setup_child_signals(void);
 
 //--------------------------PARSER-----------------------------------
 void			parser(char *input, t_vars **vars, char ***envp);
