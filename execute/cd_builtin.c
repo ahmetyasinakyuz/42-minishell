@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:25:00 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 17:07:53 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:24:11 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	cd_builtin(t_simple_cmds *cmd_list)
 		if (!path)
 		{
 			fprintf(stderr, "minishell: cd: HOME not set\n");
+			cmd_list->return_value = 1;
 			return;
 		}
 	}
@@ -30,6 +31,8 @@ void	cd_builtin(t_simple_cmds *cmd_list)
 	if (chdir(path) != 0)
 	{
 		fprintf(stderr, "minishell: cd: %s: %s\n", path, strerror(errno));
+		cmd_list->return_value = 1;
 		return;
 	}
+	cmd_list->return_value = 0;
 }

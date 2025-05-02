@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 18:04:17 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:22:15 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,10 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		perror("malloc");
 		return;
 	}
+	// Initialize all pids to -1 (invalid pid)
+	for (i = 0; i < cmd_count; i++)
+		pids[i] = -1;
+
 	current_cmd = cmd_list;
 	i = 0;
 	while (current_cmd)
@@ -115,19 +119,23 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 	i = 0;
 	while (i < cmd_count)
 	{
-		waitpid(pids[i], &status, 0);
-		if (WIFSIGNALED(status))
+		// Only wait for processes that were actually created
+		if (pids[i] > 0)
 		{
-			if (WTERMSIG(status) == SIGQUIT)
-				write(STDERR_FILENO, "Quit (core dumped)\n", 19);
-			else if (WTERMSIG(status) == SIGINT)
-				write(STDOUT_FILENO, "\n", 1);
-				
-			if (i == cmd_count - 1)
-				last_cmd->return_value = 128 + WTERMSIG(status);
+			waitpid(pids[i], &status, 0);
+			if (WIFSIGNALED(status))
+			{
+				if (WTERMSIG(status) == SIGQUIT)
+					write(STDERR_FILENO, "Quit (core dumped)\n", 19);
+				else if (WTERMSIG(status) == SIGINT)
+					write(STDOUT_FILENO, "\n", 1);
+					
+				if (i == cmd_count - 1)
+					last_cmd->return_value = 128 + WTERMSIG(status);
+			}
+			else if (WIFEXITED(status) && i == cmd_count - 1)
+				last_cmd->return_value = WEXITSTATUS(status);
 		}
-		else if (WIFEXITED(status) && i == cmd_count - 1)
-			last_cmd->return_value = WEXITSTATUS(status);
 		i++;
 	}
 	free(pids);
