@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:45:55 by codespace         #+#    #+#             */
-/*   Updated: 2025/05/01 13:24:36 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/02 16:56:30 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ void env_builtin(t_simple_cmds *cmd_list, char ***envp)
 	i = 0;
 	while ((*envp)[i])
 	{
-		printf("%s\n", (*envp)[i]);
-		i++;
+		if()
+		{
+			printf("%s\n", (*envp)[i]);
+			i++;
+		}
 	}
 }

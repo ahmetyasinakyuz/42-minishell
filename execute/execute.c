@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 15:40:28 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/02 16:04:15 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,7 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 	current_cmd = cmd_list;
 	while (current_cmd)
 	{
-		if (ft_strncmp("export", *current_cmd->str, 7) != 0)
-			cmd_count++;
+		cmd_count++;
 		current_cmd = current_cmd->next;
 	}
 	pids = malloc(sizeof(pid_t) * cmd_count);

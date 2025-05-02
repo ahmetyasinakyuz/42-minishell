@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:40:30 by codespace         #+#    #+#             */
-/*   Updated: 2025/05/02 15:16:18 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/02 15:53:02 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,12 @@ void	unset_builtin(t_simple_cmds *cmd_list, char ***envp)
 		cmd_list->return_value = 1;
 		return;
 	}
-
 	new_env = filter_env_without_vars(cmd_list, *envp);
-
 	if (!new_env)
 	{
 		perror("malloc");
 		exit(1);
 	}
-
 	int i = 0;
 	while ((*envp)[i])
 	{
@@ -72,7 +69,6 @@ void	unset_builtin(t_simple_cmds *cmd_list, char ***envp)
 		i++;
 	}
 	free(*envp);
-
 	*envp = new_env;
 	cmd_list->return_value = 0;
 }
