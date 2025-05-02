@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/02 17:15:27 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:04:35 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	run_shell(t_vars **vars, char ***envp)
 	}
 	rl_clear_history();
 	clear_vars(vars);
+	free_env(*envp);
 }
 
 char **env_maker(char **envp)

@@ -6,15 +6,35 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 17:15:19 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:04:17 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exit_builtin()
+void	free_env(char **env)
+{
+	int i = 0;
+
+	if (!env)
+		return;
+	while (env[i])
+	{
+		free(env[i]);
+		i++;
+	}
+	free(env);
+}
+
+void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars)
 {
 	write(STDOUT_FILENO, "exit\n", 5);
+	free_command_list(cmd_list);
+	free_lexer_list(token_list);
+	free(pids);
+	clear_vars(vars);
+	free_env(envp);
+	rl_clear_history();
     exit(0);
 }
 
@@ -64,9 +84,7 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		else if(ft_strncmp("cd", *current_cmd->str, 3) == 0)
 			cd_builtin(current_cmd);
 		else if(ft_strncmp("exit", *current_cmd->str, 5) == 0)
-		{
-			exit_builtin(current_cmd);
-		}
+			exit_builtin(current_cmd, *envp, token_list, pids, vars);
 		else
 		{
 			if (current_cmd->next)
