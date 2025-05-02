@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
+#    By: aycami <aycami@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/01 14:55:23 by codespace        ###   ########.fr        #
+#    Updated: 2025/05/02 15:23:13 by aycami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ SRCS =	libs/get_next_line/get_next_line.c  \
 		execute/env_builtin.c               \
 		execute/export_builtin.c            \
 		execute/unset_builtin.c             \
+		execute/pwd_builtin.c               \
 		execute/io_handle.c                 \
 		signal_handler.c                    \
 		main.c                              \

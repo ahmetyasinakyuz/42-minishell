@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset_builtin.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:40:30 by codespace         #+#    #+#             */
-/*   Updated: 2025/05/01 14:53:59 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/02 15:16:18 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void	unset_builtin(t_simple_cmds *cmd_list, char ***envp)
 		exit(1);
 	}
 
-	// Free old env
 	int i = 0;
 	while ((*envp)[i])
 	{

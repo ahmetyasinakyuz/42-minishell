@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/01 14:54:16 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/02 15:22:00 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,4 +171,5 @@ void	io_handle(t_simple_cmds *cmd_list);
 void	env_builtin(t_simple_cmds *cmd_list, char ***envp);
 void	export_builtin(t_simple_cmds *cmd_list, char ***envp);
 void	unset_builtin(t_simple_cmds *cmd_list, char ***envp);
+void    pwd_builtin(t_simple_cmds *cmd_list);
 #endif
