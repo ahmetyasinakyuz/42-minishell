@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 18:50:58 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:44:21 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 	int status = 0;  // Initialize status
 
 	// Initialize last_cmd to prevent uninitialized use
+	
 	last_cmd = cmd_list;
 	current_cmd = cmd_list;
 	while (current_cmd)
@@ -108,7 +109,6 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 			{
 				io_handle(current_cmd);
 				builtin_control(current_cmd, envp, token_list, pids, vars);
-				exit(current_cmd->return_value);
 			}
 			if (current_cmd->output_type == IO_PIPE_OUT)
 				close(current_cmd->output_fd);
@@ -118,7 +118,8 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		}
 		last_cmd = current_cmd;
 		current_cmd = current_cmd->next;
-	}
+	} 
+
 
 	i = 0;
 	while (i < cmd_count)
@@ -143,6 +144,7 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		}
 		i++;
 	}
+
 	free(pids);
 }
 

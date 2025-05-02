@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aycami <aycami@student.42.fr>              +#+  +:+       +#+         #
+#    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/02 17:23:46 by aycami           ###   ########.fr        #
+#    Updated: 2025/05/02 19:37:42 by aakyuz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = cc
-C_FLAGS = -Wall -Wextra -Werror
+C_FLAGS = 
 
 SRCS =	libs/get_next_line/get_next_line.c  \
 		parser/flags.c                      \

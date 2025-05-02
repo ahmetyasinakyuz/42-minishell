@@ -7,13 +7,15 @@
         "*.tcc": "c",
         "fstream": "c",
         "envicinekdosya": "c",
-        "wait.h": "c"
+        "wait.h": "c",
+        "list": "c"
     },
     "github.copilot.enable": {
         "*": false,
         "plaintext": false,
         "markdown": false,
-        "scminput": false
+        "scminput": false,
+        "c": true
     },
     "python.autoComplete.extraPaths": [
         "/home/akyuz/driverless/devel/lib/python3/dist-packages",

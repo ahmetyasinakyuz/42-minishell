@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/02 18:50:58 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:39:05 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	run_shell(t_vars **vars, char ***envp)
 		input = readline("bash$ ");
 		if (!input)
 		{
-			printf("exit\n");
 			break ;
 		}
 		// if (ft_strncmp(input, "exit", 5) == 0)

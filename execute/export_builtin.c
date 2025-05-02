@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:40:27 by codespace         #+#    #+#             */
-/*   Updated: 2025/05/02 18:54:02 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:17:15 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,10 +129,11 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 				exit(1);
 			}
 			for (int i = 0; i < len; i++)
-				new_env[i] = (*envp)[i];
+				new_env[i] = ft_strdup((*envp)[i]);
 			new_env[len] = new_entry;
 			new_env[len + 1] = NULL;
 			free(*envp);
+			free_env(*envp);
 			*envp = new_env;
 		}
 		free(key);

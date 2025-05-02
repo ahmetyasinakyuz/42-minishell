@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:45:55 by codespace         #+#    #+#             */
-/*   Updated: 2025/05/02 18:50:58 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:25:57 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,5 @@ void env_builtin(t_simple_cmds *cmd_list, char ***envp)
 			printf("%s\n", (*envp)[i]);
 		i++;
 	}
+
 }

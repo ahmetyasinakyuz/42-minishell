@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 06:35:43 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/01 13:11:34 by codespace        ###   ########.fr       */
+/*   Updated: 2025/05/02 19:47:46 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	free_command_list(t_simple_cmds *list)
 {
 	t_simple_cmds	*temp;
 
+	while (list && list->prev)
+		list = list->prev;
 	while (list)
 	{
 		temp = list;
