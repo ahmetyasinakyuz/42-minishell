@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 10:40:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/02 17:10:45 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:50:58 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	handle_sigint(int signum)
 	rl_on_new_line();
 	//readline girdisini temizler
 	rl_replace_line("", 0);
+	// Redisplay the prompt
+	rl_redisplay();
 }
 
 void	setup_signals(void)

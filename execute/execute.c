@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 18:22:15 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:50:58 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,16 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 	pid_t *pids;
 	int cmd_count = 0;
 	int i;
+	int status = 0;  // Initialize status
 
+	// Initialize last_cmd to prevent uninitialized use
+	last_cmd = cmd_list;
 	current_cmd = cmd_list;
 	while (current_cmd)
 	{
 		cmd_count++;
+		// Keep track of the last command for return value
+		last_cmd = current_cmd;
 		current_cmd = current_cmd->next;
 	}
 	pids = malloc(sizeof(pid_t) * cmd_count);
@@ -115,7 +120,6 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		current_cmd = current_cmd->next;
 	}
 
-	int status;
 	i = 0;
 	while (i < cmd_count)
 	{
@@ -129,11 +133,12 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 					write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 				else if (WTERMSIG(status) == SIGINT)
 					write(STDOUT_FILENO, "\n", 1);
-					
-				if (i == cmd_count - 1)
+				
+				// Make sure last_cmd is valid before using
+				if (last_cmd && i == cmd_count - 1)
 					last_cmd->return_value = 128 + WTERMSIG(status);
 			}
-			else if (WIFEXITED(status) && i == cmd_count - 1)
+			else if (WIFEXITED(status) && last_cmd && i == cmd_count - 1)
 				last_cmd->return_value = WEXITSTATUS(status);
 		}
 		i++;
