@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 15:47:15 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/02 17:12:30 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ void builtin_control(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list,
 		env_builtin(cmd_list, envp);
 	else if(ft_strncmp("pwd", *current_cmd->str, 4) == 0)
 		pwd_builtin(current_cmd);
-	// else if(ft_strncmp("exit", *current_cmd->str, 5) == 0)
-	// 	exit_builtin(current_cmd);
 	else
 		none_built_in(current_cmd, envp);
 	free_command_list(cmd_list);

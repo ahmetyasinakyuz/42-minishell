@@ -6,11 +6,17 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 17:01:10 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/02 17:15:19 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	exit_builtin()
+{
+	write(STDOUT_FILENO, "exit\n", 5);
+    exit(0);
+}
 
 void handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 {
@@ -57,6 +63,10 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 			unset_builtin(current_cmd, envp);
 		else if(ft_strncmp("cd", *current_cmd->str, 3) == 0)
 			cd_builtin(current_cmd);
+		else if(ft_strncmp("exit", *current_cmd->str, 5) == 0)
+		{
+			exit_builtin(current_cmd);
+		}
 		else
 		{
 			if (current_cmd->next)
