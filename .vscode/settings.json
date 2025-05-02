@@ -6,7 +6,8 @@
         "minishell.h": "c",
         "*.tcc": "c",
         "fstream": "c",
-        "envicinekdosya": "c"
+        "envicinekdosya": "c",
+        "wait.h": "c"
     },
     "github.copilot.enable": {
         "*": false,
