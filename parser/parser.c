@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 15:02:10 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 18:02:08 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,9 +152,9 @@ void	handle_current_token(t_lexer **current, t_lexer **start,
 	if ((*current)->token == WORD)
 		handle_word_token(*current, vars);
 	if ((*current)->token == PIPE)
-		handle_pipe_token(current, start, cmd_list);
+		handle_pipe_token(current, start, cmd_list, **vars);
 	else if (!(*current)->next)
-		handle_last_token(start, (*current)->next, cmd_list);
+		handle_last_token(start, (*current)->next, cmd_list, **vars);
 }
 
 void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)

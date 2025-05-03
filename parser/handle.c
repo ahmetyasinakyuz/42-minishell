@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:14:44 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/01 12:08:44 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/03 18:01:37 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ void	handle_word_token(t_lexer *current, t_vars **vars)
 }
 
 void	handle_pipe_token(t_lexer **current, t_lexer **start,
-		t_simple_cmds **cmd_list)
+		t_simple_cmds **cmd_list, t_vars vars)
 {
 	t_simple_cmds	*new_cmd;
 
-	new_cmd = create_command(*start, *current);
+	new_cmd = create_command(*start, *current, vars);
 	if (new_cmd)
 	{
 		new_cmd->pipe = 1;
@@ -51,11 +51,11 @@ void	handle_pipe_token(t_lexer **current, t_lexer **start,
 }
 
 void	handle_last_token(t_lexer **start, t_lexer *end,
-		t_simple_cmds **cmd_list)
+		t_simple_cmds **cmd_list, t_vars vars)
 {
 	t_simple_cmds	*new_cmd;
 
-	new_cmd = create_command(*start, end);
+	new_cmd = create_command(*start, end, vars);
 	if (new_cmd)
 	{
 		new_cmd->pipe = 0;

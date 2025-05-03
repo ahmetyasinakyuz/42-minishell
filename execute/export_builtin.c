@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 20:13:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 17:29:28 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 17:51:18 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,20 @@ int find_env_index(char **envp, const char *key)
 	}
 	return -1;
 }
+int	is_valid_identifier(const char *s)
+{
+	int i = 0;
+
+	if (!s || !(ft_isalpha(s[0]) || s[0] == '_'))
+		return (0);
+	while (s[i] && s[i] != '=')
+	{
+		if (!(ft_isalnum(s[i]) || s[i] == '_'))
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 {
@@ -128,10 +142,11 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 	char *key;
 	int idx;
 	char *new_entry;
+	int invalid_found = 0;
 
 	if (cmd_list->flag)
 	{
-		printf("This command only works without the flag.\n");
+		write(2, "This command only works without the flag.\n", 43);
 		cmd_list->return_value = 1;
 		return;
 	}
@@ -144,6 +159,16 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 
 	while (cmd_list->str[j])
 	{
+		if (!is_valid_identifier(cmd_list->str[j]))
+		{
+			write(2, "minishell: export: `", 21);
+			write(2, cmd_list->str[j], ft_strlen(cmd_list->str[j]));
+			write(2, "': not a valid identifier\n", 27);
+			invalid_found = 1;
+			j++;
+			continue;
+		}
+
 		new_entry = ft_strdup(cmd_list->str[j]);
 		if (!new_entry)
 			exit(1);
@@ -185,5 +210,5 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 		free(key);
 		j++;
 	}
-	cmd_list->return_value = 0;
+	cmd_list->return_value = invalid_found ? 1 : 0;
 }

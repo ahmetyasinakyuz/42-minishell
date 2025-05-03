@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   command_ultis.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 12:46:12 by akyuz             #+#    #+#             */
-/*   Updated: 2025/05/01 13:07:49 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/03 18:00:57 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_simple_cmds	*create_command(t_lexer *start, t_lexer *end)
+t_simple_cmds	*create_command(t_lexer *start, t_lexer *end, t_vars vars)
 {
 	t_simple_cmds	*cmd;
 
 	if (init_cmd(&cmd))
 		return (NULL);
-	cmd = setup_command_flags(cmd, start, end);
+	cmd = setup_command_flags(cmd, start, end, vars);
 	if (!cmd)
 		return (NULL);
 	cmd = setup_command_str(cmd, start, end);
@@ -58,3 +58,4 @@ int	is_var_assignment(char *str)
 		i++;
 	return (str[i] == '=');
 }
+

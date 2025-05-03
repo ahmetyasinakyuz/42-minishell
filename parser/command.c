@@ -13,13 +13,13 @@
 #include "../minishell.h"
 
 t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd, t_lexer *start,
-		t_lexer *end)
+		t_lexer *end, t_vars vars)
 {
 	int	flag_count;
 
 	handle_redirections(cmd, &start);
 	if (cmd->redirections)
-		handle_heredoc(cmd, cmd->redirections);
+		handle_heredoc(cmd, cmd->redirections, &vars);
 	flag_count = count_flags(start, end);
 	if (flag_count > 0)
 	{

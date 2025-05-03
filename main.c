@@ -6,13 +6,12 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 17:09:33 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 18:04:36 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//heredoc dollar
 //sadece = komut bulunamadı hatası
 //
 // built in return value (echo, cd, pwd, export, unset, env, exit)

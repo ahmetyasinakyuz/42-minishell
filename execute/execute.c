@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/03 17:12:44 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 18:07:02 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int	ft_isnum(char *str)
 
 void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars)
 {
-	printf("AAA\n");
 	if(!(cmd_list->prev) && !(cmd_list->next))
 	{
 		int i;
@@ -52,7 +51,7 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 		
 		i = 0;
 		flag = 0;
-		if(cmd_list->content[2])
+		if(cmd_list->content[1] && cmd_list->content[2])
 		{
 			printf("minishell: exit: too many arguments\n");
 			cmd_list->return_value = 1;

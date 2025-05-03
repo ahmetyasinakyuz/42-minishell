@@ -8,7 +8,9 @@
         "fstream": "c",
         "envicinekdosya": "c",
         "wait.h": "c",
-        "list": "c"
+        "list": "c",
+        "source_location": "c",
+        "stacktrace": "c"
     },
     "github.copilot.enable": {
         "*": false,

@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 17:04:54 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 18:03:08 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,9 @@ t_lexer			*create_token(char *str, t_tokens token_type, int index);
 void			add_token(t_lexer **list, t_lexer *new_token);
 t_tokens		check_token_type(char *str);
 void			free_lexer_list(t_lexer *list);
-t_simple_cmds	*create_command(t_lexer *start, t_lexer *end);
+t_simple_cmds	*create_command(t_lexer *start, t_lexer *end, t_vars vars);
 t_simple_cmds	*setup_command_flags(t_simple_cmds *cmd, t_lexer *start,
-				t_lexer *end);
+				t_lexer *end, t_vars vars);
 t_simple_cmds	*setup_command_str(t_simple_cmds *cmd, t_lexer *start,
 				t_lexer *end);
 t_simple_cmds	*setup_command_content(t_simple_cmds *cmd, t_lexer *start,
@@ -144,16 +144,16 @@ void			handle_quote_status(char *input, int *i, int *in_squote,
 void			process_quotes(char *str, char *result, int *i, int *j);
 void			handle_word_token(t_lexer *current, t_vars **vars);
 void			handle_pipe_token(t_lexer **current, t_lexer **start,
-					t_simple_cmds **cmd_list);
+					t_simple_cmds **cmd_list, t_vars vars);
 void			handle_last_token(t_lexer **start, t_lexer *end,
-					t_simple_cmds **cmd_list);
+					t_simple_cmds **cmd_list, t_vars vars);
 void			add_static_var(t_vars **vars, char *key, char *value);
 int				update_existing_var(t_vars **vars, char *key, char *value);
 t_vars			*create_var_node(char *key, char *value);
-char			*create_heredoc_file(char *delimiter);
-void			handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections);
-void			process_heredoc_input(int fd, char *delimiter);
-void			process_single_heredoc(t_simple_cmds *cmd, t_lexer *current);
+char			*create_heredoc_file(char *delimiter, t_vars *vars);
+void			handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections, t_vars *vars);
+void			process_heredoc_input(int fd, char *delimiter, t_vars *vars);
+void			process_single_heredoc(t_simple_cmds *cmd, t_lexer *current, t_vars *vars);
 char			*get_env_value(char *env_var, t_vars **vars);
 int				handle_pipe_char(char *token, char *input, int *i, int *j);
 int				handle_redirect_char(char *token, char *input, int *i, int *j);

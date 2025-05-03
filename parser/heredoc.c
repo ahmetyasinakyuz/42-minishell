@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:30:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/01 13:07:51 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/03 18:01:49 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static char	*generate_temp_filename(void)
 	return (filename);
 }
 
-void	process_heredoc_input(int fd, char *delimiter)
+void	process_heredoc_input(int fd, char *delimiter, t_vars *vars)
 {
 	char	*line;
 
@@ -43,13 +43,15 @@ void	process_heredoc_input(int fd, char *delimiter)
 		{
 			free(line);
 			break ;
-		}
+			}
+		// Env değişkenlerini işleme
+		line = is_dolar(line, &vars);
 		ft_putendl_fd(line, fd);
 		free(line);
 	}
 }
 
-char	*create_heredoc_file(char *delimiter)
+char	*create_heredoc_file(char *delimiter, t_vars *vars)
 {
 	char	*filename;
 	int		fd;
@@ -63,12 +65,12 @@ char	*create_heredoc_file(char *delimiter)
 		free(filename);
 		return (NULL);
 	}
-	process_heredoc_input(fd, delimiter);
+	process_heredoc_input(fd, delimiter, vars);
 	close(fd);
 	return (filename);
 }
 
-void	process_single_heredoc(t_simple_cmds *cmd, t_lexer *current)
+void	process_single_heredoc(t_simple_cmds *cmd, t_lexer *current, t_vars *vars)
 {
 	char	*delimiter;
 	char	*filename;
@@ -77,7 +79,7 @@ void	process_single_heredoc(t_simple_cmds *cmd, t_lexer *current)
 	{
 		delimiter = current->next->str;
 		delimiter = remove_quotes(ft_strdup(delimiter));
-		filename = create_heredoc_file(delimiter);
+		filename = create_heredoc_file(delimiter, vars);
 		free(delimiter);
 		if (filename)
 		{
@@ -90,14 +92,14 @@ void	process_single_heredoc(t_simple_cmds *cmd, t_lexer *current)
 	}
 }
 
-void	handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections)
+void	handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections, t_vars *vars)
 {
 	t_lexer	*current;
 
 	current = redirections;
 	while (current)
 	{
-		process_single_heredoc(cmd, current);
+		process_single_heredoc(cmd, current, vars);
 		if (current->next)
 			current = current->next->next;
 		else
