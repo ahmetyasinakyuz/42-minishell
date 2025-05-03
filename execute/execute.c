@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/03 18:07:02 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 19:34:01 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 void	free_env(char **env)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!env)
-		return;
+		return ;
 	while (env[i])
 	{
 		free(env[i]);
@@ -28,15 +29,15 @@ void	free_env(char **env)
 
 int	ft_isnum(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if(str[0] == '+' || str[0] == '-')
+	if (str[0] == '+' || str[0] == '-')
 		i++;
-	while(str[i])
+	while (str[i])
 	{
-		if(ft_isdigit(str[i]) == 0)
-			return(0);
+		if (ft_isdigit(str[i]) == 0)
+			return (0);
 		i++;
 	}
 	return (1);
@@ -44,22 +45,22 @@ int	ft_isnum(char *str)
 
 void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars)
 {
-	if(!(cmd_list->prev) && !(cmd_list->next))
+	int	i;
+	int	flag;
+
+	i = 0;
+	flag = 0;
+	if (!(cmd_list->prev) && !(cmd_list->next))
 	{
-		int i;
-		int flag;
-		
-		i = 0;
-		flag = 0;
-		if(cmd_list->content[1] && cmd_list->content[2])
+		if (cmd_list->content[1] && cmd_list->content[2])
 		{
 			printf("minishell: exit: too many arguments\n");
 			cmd_list->return_value = 1;
 			return;
 		}
-		if(cmd_list->content[1])
+		if (cmd_list->content[1])
 		{
-			if(ft_isnum(cmd_list->content[1]))
+			if (ft_isnum(cmd_list->content[1]))
 				i = ft_new_atoi(cmd_list->content[1], &flag);
 			else
 				i = 400;
@@ -70,7 +71,7 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 		clear_vars(vars);
 		free_env(envp);
 		rl_clear_history();
-		if(i == 400 || flag == -1)
+		if (i == 400 || flag == -1)
 		{
 			printf("minishell: exit: %s: numeric argument required\n", cmd_list->content[1]);
 			free_command_list(cmd_list);
@@ -85,9 +86,9 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 
 }
 
-void handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
+void	handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 {
-	int pipe_fd[2];
+	int	pipe_fd[2];
 
 	if (pipe(pipe_fd) == -1)
 	{
@@ -100,14 +101,14 @@ void handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 	next->input_type = IO_PIPE_IN;
 }
 
-void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars)
+void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars)
 {
 	t_simple_cmds *current_cmd;
 	t_simple_cmds *last_cmd;
 	pid_t *pids;
-	int cmd_count = 0;
-	int i;
-	int status = 0;
+	int	cmd_count = 0;
+	int	i;
+	int	status = 0;
 	
 	last_cmd = cmd_list;
 	current_cmd = cmd_list;
@@ -188,7 +189,6 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		i++;
 	}
 
-	// Komut yürütme tamamlandığında, ana sinyal işlemeyi geri yükle
 	setup_signals();
 
 	free(pids);
