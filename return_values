@@ -1,5 +1,7 @@
-env 0                              okey
-export 0                           okey
-export ADAM 0                      ok
-export ADAM=YEŞİL 0                ok
-export . ? (geçersiz) 1            ok
+env                            0            okey
+
+export                         0            okey
+export ADAM                    0            ok
+export ADAM=YEŞİL              0            ok
+export . ? (geçersiz)          1            ok
+

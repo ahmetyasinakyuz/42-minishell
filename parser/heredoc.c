@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:30:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 18:01:49 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 18:19:26 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ void	process_heredoc_input(int fd, char *delimiter, t_vars *vars)
 		{
 			free(line);
 			break ;
-			}
-		// Env değişkenlerini işleme
+		}
 		line = is_dolar(line, &vars);
 		ft_putendl_fd(line, fd);
 		free(line);
@@ -70,7 +69,8 @@ char	*create_heredoc_file(char *delimiter, t_vars *vars)
 	return (filename);
 }
 
-void	process_single_heredoc(t_simple_cmds *cmd, t_lexer *current, t_vars *vars)
+void	process_single_heredoc(t_simple_cmds *cmd, t_lexer *current,
+			t_vars *vars)
 {
 	char	*delimiter;
 	char	*filename;

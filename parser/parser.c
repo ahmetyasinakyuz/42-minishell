@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 18:02:08 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 18:20:04 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ void	parser(char *input, t_vars **vars, char ***envp)
 {
 	t_lexer	*token_list;
 	char	*process;
-	
+
 	add_static_var(vars, "0", "minishell");
 	process = remove_whitespaces(input);
 	token_list = lexer(process);
