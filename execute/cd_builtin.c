@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:25:00 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/03 17:06:53 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 19:11:16 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@ char	*ft_getenv_home(char **envp)
 	return (NULL);
 }
 
-
 void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 {
-	char *path;
+	char	*path;
 
 	if (!cmd_list->str[1])
 	{
@@ -40,7 +39,7 @@ void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 		{
 			fprintf(stderr, "minishell: cd: HOME not set\n");
 			cmd_list->return_value = 1;
-			return;
+			return ;
 		}
 	}
 	else
@@ -49,7 +48,7 @@ void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 	{
 		fprintf(stderr, "minishell: cd: %s: %s\n", path, strerror(errno));
 		cmd_list->return_value = 1;
-		return;
+		return ;
 	}
 	cmd_list->return_value = 0;
 }

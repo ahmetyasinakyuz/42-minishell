@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/03 19:00:32 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 19:28:14 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,12 @@ char	**merge_cmd_and_flags(char **cmd, char **flags)
 	return (merged);
 }
 
-
-void none_built_in(t_simple_cmds *cmd_list, char ***envp)
+void	none_built_in(t_simple_cmds *cmd_list, char ***envp)
 {
 	char	*path;
 	char	**cmd;
 
-	if(cmd_list->str[0] == NULL)
+	if (cmd_list->str[0] == NULL)
 	{
 		cmd_list->return_value = 127;
 		return ;
@@ -58,11 +57,11 @@ void none_built_in(t_simple_cmds *cmd_list, char ***envp)
 	if (ft_strchr(cmd_list->str[0], '='))
 	{
 		cmd_list->return_value = 0;
-		return;
+		return ;
 	}
-	if (cmd_list->str[0][0] == '/' ||
-		(cmd_list->str[0][0] == '.' && cmd_list->str[0][1] == '/') ||
-		(cmd_list->str[0][0] == '.' && cmd_list->str[0][1] == '.' && cmd_list->str[0][2] == '/'))
+	if (cmd_list->str[0][0] == '/' || (cmd_list->str[0][0] == '.'
+			&& cmd_list->str[0][1] == '/') || (cmd_list->str[0][0] == '.'
+			&& cmd_list->str[0][1] == '.' && cmd_list->str[0][2] == '/'))
 	{
 		path = cmd_list->str[0];
 	}
@@ -78,7 +77,7 @@ void none_built_in(t_simple_cmds *cmd_list, char ***envp)
 		cmd_list->return_value = 127;
 		return ;
 	}
-	if(cmd_list->flag == NULL)
+	if (cmd_list->flag == NULL)
 		cmd = cmd_list->str;
 	else
 	{

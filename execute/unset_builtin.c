@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:40:30 by codespace         #+#    #+#             */
-/*   Updated: 2025/05/03 16:56:25 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 19:29:15 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,30 @@
 
 char	**filter_env_without_vars(t_simple_cmds *cmd_list, char **envp)
 {
-	int		i = 0;
+	int		i;
 	int		j;
-	int		k = 0;
+	int		k;
 	char	**new_env;
-	int		env_len = 0;
+	int		env_len;
+	int		len;
 
+	i = 0;
+	k = 0;
+	env_len = 0;
 	while (envp && envp[env_len])
 		env_len++;
-
 	new_env = malloc(sizeof(char *) * (env_len + 1));
 	if (!new_env)
 		return (NULL);
-
 	while (envp[i])
 	{
 		j = 1;
 		while (cmd_list->str[j])
 		{
-			int len = ft_strlen(cmd_list->str[j]);
+			len = ft_strlen(cmd_list->str[j]);
 			if (ft_strncmp(envp[i], cmd_list->str[j], len) == 0
 				&& envp[i][len] == '=')
-				break;
+				break ;
 			j++;
 		}
 		if (!cmd_list->str[j])
@@ -49,12 +51,13 @@ char	**filter_env_without_vars(t_simple_cmds *cmd_list, char **envp)
 void	unset_builtin(t_simple_cmds *cmd_list, char ***envp)
 {
 	char	**new_env;
+	int		i;
 
 	if (cmd_list->flag)
 	{
 		printf("This command only works without the flag.\n");
 		cmd_list->return_value = 1;
-		return;
+		return ;
 	}
 	new_env = filter_env_without_vars(cmd_list, *envp);
 	if (!new_env)
@@ -62,7 +65,7 @@ void	unset_builtin(t_simple_cmds *cmd_list, char ***envp)
 		perror("malloc");
 		exit(1);
 	}
-	int i = 0;
+	i = 0;
 	while ((*envp)[i])
 	{
 		free((*envp)[i]);

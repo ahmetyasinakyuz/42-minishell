@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 14:33:28 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/03 15:40:15 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 19:23:56 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,20 @@ int	ft_new_atoi(const char *str, int *flag)
 		sign = -1;
 		i++;
 	}
-
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		if (sign == 1)
 			limit_digit = 7;
 		else
 			limit_digit = 8;
-		if (result > 922337203685477580 || 
-			(result == 922337203685477580 && (str[i] - '0') > limit_digit))
+		if (result > 922337203685477580 || (result == 922337203685477580
+				&& (str[i] - '0') > limit_digit))
 		{
 			*flag = -1;
 			return (-1);
 		}
 		result = result * 10 + (str[i++] - '0');
 	}
-
 	return ((long long)(result * sign) % 256);
 }
 

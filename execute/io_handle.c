@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   io_handle.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/04/30 19:18:40 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/03 19:28:00 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void i_handle(t_simple_cmds *cmd_list)
+void	i_handle(t_simple_cmds *cmd_list)
 {
-	t_lexer *current;
+	t_lexer	*current;
 
 	if (cmd_list->input_type == IO_PIPE_IN)
 	{
@@ -27,14 +27,13 @@ void i_handle(t_simple_cmds *cmd_list)
 			cmd_list->input_fd = open(cmd_list->hd_file_name, O_RDONLY);
 			if (cmd_list->input_fd < 0)
 			{
-				ft_putstr_fd("minishell: heredoc: Cannot open temporary file\n", 2);
+				ft_putstr_fd("minishell: heredoc: Cannot open temporary file\n",
+					2);
 				exit(1);
 			}
 			dup2(cmd_list->input_fd, STDIN_FILENO);
 		}
 	}
-
-	// Tüm yönlendirmeleri tarayıp input yönlendirmelerini işle
 	current = cmd_list->redirections;
 	while (current && current->next)
 	{
@@ -60,27 +59,25 @@ void i_handle(t_simple_cmds *cmd_list)
 		if (current->next->next)
 			current = current->next->next;
 		else
-			break;
+			break ;
 	}
 }
 
-void o_handle(t_simple_cmds *cmd_list)
+void	o_handle(t_simple_cmds *cmd_list)
 {
-	t_lexer *current;
+	t_lexer	*current;
 
 	if (cmd_list->output_type == IO_PIPE_OUT)
 	{
 		dup2(cmd_list->output_fd, STDOUT_FILENO);
 	}
-
-	// Tüm yönlendirmeleri tarayıp output yönlendirmelerini işle
 	current = cmd_list->redirections;
 	while (current && current->next)
 	{
 		if (current->token == REDIRECT_OUT)
 		{
 			cmd_list->output_fd = open(current->next->str,
-				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+					O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (cmd_list->output_fd < 0)
 			{
 				ft_putstr_fd("minishell: ", 2);
@@ -93,7 +90,7 @@ void o_handle(t_simple_cmds *cmd_list)
 		else if (current->token == REDIRECT_APPEND)
 		{
 			cmd_list->output_fd = open(current->next->str,
-				O_WRONLY | O_CREAT | O_APPEND, 0644);
+					O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (cmd_list->output_fd < 0)
 			{
 				ft_putstr_fd("minishell: ", 2);
@@ -106,7 +103,7 @@ void o_handle(t_simple_cmds *cmd_list)
 		if (current->next->next)
 			current = current->next->next;
 		else
-			break;
+			break ;
 	}
 }
 

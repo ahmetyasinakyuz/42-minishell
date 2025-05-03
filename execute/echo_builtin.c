@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:59:20 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 15:14:46 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 19:12:22 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void	echo_builtin(t_simple_cmds *cmd_list)
 
 	i = 1;
 	flag = 0;
-	if (cmd_list->content && cmd_list->content[1] &&
-		cmd_list->content[1][0] == '-' && cmd_list->content[1][1] == 'n')
+	if ((cmd_list->content && cmd_list->content[1])
+		&& (cmd_list->content[1][0]) == '-' && (cmd_list->content[1][1] == 'n'))
 	{
 		flag = 1;
 		i = 2;
