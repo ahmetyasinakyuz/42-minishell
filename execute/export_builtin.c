@@ -3,14 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 20:13:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/02 20:13:02 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/03 17:29:28 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 
 #include "../minishell.h"
 
@@ -45,23 +43,70 @@ char	**new_env_maker(char ***envp, int extra)
 
 void	empty_export(char ***envp)
 {
-	int i;
+	int		i, j;
+	char	**sorted_env;
+	char	*temp;
+	int		count = 0;
+
+	while ((*envp)[count])
+		count++;
+
+	sorted_env = malloc(sizeof(char *) * (count + 1));
+	if (!sorted_env)
+		return;
 
 	i = 0;
-	while((*envp)[i])
+	while (i < count)
 	{
-		printf("declare -x %s\n", (*envp)[i]);
+		sorted_env[i] = ft_strdup((*envp)[i]);
 		i++;
 	}
+	sorted_env[i] = NULL;
+
+	for (i = 0; i < count - 1; i++)
+	{
+		for (j = 0; j < count - i - 1; j++)
+		{
+			if (ft_strncmp(sorted_env[j], sorted_env[j + 1],
+				ft_strlen(sorted_env[j]) > ft_strlen(sorted_env[j + 1]) ?
+				ft_strlen(sorted_env[j]) : ft_strlen(sorted_env[j + 1])) > 0)
+			{
+				temp = sorted_env[j];
+				sorted_env[j] = sorted_env[j + 1];
+				sorted_env[j + 1] = temp;
+			}
+		}
+	}
+
+	i = 0;
+	while (sorted_env[i])
+	{
+		char *eq = ft_strchr(sorted_env[i], '=');
+		if (eq)
+		{
+			int key_len = eq - sorted_env[i];
+			write(1, "declare -x ", 11);
+			write(1, sorted_env[i], key_len);
+			write(1, "=\"", 2);
+			write(1, eq + 1, ft_strlen(eq + 1));
+			write(1, "\"\n", 2);
+		}
+		else
+		{
+			printf("declare -x %s\n", sorted_env[i]);
+		}
+		free(sorted_env[i]);
+		i++;
+	}
+	free(sorted_env);
 }
-#include <string.h> // strcmp, strncmp
 
 char *get_env_key(const char *env_str)
 {
 	int i = 0;
 	while (env_str[i] && env_str[i] != '=')
 		i++;
-	return ft_substr(env_str, 0, i); // malloc'lı substring fonksiyonu
+	return ft_substr(env_str, 0, i);
 }
 
 int find_env_index(char **envp, const char *key)
@@ -76,6 +121,7 @@ int find_env_index(char **envp, const char *key)
 	}
 	return -1;
 }
+
 void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 {
 	int j = 1;
@@ -98,27 +144,25 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 
 	while (cmd_list->str[j])
 	{
-		new_entry = ft_strdup(cmd_list->str[j]); // örn: ASA=MASA
+		new_entry = ft_strdup(cmd_list->str[j]);
 		if (!new_entry)
 			exit(1);
 
-		key = get_env_key(new_entry); // ASA
+		key = get_env_key(new_entry);
 		if (!key)
 		{
 			free(new_entry);
 			exit(1);
 		}
 
-		idx = find_env_index(*envp, key); // ASA varsa bul
+		idx = find_env_index(*envp, key);
 		if (idx != -1)
 		{
-			// Varsa, eski değeri sil ve yenisini koy
 			free((*envp)[idx]);
 			(*envp)[idx] = new_entry;
 		}
 		else
 		{
-			// Yoksa yeni bir alan aç ve ekle
 			int len = 0;
 			while ((*envp)[len])
 				len++;
@@ -134,8 +178,7 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 				new_env[i] = ft_strdup((*envp)[i]);
 			new_env[len] = new_entry;
 			new_env[len + 1] = NULL;
-			
-			// Use free_env instead of free and free_env (don't do both)
+
 			free_env(*envp);
 			*envp = new_env;
 		}
