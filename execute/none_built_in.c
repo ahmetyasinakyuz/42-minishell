@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 16:57:58 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 19:00:32 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,11 @@ void none_built_in(t_simple_cmds *cmd_list, char ***envp)
 	{
 		cmd_list->return_value = 127;
 		return ;
+	}
+	if (ft_strchr(cmd_list->str[0], '='))
+	{
+		cmd_list->return_value = 0;
+		return;
 	}
 	if (cmd_list->str[0][0] == '/' ||
 		(cmd_list->str[0][0] == '.' && cmd_list->str[0][1] == '/') ||

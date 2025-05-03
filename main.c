@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 18:04:36 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 18:44:48 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 //
 // built in return value (echo, cd, pwd, export, unset, env, exit)
 // norm
+// bash$ echo "aaa" << $OK
+//> 
+//aaa
+//bash$ 
+// diameter de dolar işleme
 //
 //- Try ctrl-C in a prompt after you wrote some stuff should show a new line with a new prompt
 //- Try ctrl-D in a prompt after you wrote some stuff should not do anything

@@ -10,7 +10,9 @@
         "wait.h": "c",
         "list": "c",
         "source_location": "c",
-        "stacktrace": "c"
+        "stacktrace": "c",
+        "sstream": "c",
+        "regex": "c"
     },
     "github.copilot.enable": {
         "*": false,
