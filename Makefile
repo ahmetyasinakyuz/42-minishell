@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
+#    By: aycami <aycami@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/02 19:37:42 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/05/03 14:52:10 by aycami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 CC = cc
-C_FLAGS = 
+C_FLAGS = -Wall -Wextra -Werror
 
 SRCS =	libs/get_next_line/get_next_line.c  \
 		parser/flags.c                      \
@@ -44,6 +44,7 @@ SRCS =	libs/get_next_line/get_next_line.c  \
 		execute/pwd_builtin.c               \
 		execute/cd_builtin.c                \
 		execute/io_handle.c                 \
+		execute/ft_new_atoi.c               \
 		signal_handler.c                    \
 		main.c                              \
 

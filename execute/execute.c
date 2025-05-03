@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 20:20:59 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/03 15:46:06 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,62 @@ void	free_env(char **env)
 	free(env);
 }
 
+int	ft_isnum(char *str)
+{
+	int i;
+
+	i = 0;
+	if(str[0] == '+' || str[0] == '-')
+		i++;
+	while(str[i])
+	{
+		if(ft_isdigit(str[i]) == 0)
+			return(0);
+		i++;
+	}
+	return (1);
+}
+
 void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars)
 {
 	if(!(cmd_list->prev) && !(cmd_list->next))
 	{
+		int i;
+		int flag;
+		
+		i = 0;
+		flag = 0; 
+		if(cmd_list->content[2])
+		{
+			printf("minishell: exit: too many arguments\n");
+			cmd_list->return_value = 1;
+			return;
+		}
+		printf("%s\n", cmd_list->content[1]);
+		if(cmd_list->content[1])
+		{
+			if(ft_isnum(cmd_list->content[1]))
+				i = ft_new_atoi(cmd_list->content[1], &flag);
+			else
+				i = 400;
+		}
 		write(STDOUT_FILENO, "exit\n", 5);
-		free_command_list(cmd_list);
 		free_lexer_list(token_list);
 		free(pids);
 		clear_vars(vars);
 		free_env(envp);
 		rl_clear_history();
-		exit(0);
+		if(i == 400 || flag == -1)
+		{
+			printf("minishell: exit: %s: numeric argument required\n", cmd_list->content[1]);
+			free_command_list(cmd_list);
+			exit(2);
+		}
+		else
+		{
+			free_command_list(cmd_list);
+			exit(i);
+		}
 	}
 
 }
@@ -64,16 +108,13 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 	pid_t *pids;
 	int cmd_count = 0;
 	int i;
-	int status = 0;  // Initialize status
-
-	// Initialize last_cmd to prevent uninitialized use
+	int status = 0;
 	
 	last_cmd = cmd_list;
 	current_cmd = cmd_list;
 	while (current_cmd)
 	{
 		cmd_count++;
-		// Keep track of the last command for return value
 		last_cmd = current_cmd;
 		current_cmd = current_cmd->next;
 	}
@@ -83,11 +124,8 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		perror("malloc");
 		return;
 	}
-	// Initialize all pids to -1 (invalid pid)
 	for (i = 0; i < cmd_count; i++)
 		pids[i] = -1;
-
-	// Ana süreç için komut yürütme sırasında özel sinyal işleme
 	setup_execute_signals();
 
 	current_cmd = cmd_list;
@@ -114,7 +152,6 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 			}
 			if (pids[i] == 0)
 			{
-				// Alt süreç için varsayılan sinyal davranışını ayarla
 				setup_child_signals();
 				io_handle(current_cmd);
 				builtin_control(current_cmd, envp, token_list, pids, vars);
@@ -141,9 +178,8 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 				if (WTERMSIG(status) == SIGQUIT)
 					write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 				else if (WTERMSIG(status) == SIGINT)
-					write(STDOUT_FILENO, "\n", 1); // Ctrl+C ile kesilen süreçlerde yeni satır ekle
-				
-				// Make sure last_cmd is valid before using
+					write(STDOUT_FILENO, "\n", 1);
+
 				if (last_cmd && i == cmd_count - 1)
 					last_cmd->return_value = 128 + WTERMSIG(status);
 			}

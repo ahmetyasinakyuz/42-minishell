@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/02 19:17:15 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/03 15:40:43 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,8 @@ int				handle_redirect_char(char *token, char *input, int *i, int *j);
 void			handle_quotes(char c, int *in_squote, int *in_dquote);
 void			free_str_array(char **arr);
 void			free_command_content(t_simple_cmds *cmd);
+char			*remove_whitespaces(char *str);
+
 
 //--------------------------EXECUTE-----------------------------------
 void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars);
@@ -175,5 +177,6 @@ void	unset_builtin(t_simple_cmds *cmd_list, char ***envp);
 void    pwd_builtin(t_simple_cmds *cmd_list);
 void    cd_builtin(t_simple_cmds *cmd_list);
 void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars);
+int		ft_new_atoi(const char *str, int *flag);
 void	free_env(char **env);
 #endif
