@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 15:40:43 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 17:04:54 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,8 +175,9 @@ void	env_builtin(t_simple_cmds *cmd_list, char ***envp);
 void	export_builtin(t_simple_cmds *cmd_list, char ***envp);
 void	unset_builtin(t_simple_cmds *cmd_list, char ***envp);
 void    pwd_builtin(t_simple_cmds *cmd_list);
-void    cd_builtin(t_simple_cmds *cmd_list);
+void	cd_builtin(t_simple_cmds *cmd_list, char **envp);
 void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars);
 int		ft_new_atoi(const char *str, int *flag);
 void	free_env(char **env);
 #endif
+ 

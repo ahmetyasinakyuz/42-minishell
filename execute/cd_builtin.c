@@ -3,22 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:25:00 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/02 18:35:46 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/03 17:06:53 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"../minishell.h"
 
-void	cd_builtin(t_simple_cmds *cmd_list)
+char	*ft_getenv_home(char **envp)
+{
+	int		i;
+	char	*prefix;
+
+	i = 0;
+	prefix = "HOME=";
+	while (envp && envp[i])
+	{
+		if (ft_strncmp(envp[i], prefix, 5) == 0)
+			return (envp[i] + 5);
+		i++;
+	}
+	return (NULL);
+}
+
+
+void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 {
 	char *path;
 
 	if (!cmd_list->str[1])
 	{
-		path = getenv("HOME");
+		path = ft_getenv_home(envp);
 		if (!path)
 		{
 			fprintf(stderr, "minishell: cd: HOME not set\n");

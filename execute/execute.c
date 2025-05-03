@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/03 15:46:06 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 17:12:44 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,20 +44,20 @@ int	ft_isnum(char *str)
 
 void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars)
 {
+	printf("AAA\n");
 	if(!(cmd_list->prev) && !(cmd_list->next))
 	{
 		int i;
 		int flag;
 		
 		i = 0;
-		flag = 0; 
+		flag = 0;
 		if(cmd_list->content[2])
 		{
 			printf("minishell: exit: too many arguments\n");
 			cmd_list->return_value = 1;
 			return;
 		}
-		printf("%s\n", cmd_list->content[1]);
 		if(cmd_list->content[1])
 		{
 			if(ft_isnum(cmd_list->content[1]))
@@ -137,7 +137,7 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		else if(ft_strncmp("unset", *current_cmd->str, 6) == 0)
 			unset_builtin(current_cmd, envp);
 		else if(ft_strncmp("cd", *current_cmd->str, 3) == 0)
-			cd_builtin(current_cmd);
+			cd_builtin(current_cmd, *envp);
 		else if(ft_strncmp("exit", *current_cmd->str, 5) == 0)
 			exit_builtin(current_cmd, *envp, token_list, pids, vars);
 		else

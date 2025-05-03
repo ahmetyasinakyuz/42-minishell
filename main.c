@@ -6,25 +6,23 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 15:27:41 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/03 17:09:33 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//sadece tabda commande girmemeli tırnak dışındaki tabları boşluğa dönüştür
 //heredoc dollar
 //sadece = komut bulunamadı hatası
 //
-//exit
-//built in return value
-//unset $PATH
+// built in return value (echo, cd, pwd, export, unset, env, exit)
+// norm
 //
 //- Try ctrl-C in a prompt after you wrote some stuff should show a new line with a new prompt
 //- Try ctrl-D in a prompt after you wrote some stuff should not do anything
 //- Try ctrl-\ in a prompt after you wrote some stuff should quit minishell --> RELAUNCH!
 //
-//
+
 
 void	run_shell(t_vars **vars, char ***envp)
 {
