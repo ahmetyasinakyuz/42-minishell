@@ -26,10 +26,10 @@ void	handle_sigint(int signum)
 	rl_on_new_line();
 	//readline girdisini temizler
 	rl_replace_line("", 0);
-	// Redisplay the prompt
-	rl_redisplay();
+	rl_redisplay(); 
 }
 
+// Ana süreç (interaktif kabuk) için sinyal ayarları
 void	setup_signals(void)
 {
 	//ctrl + c ve ctrl + \ sinyalleri için sigaction yapısı oluşturuldu
@@ -38,15 +38,8 @@ void	setup_signals(void)
 
 	//SIGINT sinyali için handle_sigint fonksiyonunu çağır
 	sa_int.sa_handler = handle_sigint;
-
-	//sa_int tarafından kullanılan sinyal maskesi temizleniyor.
-	//Böylece başka sinyallerin de engellenmeden çalışmasına izin veriliyor.
 	sigemptyset(&sa_int.sa_mask);
-
-	//özel flaler olmadığı için 0
 	sa_int.sa_flags = 0;
-
-	//SIGINT sinyali için sa_int yapılandırması işletim sistemine bildiriliyor.
 	sigaction(SIGINT, &sa_int, NULL);
 
 	//SIGQUIT sinyali tamamen yok sayılıyor (SIG_IGN ile)
@@ -56,18 +49,36 @@ void	setup_signals(void)
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
+// Alt süreçler (komut çalıştırma) için sinyal ayarları
 void	setup_child_signals(void)
 {
 	struct sigaction	sa;
 
-	// Reset SIGINT to default behavior
+	// SIGINT ve SIGQUIT için varsayılan davranışa geri dön
 	sa.sa_handler = SIG_DFL;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
 	sigaction(SIGINT, &sa, NULL);
-
-	// Reset SIGQUIT to default behavior so it can produce core dump in child processes
 	sigaction(SIGQUIT, &sa, NULL);
+}
+
+// Komut çalıştırma (execute) sırasında ana süreç için sinyal ayarları
+void	setup_execute_signals(void)
+{
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+
+	// SIGINT için özel işleyici - alt süreçlerin kontrolünü bozmaz
+	sa_int.sa_handler = SIG_IGN; // Execute sırasında ana süreç sinyalleri yok sayar
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = 0;
+	sigaction(SIGINT, &sa_int, NULL);
+
+	// SIGQUIT için varsayılan davranışa geri dön (alt süreçlerin core dump üretmesine izin ver)
+	sa_quit.sa_handler = SIG_IGN;
+	sigemptyset(&sa_quit.sa_mask);
+	sa_quit.sa_flags = 0;
+	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
 void	reset_signal_handling(void)

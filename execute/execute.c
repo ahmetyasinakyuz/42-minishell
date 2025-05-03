@@ -87,6 +87,9 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 	for (i = 0; i < cmd_count; i++)
 		pids[i] = -1;
 
+	// Ana süreç için komut yürütme sırasında özel sinyal işleme
+	setup_execute_signals();
+
 	current_cmd = cmd_list;
 	i = 0;
 	while (current_cmd)
@@ -111,6 +114,8 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 			}
 			if (pids[i] == 0)
 			{
+				// Alt süreç için varsayılan sinyal davranışını ayarla
+				setup_child_signals();
 				io_handle(current_cmd);
 				builtin_control(current_cmd, envp, token_list, pids, vars);
 			}
@@ -128,7 +133,6 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 	i = 0;
 	while (i < cmd_count)
 	{
-		// Only wait for processes that were actually created
 		if (pids[i] > 0)
 		{
 			waitpid(pids[i], &status, 0);
@@ -137,7 +141,7 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 				if (WTERMSIG(status) == SIGQUIT)
 					write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 				else if (WTERMSIG(status) == SIGINT)
-					write(STDOUT_FILENO, "\n", 1);
+					write(STDOUT_FILENO, "\n", 1); // Ctrl+C ile kesilen süreçlerde yeni satır ekle
 				
 				// Make sure last_cmd is valid before using
 				if (last_cmd && i == cmd_count - 1)
@@ -148,6 +152,9 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		}
 		i++;
 	}
+
+	// Komut yürütme tamamlandığında, ana sinyal işlemeyi geri yükle
+	setup_signals();
 
 	free(pids);
 }

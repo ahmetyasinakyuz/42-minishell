@@ -15,7 +15,7 @@
         "plaintext": false,
         "markdown": false,
         "scminput": false,
-        "c": false
+        "c": true
     },
     "python.autoComplete.extraPaths": [
         "/home/akyuz/driverless/devel/lib/python3/dist-packages",

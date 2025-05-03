@@ -23,6 +23,8 @@ void	run_shell(t_vars **vars, char ***envp)
 		input = readline("bash$ ");
 		if (!input)
 		{
+			if (g_received_signal == SIGINT) // Ctrl+C (SIGINT) ile çıkış
+				exit(130);
 			break ;
 		}
 		if (ft_strlen(input) > 0)

@@ -92,6 +92,7 @@ extern volatile sig_atomic_t	g_received_signal;
 //--------------------------ANA KISIM--------------------------------
 void	run_shell(t_vars **vars, char ***envp);
 void	setup_signals(void);
+void	setup_execute_signals(void); // Yeni fonksiyon deklarasyonu
 void	reset_signal_handling(void);
 void	handle_sigint(int signum);
 void	setup_child_signals(void);
