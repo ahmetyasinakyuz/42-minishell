@@ -12,6 +12,15 @@
 
 #include "../minishell.h"
 
+void	free_all(t_free *free_struct)
+{
+	free_lexer_list(free_struct->token_list);
+	free(free_struct->pids);
+	clear_vars(free_struct->vars);
+	free_env(free_struct->envp);
+	rl_clear_history();
+}
+
 void	free_env(char **env)
 {
 	int	i;
@@ -43,7 +52,22 @@ int	ft_isnum(char *str)
 	return (1);
 }
 
-void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars)
+void	exit_builtin_value(int i, int flag, t_simple_cmds *cmd_list)
+{
+	if (i == 400 || flag == -1)
+	{
+		printf("minishell: exit: %s: numeric argument required\n", cmd_list->content[1]);
+		free_command_list(cmd_list);
+		exit(2);
+	}
+	else
+	{
+		free_command_list(cmd_list);
+		exit(i);
+	}
+}
+
+void	exit_builtin(t_simple_cmds *cmd_list, t_free *free_struct)
 {
 	int	i;
 	int	flag;
@@ -56,7 +80,7 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 		{
 			printf("minishell: exit: too many arguments\n");
 			cmd_list->return_value = 1;
-			return;
+			return ;
 		}
 		if (cmd_list->content[1])
 		{
@@ -66,24 +90,9 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 				i = 400;
 		}
 		write(STDOUT_FILENO, "exit\n", 5);
-		free_lexer_list(token_list);
-		free(pids);
-		clear_vars(vars);
-		free_env(envp);
-		rl_clear_history();
-		if (i == 400 || flag == -1)
-		{
-			printf("minishell: exit: %s: numeric argument required\n", cmd_list->content[1]);
-			free_command_list(cmd_list);
-			exit(2);
-		}
-		else
-		{
-			free_command_list(cmd_list);
-			exit(i);
-		}
+		free_all(free_struct);
+		exit_builtin_value(i, flag, cmd_list);
 	}
-
 }
 
 void	handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
@@ -101,71 +110,64 @@ void	handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 	next->input_type = IO_PIPE_IN;
 }
 
-void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars)
+void	count_commands(t_simple_cmds *cmd_list, int *cmd_count, t_simple_cmds **last_cmd)
 {
-	t_simple_cmds *current_cmd;
-	t_simple_cmds *last_cmd;
-	pid_t *pids;
-	int	cmd_count = 0;
-	int	i;
-	int	status = 0;
-	
-	last_cmd = cmd_list;
-	current_cmd = cmd_list;
-	while (current_cmd)
+	*cmd_count = 0;
+	while (cmd_list)
 	{
-		cmd_count++;
-		last_cmd = current_cmd;
-		current_cmd = current_cmd->next;
+		(*cmd_count)++;
+		*last_cmd = cmd_list;
+		cmd_list = cmd_list->next;
 	}
-	pids = malloc(sizeof(pid_t) * cmd_count);
-	if (!pids)
+}
+
+int	init_execute_struct(t_free *free_struct, pid_t **pids, int cmd_count,
+						t_lexer *token_list, t_vars **vars, char ***envp)
+{
+	int	i;
+
+	*pids = malloc(sizeof(pid_t) * cmd_count);
+	if (!*pids)
 	{
 		perror("malloc");
-		return;
+		return (0);
 	}
-	for (i = 0; i < cmd_count; i++)
-		pids[i] = -1;
-	setup_execute_signals();
-
-	current_cmd = cmd_list;
 	i = 0;
-	while (current_cmd)
-	{
-		if (ft_strncmp("export", *current_cmd->str, 7) == 0)
-			export_builtin(current_cmd, envp);
-		else if(ft_strncmp("unset", *current_cmd->str, 6) == 0)
-			unset_builtin(current_cmd, envp);
-		else if(ft_strncmp("cd", *current_cmd->str, 3) == 0)
-			cd_builtin(current_cmd, *envp);
-		else if(ft_strncmp("exit", *current_cmd->str, 5) == 0)
-			exit_builtin(current_cmd, *envp, token_list, pids, vars);
-		else
-		{
-			if (current_cmd->next)
-				handle_pipe(current_cmd, current_cmd->next);
-			pids[i] = fork();
-			if (pids[i] == -1)
-			{
-				perror("fork");
-				exit(1);
-			}
-			if (pids[i] == 0)
-			{
-				setup_child_signals();
-				io_handle(current_cmd);
-				builtin_control(current_cmd, envp, token_list, pids, vars);
-			}
-			if (current_cmd->output_type == IO_PIPE_OUT)
-				close(current_cmd->output_fd);
-			if (current_cmd->input_type == IO_PIPE_IN)
-				close(current_cmd->input_fd);
-			i++;
-		}
-		last_cmd = current_cmd;
-		current_cmd = current_cmd->next;
-	} 
+	while (i < cmd_count)
+		(*pids)[i++] = -1;
+	free_struct->envp = *envp;
+	free_struct->token_list = token_list;
+	free_struct->pids = *pids;
+	free_struct->vars = vars;
+	return (1);
+}
 
+void	run_single_command(t_simple_cmds *cmd, t_free *free_struct, pid_t *pids, int i)
+{
+	if (cmd->next)
+		handle_pipe(cmd, cmd->next);
+	pids[i] = fork();
+	if (pids[i] == -1)
+	{
+		perror("fork");
+		exit(1);
+	}
+	if (pids[i] == 0)
+	{
+		setup_child_signals();
+		io_handle(cmd);
+		builtin_control(cmd, free_struct);
+	}
+	if (cmd->output_type == IO_PIPE_OUT)
+		close(cmd->output_fd);
+	if (cmd->input_type == IO_PIPE_IN)
+		close(cmd->input_fd);
+}
+
+void	wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *last_cmd)
+{
+	int	i;
+	int	status;
 
 	i = 0;
 	while (i < cmd_count)
@@ -179,7 +181,6 @@ void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 					write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 				else if (WTERMSIG(status) == SIGINT)
 					write(STDOUT_FILENO, "\n", 1);
-
 				if (last_cmd && i == cmd_count - 1)
 					last_cmd->return_value = 128 + WTERMSIG(status);
 			}
@@ -188,9 +189,46 @@ void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		}
 		i++;
 	}
+}
 
+void	execute(t_simple_cmds *cmd_list, char ***envp,
+			t_lexer *token_list, t_vars **vars)
+{
+	t_simple_cmds	*current_cmd;
+	t_simple_cmds	*last_cmd;
+	pid_t			*pids;
+	int				cmd_count;
+	int				i;
+	t_free			free_struct;
+
+	count_commands(cmd_list, &cmd_count, &last_cmd);
+	if (!init_execute_struct(&free_struct, &pids, cmd_count, token_list, vars, envp))
+		return ;
+	setup_execute_signals();
+	current_cmd = cmd_list;
+	i = 0;
+	while (current_cmd)
+	{
+		if (ft_strncmp("export", *current_cmd->str, 7) == 0)
+			export_builtin(current_cmd, envp);
+		else if (ft_strncmp("unset", *current_cmd->str, 6) == 0)
+			unset_builtin(current_cmd, envp);
+		else if (ft_strncmp("cd", *current_cmd->str, 3) == 0)
+			cd_builtin(current_cmd, *envp);
+		else if (ft_strncmp("exit", *current_cmd->str, 5) == 0)
+		{
+			free_struct.envp = *envp;
+			free_struct.token_list = token_list;
+			free_struct.pids = pids;
+			free_struct.vars = vars;
+			exit_builtin(current_cmd, &free_struct);
+		}
+		else
+			run_single_command(current_cmd, &free_struct, pids, i++);
+		current_cmd = current_cmd->next;
+	}
+	wait_for_children(pids, cmd_count, last_cmd);
 	setup_signals();
-
 	free(pids);
 }
 

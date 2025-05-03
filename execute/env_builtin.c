@@ -26,7 +26,7 @@ int	equal_control(char *envp)
 	return (0);
 }
 
-void	env_builtin(t_simple_cmds *cmd_list, char ***envp)
+void	env_builtin(t_simple_cmds *cmd_list, char **envp)
 {
 	int	i;
 
@@ -38,10 +38,10 @@ void	env_builtin(t_simple_cmds *cmd_list, char ***envp)
 		exit(0);
 	}
 	i = 0;
-	while ((*envp)[i])
+	while (envp[i])
 	{
-		if (equal_control((*envp)[i]))
-			printf("%s\n", (*envp)[i]);
+		if (equal_control(envp[i]))
+			printf("%s\n", envp[i]);
 		i++;
 	}
 }

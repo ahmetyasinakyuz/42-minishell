@@ -87,6 +87,14 @@ typedef struct s_simple_cmds
 	struct s_simple_cmds	*prev;
 }						t_simple_cmds;
 
+typedef struct s_free
+{
+	char **envp;
+	t_lexer *token_list;
+	pid_t *pids;
+	t_vars **vars;
+}						t_free;
+
 extern volatile sig_atomic_t	g_received_signal;
 
 //--------------------------ANA KISIM--------------------------------
@@ -165,19 +173,19 @@ char			*remove_whitespaces(char *str);
 
 //--------------------------EXECUTE-----------------------------------
 void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars);
-void	builtin_control(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, pid_t *pids, t_vars **vars);
+void	builtin_control(t_simple_cmds *cmd_list, t_free *free_struct);
 void	echo_builtin(t_simple_cmds *cmd_list);
 char	*path_finder(char *cmd, char **envp);
-void	none_built_in(t_simple_cmds *cmd_list, char ***envp);
+void	none_built_in(t_simple_cmds *cmd_list, char **envp);
 void	free_paths(char **paths);
 void	io_handle(t_simple_cmds *cmd_list);
-void	env_builtin(t_simple_cmds *cmd_list, char ***envp);
+void	env_builtin(t_simple_cmds *cmd_list, char **envp);
 void	export_builtin(t_simple_cmds *cmd_list, char ***envp);
 void	unset_builtin(t_simple_cmds *cmd_list, char ***envp);
 void    pwd_builtin(t_simple_cmds *cmd_list);
 void	cd_builtin(t_simple_cmds *cmd_list, char **envp);
-void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars);
+void	exit_builtin(t_simple_cmds *cmd_list, t_free *free_struct);
 int		ft_new_atoi(const char *str, int *flag);
 void	free_env(char **env);
+void	free_all(t_free *free_struct);
 #endif
- 

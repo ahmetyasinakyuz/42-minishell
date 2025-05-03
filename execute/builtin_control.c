@@ -12,8 +12,7 @@
 
 #include "../minishell.h"
 
-void	builtin_control(t_simple_cmds *cmd_list, char ***envp,
-		t_lexer *token_list, pid_t *pids, t_vars **vars)
+void	builtin_control(t_simple_cmds *cmd_list, t_free *free_struct)
 {
 	t_simple_cmds	*current_cmd;
 
@@ -21,15 +20,12 @@ void	builtin_control(t_simple_cmds *cmd_list, char ***envp,
 	if (ft_strncmp("echo", *current_cmd->str, 5) == 0)
 		echo_builtin(current_cmd);
 	else if (ft_strncmp("env", *current_cmd->str, 4) == 0)
-		env_builtin(cmd_list, envp);
+		env_builtin(cmd_list, free_struct->envp);
 	else if (ft_strncmp("pwd", *current_cmd->str, 4) == 0)
 		pwd_builtin(current_cmd);
 	else
-		none_built_in(current_cmd, envp);
+		none_built_in(current_cmd, free_struct->envp);
 	free_command_list(cmd_list);
-	free_lexer_list(token_list);
-	free(pids);
-	clear_vars(vars);
-	free_env(*envp);
+	free_all(free_struct);
 	exit(0);
 }

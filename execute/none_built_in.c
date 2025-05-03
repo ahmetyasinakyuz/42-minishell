@@ -12,43 +12,43 @@
 
 #include "../minishell.h"
 
+void	zero_values(int i[2])
+{
+	i[0] = 0;
+	i[1] = 0;
+}
+
 char	**merge_cmd_and_flags(char **cmd, char **flags)
 {
-	int		i;
-	int		j;
+	int		i[2];
 	char	**merged;
 
-	i = 0;
-	j = 0;
-	while (cmd[i])
-		i++;
-	while (flags[j])
-		j++;
-	merged = malloc(sizeof(char *) * (i + j + 1));
+	zero_values(i);
+	while (cmd[i[0]])
+		i[0]++;
+	while (flags[i[1]])
+		i[1]++;
+	merged = malloc(sizeof(char *) * (i[0] + i[1] + 1));
 	if (!merged)
 		return (NULL);
-	i = 0;
-	j = 0;
-	while (cmd[i])
+	zero_values(i);
+	while (cmd[i[0]])
 	{
-		merged[i] = cmd[i];
-		i++;
+		merged[i[0]] = cmd[i[0]];
+		i[0]++;
 	}
-	while (flags[j])
+	while (flags[i[1]])
 	{
-		merged[i] = flags[j];
-		i++;
-		j++;
+		merged[i[0]] = flags[i[1]];
+		i[0]++;
+		i[1]++;
 	}
-	merged[i] = NULL;
+	merged[i[0]] = NULL;
 	return (merged);
 }
 
-void	none_built_in(t_simple_cmds *cmd_list, char ***envp)
+void	none_built_in_path_control(t_simple_cmds *cmd_list, char **envp, char **path)
 {
-	char	*path;
-	char	**cmd;
-
 	if (cmd_list->str[0] == NULL)
 	{
 		cmd_list->return_value = 127;
@@ -62,13 +62,17 @@ void	none_built_in(t_simple_cmds *cmd_list, char ***envp)
 	if (cmd_list->str[0][0] == '/' || (cmd_list->str[0][0] == '.'
 			&& cmd_list->str[0][1] == '/') || (cmd_list->str[0][0] == '.'
 			&& cmd_list->str[0][1] == '.' && cmd_list->str[0][2] == '/'))
-	{
-		path = cmd_list->str[0];
-	}
+		*path = cmd_list->str[0];
 	else
-	{
-		path = path_finder(cmd_list->str[0], *envp);
-	}
+		*path = path_finder(cmd_list->str[0], envp);
+}
+
+void	none_built_in(t_simple_cmds *cmd_list, char **envp)
+{
+	char	*path;
+	char	**cmd;
+
+	none_built_in_path_control(cmd_list, envp, &path);
 	if (path == NULL)
 	{
 		ft_putstr_fd("minishell: ", 2);
@@ -84,7 +88,7 @@ void	none_built_in(t_simple_cmds *cmd_list, char ***envp)
 		cmd = merge_cmd_and_flags(cmd_list->str, cmd_list->flag);
 	}
 	setup_child_signals();
-	execve(path, cmd, *envp);
+	execve(path, cmd, envp);
 	perror("execve");
 	exit(EXIT_FAILURE);
 }

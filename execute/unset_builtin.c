@@ -14,37 +14,35 @@
 
 char	**filter_env_without_vars(t_simple_cmds *cmd_list, char **envp)
 {
-	int		i;
-	int		j;
-	int		k;
+	int		i[3];
 	char	**new_env;
 	int		env_len;
 	int		len;
 
-	i = 0;
-	k = 0;
+	i[0] = 0;
+	i[2] = 0;
 	env_len = 0;
 	while (envp && envp[env_len])
 		env_len++;
 	new_env = malloc(sizeof(char *) * (env_len + 1));
 	if (!new_env)
 		return (NULL);
-	while (envp[i])
+	while (envp[i[0]])
 	{
-		j = 1;
-		while (cmd_list->str[j])
+		i[1] = 1;
+		while (cmd_list->str[i[1]])
 		{
-			len = ft_strlen(cmd_list->str[j]);
-			if (ft_strncmp(envp[i], cmd_list->str[j], len) == 0
-				&& envp[i][len] == '=')
+			len = ft_strlen(cmd_list->str[i[1]]);
+			if (ft_strncmp(envp[i[0]], cmd_list->str[i[1]], len) == 0
+				&& envp[i[0]][len] == '=')
 				break ;
-			j++;
+			i[1]++;
 		}
-		if (!cmd_list->str[j])
-			new_env[k++] = ft_strdup(envp[i]);
-		i++;
+		if (!cmd_list->str[i[1]])
+			new_env[i[2]++] = ft_strdup(envp[i[0]]);
+		i[0]++;
 	}
-	new_env[k] = NULL;
+	new_env[i[2]] = NULL;
 	return (new_env);
 }
 
