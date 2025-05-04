@@ -98,97 +98,103 @@ void	run_single_command(t_simple_cmds *cmd, t_free *free_struct, pid_t *pids, in
 		close(cmd->input_fd);
 }
 
-void	wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *cmd_list)
+static void handle_child_status(int status, t_simple_cmds *cmd)
+{
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+			write(STDERR_FILENO, "Quit (core dumped)\n", 19);
+		else if (WTERMSIG(status) == SIGINT)
+			write(STDOUT_FILENO, "\n", 1);
+		cmd->return_value = 128 + WTERMSIG(status);
+	}
+	else if (WIFEXITED(status))
+		cmd->return_value = WEXITSTATUS(status);
+}
+
+void wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *cmd_list)
 {
 	int	i;
 	int	status;
-	t_simple_cmds *current_cmd;
+	t_simple_cmds *curr;
 
 	i = 0;
-	current_cmd = cmd_list;
+	curr = cmd_list;
 	while (i < cmd_count)
 	{
 		if (pids[i] > 0)
 		{
 			waitpid(pids[i], &status, 0);
-			if (WIFSIGNALED(status))
-			{
-				if (WTERMSIG(status) == SIGQUIT)
-					write(STDERR_FILENO, "Quit (core dumped)\n", 19);
-				else if (WTERMSIG(status) == SIGINT)
-					write(STDOUT_FILENO, "\n", 1);
-				current_cmd->return_value = 128 + WTERMSIG(status);
-			}
-			else if (WIFEXITED(status))
-				current_cmd->return_value = WEXITSTATUS(status);
+			handle_child_status(status, curr);
 		}
-		if (current_cmd && current_cmd->next)
-			current_cmd = current_cmd->next;
+		if (curr && curr->next)
+			curr = curr->next;
 		i++;
 	}
 }
 
-static int handle_builtin_commands(t_exec_state *state)
-{
-	char *cmd = *state->current_cmd->str;
-	int is_pipeline = (state->current_cmd->pipe || 
-		(state->current_cmd->next != NULL || state->current_cmd->prev != NULL));
 
-	if (is_pipeline && (ft_strncmp("export", cmd, 7) == 0 || 
-						ft_strncmp("unset", cmd, 6) == 0 || 
-						ft_strncmp("cd", cmd, 3) == 0))
-	{
-		pid_t pid = fork();
-		if (pid == -1)
-		{
-			perror("fork");
-			return (1);
-		}
-		if (pid == 0)
-		{
-			setup_child_signals();
-			io_handle(state->current_cmd);
-			if (ft_strncmp("export", cmd, 7) == 0)
-				export_builtin(state->current_cmd, &state->free_struct.envp);
-			else if (ft_strncmp("unset", cmd, 6) == 0)
-				unset_builtin(state->current_cmd, &state->free_struct.envp);
-			else if (ft_strncmp("cd", cmd, 3) == 0)
-				cd_builtin(state->current_cmd, state->free_struct.envp);
-			exit(state->current_cmd->return_value);
-		}
-		state->pids[state->i++] = pid;
-		if (state->current_cmd->output_type == IO_PIPE_OUT)
-			close(state->current_cmd->output_fd);
-		if (state->current_cmd->input_type == IO_PIPE_IN)
-			close(state->current_cmd->input_fd);
-		return (1);
-	}
-	else if (ft_strncmp("export", cmd, 7) == 0)
-		export_builtin(state->current_cmd, &state->free_struct.envp);
-	else if (ft_strncmp("unset", cmd, 6) == 0)
-		unset_builtin(state->current_cmd, &state->free_struct.envp);
-	else if (ft_strncmp("cd", cmd, 3) == 0)
-		cd_builtin(state->current_cmd, state->free_struct.envp);
-	else if (ft_strncmp("echo", cmd, 5) == 0 &&
-		!state->current_cmd->next && !state->current_cmd->prev)
-		echo_builtin(state->current_cmd);
-	else if (ft_strncmp("pwd", cmd, 4) == 0 &&
-		!state->current_cmd->next && !state->current_cmd->prev)
-		pwd_builtin(state->current_cmd);
-	else if (ft_strncmp("env", cmd, 4) == 0 &&
-		!state->current_cmd->next && !state->current_cmd->prev)
-		env_builtin(state->current_cmd, state->free_struct.envp);
-	else if (ft_strncmp("exit", cmd, 5) == 0)
-	{
-		state->free_struct.token_list = state->free_struct.token_list;
-		state->free_struct.pids = state->pids;
-		state->free_struct.vars = state->free_struct.vars;
-		exit_builtin(state->current_cmd, &state->free_struct);
-	}
-	else
-		return (0);
-	return (1);
+static int is_pipeline_builtin(t_simple_cmds *cmd)
+{
+	char *name = *cmd->str;
+	int is_pipe = (cmd->pipe || cmd->next || cmd->prev);
+	return is_pipe && (
+		ft_strncmp("export", name, 7) == 0 ||
+		ft_strncmp("unset", name, 6) == 0 ||
+		ft_strncmp("cd", name, 3) == 0
+	);
 }
+
+static int run_pipeline_builtin(t_exec_state *s, char *cmd)
+{
+	pid_t pid = fork();
+	if (pid == -1)
+		return perror("fork"), 1;
+	if (pid == 0)
+	{
+		setup_child_signals();
+		io_handle(s->current_cmd);
+		if (ft_strncmp("export", cmd, 7) == 0)
+			export_builtin(s->current_cmd, &s->free_struct.envp);
+		else if (ft_strncmp("unset", cmd, 6) == 0)
+			unset_builtin(s->current_cmd, &s->free_struct.envp);
+		else if (ft_strncmp("cd", cmd, 3) == 0)
+			cd_builtin(s->current_cmd, s->free_struct.envp);
+		exit(s->current_cmd->return_value);
+	}
+	s->pids[s->i++] = pid;
+	if (s->current_cmd->output_type == IO_PIPE_OUT)
+		close(s->current_cmd->output_fd);
+	if (s->current_cmd->input_type == IO_PIPE_IN)
+		close(s->current_cmd->input_fd);
+	return 1;
+}
+
+static int handle_builtin_commands(t_exec_state *s)
+{
+	char *cmd = *s->current_cmd->str;
+
+	if (is_pipeline_builtin(s->current_cmd))
+		return run_pipeline_builtin(s, cmd);
+	if (ft_strncmp("export", cmd, 7) == 0)
+		export_builtin(s->current_cmd, &s->free_struct.envp);
+	else if (ft_strncmp("unset", cmd, 6) == 0)
+		unset_builtin(s->current_cmd, &s->free_struct.envp);
+	else if (ft_strncmp("cd", cmd, 3) == 0)
+		cd_builtin(s->current_cmd, s->free_struct.envp);
+	else if (ft_strncmp("echo", cmd, 5) == 0 && !s->current_cmd->next && !s->current_cmd->prev)
+		echo_builtin(s->current_cmd);
+	else if (ft_strncmp("pwd", cmd, 4) == 0 && !s->current_cmd->next && !s->current_cmd->prev)
+		pwd_builtin(s->current_cmd);
+	else if (ft_strncmp("env", cmd, 4) == 0 && !s->current_cmd->next && !s->current_cmd->prev)
+		env_builtin(s->current_cmd, s->free_struct.envp);
+	else if (ft_strncmp("exit", cmd, 5) == 0)
+		exit_builtin(s->current_cmd, &s->free_struct);
+	else
+		return 0;
+	return 1;
+}
+
 
 static void execute_loop(t_exec_state *state)
 {
