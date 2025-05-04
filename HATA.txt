@@ -5,3 +5,8 @@ bash output = (/home/aakyuz/sgoinfre/bbb/minishell_tester)
 Test  23: ❌ pwd oi 
 mini output = (/sgoinfre/aakyuz/bbb/minishell_tester)
 bash output = (/home/aakyuz/sgoinfre/bbb/minishell_tester)
+
+
+HATA
+
+echo > deneme de yeni dosya oluşturması lazım oluşturmuyor
