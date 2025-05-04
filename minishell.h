@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 18:21:13 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 22:55:39 by ahmtemel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,12 @@ typedef struct s_free
 	t_simple_cmds	*cmd_list; 
 }						t_free;
 
+typedef struct s_context {
+	char ***envp;
+	t_lexer *token_list;
+	t_vars **vars;
+}	t_context;
+
 typedef struct s_exec_state
 {
 	t_simple_cmds	*current_cmd;
@@ -102,15 +108,8 @@ typedef struct s_exec_state
 	pid_t			*pids;
 	int				cmd_count;
 	int				i;
-	t_free			free_struct;
+	int				status;
 }	t_exec_state;
-
-typedef struct s_context {
-	char ***envp;
-	t_lexer *token_list;
-	t_vars **vars;
-}	t_context;
-
 
 extern volatile sig_atomic_t	g_received_signal;
 

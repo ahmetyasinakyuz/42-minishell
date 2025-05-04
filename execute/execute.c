@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 22:03:31 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 00:36:41 by ahmtemel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,120 +105,127 @@ void	handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 
 void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars)
 {
-	t_simple_cmds	*current_cmd;
-	t_simple_cmds	*last_cmd;
-	pid_t			*pids;
-	int				cmd_count;
-	int				i;
-	int				status;
-	
-	cmd_count = 0;
-	status = 0;
-	last_cmd = cmd_list;
-	current_cmd = cmd_list;
-	while (current_cmd)
+	t_exec_state	st;
+
+	st.cmd_count = 0;
+	st.status = 0;
+	st.last_cmd = cmd_list;
+	st.current_cmd = cmd_list;
+
+	while (st.current_cmd)
 	{
-		cmd_count++;
-		last_cmd = current_cmd;
-		current_cmd = current_cmd->next;
+		st.cmd_count++;
+		st.last_cmd = st.current_cmd;
+		st.current_cmd = st.current_cmd->next;
 	}
-	pids = malloc(sizeof(pid_t) * cmd_count);
-	if (!pids)
+
+	st.pids = malloc(sizeof(pid_t) * st.cmd_count);
+	if (!st.pids)
 	{
 		perror("malloc");
 		return;
 	}
-	for (i = 0; i < cmd_count; i++)
-		pids[i] = -1;
+	for (st.i = 0; st.i < st.cmd_count; st.i++)
+		st.pids[st.i] = -1;
+
 	setup_execute_signals();
-	current_cmd = cmd_list;
-	i = 0;
-	while (current_cmd)
+
+	st.current_cmd = cmd_list;
+	st.i = 0;
+	while (st.current_cmd)
 	{
-		if (current_cmd->pipe == 0 && !current_cmd->prev)
+		if (!((st.current_cmd->pipe == 1 || st.current_cmd->prev) &&
+			(ft_strncmp("unset",  *st.current_cmd->str, 6) == 0 ||
+			ft_strncmp("cd",     *st.current_cmd->str, 3) == 0 ||
+			ft_strncmp("exit",   *st.current_cmd->str, 5) == 0)))
 		{
-			if (ft_strncmp("export", *current_cmd->str, 7) == 0)
+			if (st.current_cmd->pipe == 0 && !st.current_cmd->prev)
 			{
-				if (current_cmd->content && current_cmd->content[1])
-					export_builtin(current_cmd, envp, 1);
+				if (ft_strncmp("export", *st.current_cmd->str, 7) == 0)
+				{
+					if (st.current_cmd->content && st.current_cmd->content[1])
+						export_builtin(st.current_cmd, envp, 1);
+					else
+						export_builtin(st.current_cmd, envp, 0);
+				}
+				else if(ft_strncmp("unset", *st.current_cmd->str, 6) == 0)
+					unset_builtin(st.current_cmd, envp);
+				else if(ft_strncmp("cd", *st.current_cmd->str, 3) == 0)
+					cd_builtin(st.current_cmd, *envp);
+				else if(ft_strncmp("exit", *st.current_cmd->str, 5) == 0)
+					exit_builtin(st.current_cmd, *envp, token_list, st.pids, vars);
 				else
-					export_builtin(current_cmd, envp, 0);
+				{
+					if (st.current_cmd->next)
+						handle_pipe(st.current_cmd, st.current_cmd->next);
+					st.pids[st.i] = fork();
+					if (st.pids[st.i] == -1)
+					{
+						perror("fork");
+						exit(1);
+					}
+					if (st.pids[st.i] == 0)
+					{
+						setup_child_signals();
+						io_handle(st.current_cmd);
+						builtin_control(st.current_cmd, envp, token_list, st.pids, vars);
+					}
+					if (st.current_cmd->output_type == IO_PIPE_OUT)
+						close(st.current_cmd->output_fd);
+					if (st.current_cmd->input_type == IO_PIPE_IN)
+						close(st.current_cmd->input_fd);
+					st.i++;
+				}
 			}
-			else if(ft_strncmp("unset", *current_cmd->str, 6) == 0)
-				unset_builtin(current_cmd, envp);
-			else if(ft_strncmp("cd", *current_cmd->str, 3) == 0)
-				cd_builtin(current_cmd, *envp);
-			else if(ft_strncmp("exit", *current_cmd->str, 5) == 0)
-				exit_builtin(current_cmd, *envp, token_list, pids, vars);
 			else
 			{
-				if (current_cmd->next)
-					handle_pipe(current_cmd, current_cmd->next);
-				pids[i] = fork();
-				if (pids[i] == -1)
+				if (st.current_cmd->next)
+					handle_pipe(st.current_cmd, st.current_cmd->next);
+				st.pids[st.i] = fork();
+				if (st.pids[st.i] == -1)
 				{
 					perror("fork");
 					exit(1);
 				}
-				if (pids[i] == 0)
+				if (st.pids[st.i] == 0)
 				{
 					setup_child_signals();
-					io_handle(current_cmd);
-					builtin_control(current_cmd, envp, token_list, pids, vars);
+					io_handle(st.current_cmd);
+					builtin_control(st.current_cmd, envp, token_list, st.pids, vars);
 				}
-				if (current_cmd->output_type == IO_PIPE_OUT)
-					close(current_cmd->output_fd);
-				if (current_cmd->input_type == IO_PIPE_IN)
-					close(current_cmd->input_fd);
-				i++;
+				if (st.current_cmd->output_type == IO_PIPE_OUT)
+					close(st.current_cmd->output_fd);
+				if (st.current_cmd->input_type == IO_PIPE_IN)
+					close(st.current_cmd->input_fd);
+				st.i++;
 			}
 		}
-		else
-		{
-			if (current_cmd->next)
-				handle_pipe(current_cmd, current_cmd->next);
-			pids[i] = fork();
-			if (pids[i] == -1)
-			{
-				perror("fork");
-				exit(1);
-			}
-			if (pids[i] == 0)
-			{
-				setup_child_signals();
-				io_handle(current_cmd);
-				builtin_control(current_cmd, envp, token_list, pids, vars);
-			}
-			if (current_cmd->output_type == IO_PIPE_OUT)
-				close(current_cmd->output_fd);
-			if (current_cmd->input_type == IO_PIPE_IN)
-				close(current_cmd->input_fd);
-			i++;
-		}
-		last_cmd = current_cmd;
-		current_cmd = current_cmd->next;
+		st.last_cmd = st.current_cmd;
+		st.current_cmd = st.current_cmd->next;
 	} 
-	i = 0;
-	while (i < cmd_count)
+
+	st.i = 0;
+	while (st.i < st.cmd_count)
 	{
-		if (pids[i] > 0)
+		if (st.pids[st.i] > 0)
 		{
-			waitpid(pids[i], &status, 0);
-			if (WIFSIGNALED(status))
+			waitpid(st.pids[st.i], &st.status, 0);
+			if (WIFSIGNALED(st.status))
 			{
-				if (WTERMSIG(status) == SIGQUIT)
+				if (WTERMSIG(st.status) == SIGQUIT)
 					write(STDERR_FILENO, "Quit (core dumped)\n", 19);
-				else if (WTERMSIG(status) == SIGINT)
+				else if (WTERMSIG(st.status) == SIGINT)
 					write(STDOUT_FILENO, "\n", 1);
 
-				if (last_cmd && i == cmd_count - 1)
-					last_cmd->return_value = 128 + WTERMSIG(status);
+				if (st.last_cmd && st.i == st.cmd_count - 1)
+					st.last_cmd->return_value = 128 + WTERMSIG(st.status);
 			}
-			else if (WIFEXITED(status) && last_cmd && i == cmd_count - 1)
-				last_cmd->return_value = WEXITSTATUS(status);
+			else if (WIFEXITED(st.status) && st.last_cmd && st.i == st.cmd_count - 1)
+				st.last_cmd->return_value = WEXITSTATUS(st.status);
 		}
-		i++;
+		st.i++;
 	}
+
 	setup_signals();
-	free(pids);
+	free(st.pids);
 }
