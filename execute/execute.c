@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 12:18:31 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 12:28:40 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,51 @@ void	exit_builtin_value(int i, int flag, t_simple_cmds *cmd_list)
 	}
 }
 
+int	remove_quotes_from_arg(char *str)
+{
+	if (!str)
+		return (0);
+	
+	// If the string is empty, it's not numeric
+	if (str[0] == '\0')
+		return (0);
+		
+	// Check if it's wrapped in quotes
+	if ((str[0] == '"' && str[ft_strlen(str) - 1] == '"') || 
+		(str[0] == '\'' && str[ft_strlen(str) - 1] == '\''))
+		return (1);
+		
+	return (0);
+}
+
+char	*extract_number(char *str)
+{
+	char	*result;
+	int		len;
+	int		is_quoted;
+	
+	is_quoted = remove_quotes_from_arg(str);
+	
+	if (is_quoted)
+	{
+		// Remove surrounding quotes
+		len = ft_strlen(str) - 2;
+		result = ft_substr(str, 1, len);
+	}
+	else
+	{
+		result = ft_strdup(str);
+	}
+	
+	return (result);
+}
+
 void	exit_builtin(t_simple_cmds *cmd_list, t_free *free_struct)
 {
-	int	i;
-	int	flag;
+	int		i;
+	int		flag;
+	char	*exit_arg;
+	char	*num_str;
 
 	i = 0;
 	flag = 0;
@@ -84,10 +125,15 @@ void	exit_builtin(t_simple_cmds *cmd_list, t_free *free_struct)
 		}
 		if (cmd_list->content[1])
 		{
-			if (ft_isnum(cmd_list->content[1]))
-				i = ft_new_atoi(cmd_list->content[1], &flag);
+			exit_arg = cmd_list->content[1];
+			num_str = extract_number(exit_arg);
+			
+			if (ft_isnum(num_str))
+				i = ft_new_atoi(num_str, &flag);
 			else
 				i = 400;
+				
+			free(num_str);
 		}
 		write(STDOUT_FILENO, "exit\n", 5);
 		free_all(free_struct);

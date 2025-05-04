@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 14:33:28 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 11:29:02 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 12:29:09 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ void	sign_control(int *sign, int *i, const char *str)
 {
 	*sign = 1;
 	if (str[*i] == '+')
-		i++;
+		(*i)++;
 	else if (str[*i] == '-')
 	{
 		*sign = -1;
-		i++;
+		(*i)++;
 	}
 }
 
@@ -56,5 +56,13 @@ int	ft_new_atoi(const char *str, int *flag)
 		}
 		result = result * 10 + (str[i++] - '0');
 	}
-	return ((long long)(result * sign) % 256);
+	if (str[i] != '\0')
+	{
+		*flag = -1;
+		return (-1);
+	}
+	if (sign == -1)
+		return ((256 - (result % 256)) % 256);
+	else
+		return (result % 256);
 }

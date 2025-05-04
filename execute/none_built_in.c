@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 12:18:31 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 12:29:17 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ void	none_built_in(t_simple_cmds *cmd_list, char **envp)
 		}
 		return ;
 	}
-	
-	// Check if path is a directory
 	if (stat(path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
 	{
 		ft_putstr_fd("minishell: ", 2);
@@ -99,7 +97,6 @@ void	none_built_in(t_simple_cmds *cmd_list, char **envp)
 		cmd_list->return_value = 126;
 		return;
 	}
-
 	if (cmd_list->flag == NULL)
 		cmd = cmd_list->str;
 	else
