@@ -98,41 +98,35 @@ void	run_single_command(t_simple_cmds *cmd, t_free *free_struct, pid_t *pids, in
 		close(cmd->input_fd);
 }
 
-static void handle_child_status(int status, t_simple_cmds *cmd)
-{
-	if (WIFSIGNALED(status))
-	{
-		if (WTERMSIG(status) == SIGQUIT)
-			write(STDERR_FILENO, "Quit (core dumped)\n", 19);
-		else if (WTERMSIG(status) == SIGINT)
-			write(STDOUT_FILENO, "\n", 1);
-		cmd->return_value = 128 + WTERMSIG(status);
-	}
-	else if (WIFEXITED(status))
-		cmd->return_value = WEXITSTATUS(status);
-}
-
-void wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *cmd_list)
+void	wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *cmd_list)
 {
 	int	i;
 	int	status;
-	t_simple_cmds *curr;
+	t_simple_cmds *current_cmd;
 
 	i = 0;
-	curr = cmd_list;
+	current_cmd = cmd_list;
 	while (i < cmd_count)
 	{
 		if (pids[i] > 0)
 		{
 			waitpid(pids[i], &status, 0);
-			handle_child_status(status, curr);
+			if (WIFSIGNALED(status))
+			{
+				if (WTERMSIG(status) == SIGQUIT)
+					write(STDERR_FILENO, "Quit (core dumped)\n", 19);
+				else if (WTERMSIG(status) == SIGINT)
+					write(STDOUT_FILENO, "\n", 1);
+				current_cmd->return_value = 128 + WTERMSIG(status);
+			}
+			else if (WIFEXITED(status))
+				current_cmd->return_value = WEXITSTATUS(status);
 		}
-		if (curr && curr->next)
-			curr = curr->next;
+		if (current_cmd && current_cmd->next)
+			current_cmd = current_cmd->next;
 		i++;
 	}
 }
-
 
 static int handle_builtin_commands(t_exec_state *state)
 {
