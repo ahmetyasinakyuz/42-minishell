@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 14:33:28 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/03 19:23:56 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 10:19:22 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,18 @@ static int	ft_white_space(int i, const char *str)
 	return (i);
 }
 
+void	sign_control(int *sign, int *i, const char *str)
+{
+	*sign = 1;
+	if (str[*i] == '+')
+		i++;
+	else if (str[*i] == '-')
+	{
+		*sign = -1;
+		i++;
+	}
+}
+
 int	ft_new_atoi(const char *str, int *flag)
 {
 	int					i;
@@ -28,15 +40,8 @@ int	ft_new_atoi(const char *str, int *flag)
 
 	i = 0;
 	result = 0;
-	sign = 1;
 	i = ft_white_space(i, str);
-	if (str[i] == '+')
-		i++;
-	else if (str[i] == '-')
-	{
-		sign = -1;
-		i++;
-	}
+	sign_control(&sign, &i, str);
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		if (sign == 1)
@@ -53,12 +58,3 @@ int	ft_new_atoi(const char *str, int *flag)
 	}
 	return ((long long)(result * sign) % 256);
 }
-
-// int main()
-// {
-// 	printf("%d\n", ft_new_atoi("42"));                    // 42
-// 	printf("%d\n", ft_new_atoi("9223372036854775807"));   // 255
-// 	printf("%d\n", ft_new_atoi("9223372036854775808"));   // Hata
-// 	printf("%d\n", ft_new_atoi("-9223372036854775808"));  // 0
-// 	printf("%d\n", ft_new_atoi("-9223372036854775809"));  // Hata
-// }

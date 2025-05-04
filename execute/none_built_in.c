@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/03 19:28:14 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 10:27:10 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ char	**merge_cmd_and_flags(char **cmd, char **flags)
 	return (merged);
 }
 
-void	none_built_in_path_control(t_simple_cmds *cmd_list, char **envp, char **path)
+void	none_built_in_path_control(t_simple_cmds *cmd_list,
+		char **envp, char **path)
 {
 	if (cmd_list->str[0] == NULL)
 	{
