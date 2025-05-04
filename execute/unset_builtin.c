@@ -6,41 +6,46 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:40:30 by codespace         #+#    #+#             */
-/*   Updated: 2025/05/04 16:46:13 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 21:57:02 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static int	is_unset_target(t_simple_cmds *cmd_list, char *env)
+{
+	int		j;
+	int		len;
+
+	j = 1;
+	while (cmd_list->str[j])
+	{
+		len = ft_strlen(cmd_list->str[j]);
+		if (ft_strncmp(env, cmd_list->str[j], len) == 0 && env[len] == '=')
+			return (1);
+		j++;
+	}
+	return (0);
+}
+
 char	**filter_env_without_vars(t_simple_cmds *cmd_list, char **envp)
 {
 	int		i;
-	int		j;
 	int		k;
 	char	**new_env;
 	int		env_len;
-	int		len;
 
-	i = 0;
-	k = 0;
 	env_len = 0;
 	while (envp && envp[env_len])
 		env_len++;
 	new_env = malloc(sizeof(char *) * (env_len + 1));
 	if (!new_env)
 		return (NULL);
+	i = 0;
+	k = 0;
 	while (envp[i])
 	{
-		j = 1;
-		while (cmd_list->str[j])
-		{
-			len = ft_strlen(cmd_list->str[j]);
-			if (ft_strncmp(envp[i], cmd_list->str[j], len) == 0
-				&& envp[i][len] == '=')
-				break ;
-			j++;
-		}
-		if (!cmd_list->str[j])
+		if (!is_unset_target(cmd_list, envp[i]))
 			new_env[k++] = ft_strdup(envp[i]);
 		i++;
 	}
