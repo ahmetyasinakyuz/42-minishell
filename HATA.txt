@@ -1,2 +1,5 @@
 valgrind --leak-check=full --show-leak-kinds=all--suppressions=readline.supp ./minishell
 git reset --soft HEAD~1
+
+echo "deneme" >> folder
+bunda reachable leak alıyor
