@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 13:02:53 by ahmtemel         ###   ########.fr       */
+/*   Updated: 2025/05/04 14:21:55 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,10 @@ void	handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 	}
 	cmd->output_fd = pipe_fd[1];
 	cmd->output_type = IO_PIPE_OUT;
+	cmd->pipe = 1;  // Mark command as part of a pipeline
 	next->input_fd = pipe_fd[0];
 	next->input_type = IO_PIPE_IN;
+	next->pipe = 1;  // Mark next command as part of a pipeline
 }
 
 void	count_commands(t_simple_cmds *cmd_list, int *cmd_count, t_simple_cmds **last_cmd)
@@ -129,8 +131,42 @@ void	wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *cmd_list)
 static int handle_builtin_commands(t_exec_state *state)
 {
 	char *cmd = *state->current_cmd->str;
+	int is_pipeline = (state->current_cmd->pipe || 
+		(state->current_cmd->next != NULL || state->current_cmd->prev != NULL));
 
-	if (ft_strncmp("export", cmd, 7) == 0)
+	// For built-ins in a pipeline, we need to fork to ensure changes stay local to that process
+	if (is_pipeline && (ft_strncmp("export", cmd, 7) == 0 || 
+						ft_strncmp("unset", cmd, 6) == 0 || 
+						ft_strncmp("cd", cmd, 3) == 0))
+	{
+		pid_t pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
+			return (1);
+		}
+		if (pid == 0)
+		{
+			// Child process handles the built-in
+			setup_child_signals();
+			io_handle(state->current_cmd);
+			if (ft_strncmp("export", cmd, 7) == 0)
+				export_builtin(state->current_cmd, &state->free_struct.envp);
+			else if (ft_strncmp("unset", cmd, 6) == 0)
+				unset_builtin(state->current_cmd, &state->free_struct.envp);
+			else if (ft_strncmp("cd", cmd, 3) == 0)
+				cd_builtin(state->current_cmd, state->free_struct.envp);
+			exit(state->current_cmd->return_value);
+		}
+		// Parent continues and notes this child in the pids array
+		state->pids[state->i++] = pid;
+		if (state->current_cmd->output_type == IO_PIPE_OUT)
+			close(state->current_cmd->output_fd);
+		if (state->current_cmd->input_type == IO_PIPE_IN)
+			close(state->current_cmd->input_fd);
+		return (1);
+	}
+	else if (ft_strncmp("export", cmd, 7) == 0)
 		export_builtin(state->current_cmd, &state->free_struct.envp);
 	else if (ft_strncmp("unset", cmd, 6) == 0)
 		unset_builtin(state->current_cmd, &state->free_struct.envp);
@@ -156,7 +192,6 @@ static int handle_builtin_commands(t_exec_state *state)
 		return (0);
 	return (1);
 }
-
 
 static void execute_loop(t_exec_state *state)
 {
@@ -197,59 +232,3 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 	setup_signals();
 	free(state.pids);
 }
-
-// void	execute(t_simple_cmds *cmd_list, char ***envp,
-// 	t_lexer *token_list, t_vars **vars)
-// {
-// 	t_exec_state	state;
-	
-// 	count_commands(cmd_list, &state.cmd_count, &state.last_cmd);
-// 	if (!init_execute_struct(&state.free_struct, &state.pids, state.cmd_count, token_list, vars, envp))
-// 		return ;
-// 	setup_execute_signals();
-// 	state.free_struct.cmd_list = cmd_list;
-// 	state.current_cmd = cmd_list;
-// 	state.i = 0;
-// 	while (state.current_cmd)
-// 	{
-// 		if (ft_strncmp("export", *state.current_cmd->str, 7) == 0)
-// 			export_builtin(state.current_cmd, envp);
-// 		else if (ft_strncmp("unset", *state.current_cmd->str, 6) == 0)
-// 			unset_builtin(state.current_cmd, envp);
-// 		else if (ft_strncmp("cd", *state.current_cmd->str, 3) == 0)
-// 			cd_builtin(state.current_cmd, *envp);
-// 		else if (ft_strncmp("echo", *state.current_cmd->str, 5) == 0 && 
-// 				(!state.current_cmd->next && !state.current_cmd->prev))
-// 		{
-// 			echo_builtin(state.current_cmd);
-// 		}
-// 		else if (ft_strncmp("pwd", *state.current_cmd->str, 4) == 0 && 
-// 				(!state.current_cmd->next && !state.current_cmd->prev))
-// 		{
-// 			pwd_builtin(state.current_cmd);
-// 		}
-// 		else if (ft_strncmp("env", *state.current_cmd->str, 4) == 0 && 
-// 				(!state.current_cmd->next && !state.current_cmd->prev))
-// 		{
-// 			env_builtin(state.current_cmd, *envp);
-// 		}
-// 		else if (ft_strncmp("exit", *state.current_cmd->str, 5) == 0)
-// 		{
-// 			state.free_struct.envp = *envp;
-// 			state.free_struct.token_list = token_list;
-// 			state.free_struct.pids = state.pids;
-// 			state.free_struct.vars = vars;
-// 			exit_builtin(state.current_cmd, &state.free_struct);
-// 		}
-// 		else
-// 			run_single_command(state.current_cmd, &state.free_struct, state.pids, state.i++);
-// 		state.current_cmd = state.current_cmd->next;
-// 	}
-// 	wait_for_children(state.pids, state.i, cmd_list);
-// 	setup_signals();
-// 	free(state.pids);
-// }
-
-//echo "test 42 minishell" | cat | grep "test" | cat | cat | grep "42" | cat | cat | grep "minishell" | cat
-//echo "42 minishell Ayse Sude" | tr 'a-z' 'A-Z' | tr ' ' '\n' | sort | uniq | rev | tr 'A-Z' 'a-z' | cat | cat | wc -l | cat
-// echo -n "This is a test" | cd /home/user | pwd | export | unset VAR_NAME | env | echo "Another test" | echo -n "Final output" | exit | echo "This should not be executed"
