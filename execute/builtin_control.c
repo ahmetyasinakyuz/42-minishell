@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 15:48:37 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 16:05:01 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,7 @@ void	builtin_control(t_simple_cmds *cmd_list, t_free *free_struct)
 	free_lexer_list(free_struct->token_list);
 	clear_vars(free_struct->vars);
 	free_env(free_struct->envp);
+	free(free_struct->pids);
+	rl_clear_history();
 	exit(0);
 }
