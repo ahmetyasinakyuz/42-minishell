@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 13:20:33 by ahmtemel         ###   ########.fr       */
+/*   Updated: 2025/05/04 13:30:40 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,16 @@
 
 static char	*process_dollar(char *result, int *i, t_vars **vars)
 {
+	// Special check for $? which should be processed regardless
+	if (result[*i + 1] == '?')
+	{
+		result = replace_env_var(result, *i, vars);
+		*i = -1;
+		return (result);
+	}
+
 	if (result[*i + 1] && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_'
-			|| (ft_isdigit(result[*i + 1]) && result[*i + 1] != ' ')
-			|| result[*i + 1] == '?'))
+			|| (ft_isdigit(result[*i + 1]) && result[*i + 1] != ' ')))
 	{
 		result = replace_env_var(result, *i, vars);
 		*i = -1;
