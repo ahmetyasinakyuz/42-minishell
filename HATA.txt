@@ -1,19 +1,4 @@
-Test  22: ❌ pwd 
-mini output = (/sgoinfre/aakyuz/bbb/minishell_tester)
-bash output = (/home/aakyuz/sgoinfre/bbb/minishell_tester)
-
-Test  23: ❌ pwd oi 
-mini output = (/sgoinfre/aakyuz/bbb/minishell_tester)
-bash output = (/home/aakyuz/sgoinfre/bbb/minishell_tester)
-
-
 HATA
-
-echo > deneme de yeni dosya oluşturması lazım oluşturmuyor
-
-
-pipe değşişke n export
-
 
 HATA 2 
 touch readonly.txt

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:59:20 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 16:44:02 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 19:53:29 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,14 @@ void	echo_builtin(t_simple_cmds *cmd_list)
 	{
 		while (cmd_list->content[i] && cmd_list->content[i + 1])
 		{
-			printf("%s ", cmd_list->content[i]);
+			ft_putstr_fd(cmd_list->content[i], STDOUT_FILENO);
+			ft_putchar_fd(' ', STDOUT_FILENO);
 			i++;
 		}
 		if (cmd_list->content[i])
-			printf("%s", cmd_list->content[i]);
+			ft_putstr_fd(cmd_list->content[i], STDOUT_FILENO);
 	}
 	if (flag == 0)
-		printf("\n");
+		ft_putchar_fd('\n', STDOUT_FILENO);
 	cmd_list->return_value = 0;
 }
