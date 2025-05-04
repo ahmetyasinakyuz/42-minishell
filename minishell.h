@@ -105,6 +105,12 @@ typedef struct s_exec_state
 	t_free			free_struct;
 }	t_exec_state;
 
+typedef struct s_context {
+	char ***envp;
+	t_lexer *token_list;
+	t_vars **vars;
+}	t_context;
+
 
 extern volatile sig_atomic_t	g_received_signal;
 
