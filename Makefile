@@ -6,7 +6,7 @@
 #    By: aycami <aycami@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/05 01:37:16 by aycami           ###   ########.fr        #
+#    Updated: 2025/05/05 02:28:51 by aycami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,8 @@ SRCS =	parser/flags.c                      \
 		parser/heredoc.c                    \
 		execute/builtin_control.c           \
 		execute/none_built_in.c             \
+		execute/none_builtin_utils_one.c    \
+		execute/none_builtin_utils_two.c    \
 		execute/execute.c                   \
 		execute/path_finder.c               \
 		execute/echo_builtin.c              \

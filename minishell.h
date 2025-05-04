@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 01:39:30 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 02:27:37 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,4 +212,10 @@ int		is_valid_identifier(const char *s);
 void	export_with_flag_error(t_simple_cmds *cmd_list);
 void	print_invalid_identifier(char *str);
 void	update_env_entry(char **envp, int idx, char *new_entry);
+char	**allocate_merged_array(char **cmd, char **flags);
+char	**merge_cmd_and_flags(char **cmd, char **flags);
+int		is_directory(const char *path);
+void	print_cmd_not_found(char *cmd, int *ret);
+void	handle_command_error(t_simple_cmds *cmd_list, char *cmd, char *path);
+int		is_invalid_command(t_simple_cmds *cmd_list);
 #endif
