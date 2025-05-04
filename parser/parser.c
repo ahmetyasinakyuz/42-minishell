@@ -6,32 +6,11 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 13:30:40 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 14:36:31 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-static char	*process_dollar(char *result, int *i, t_vars **vars)
-{
-	// Special check for $? which should be processed regardless
-	if (result[*i + 1] == '?')
-	{
-		result = replace_env_var(result, *i, vars);
-		*i = -1;
-		return (result);
-	}
-
-	if (result[*i + 1] && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_'
-			|| (ft_isdigit(result[*i + 1]) && result[*i + 1] != ' ')))
-	{
-		result = replace_env_var(result, *i, vars);
-		*i = -1;
-	}
-	else
-		(*i)++;
-	return (result);
-}
 
 char	*is_dolar(char *str, t_vars **vars)
 {
@@ -61,14 +40,27 @@ void	handle_current_token(t_lexer **current, t_lexer **start,
 		handle_last_token(start, (*current)->next, cmd_list, **vars);
 }
 
+void	update_return_value(t_simple_cmds *cmd_list, t_vars **vars)
+{
+	t_simple_cmds	*last_cmd;
+	char			*return_value;
+
+	last_cmd = cmd_list;
+	while (last_cmd && last_cmd->next)
+		last_cmd = last_cmd->next;
+	if (last_cmd)
+	{
+		return_value = ft_itoa(last_cmd->return_value);
+		add_static_var(vars, "?", return_value);
+		free(return_value);
+	}
+}
+
 void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)
 {
 	t_simple_cmds	*cmd_list;
-	t_simple_cmds	*cmd_start;
-	t_simple_cmds	*last_cmd;
 	t_lexer			*start;
 	t_lexer			*current;
-	char			*return_value;
 
 	cmd_list = NULL;
 	start = token_list;
@@ -78,18 +70,9 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)
 		handle_current_token(&current, &start, &cmd_list, vars);
 		current = current->next;
 	}
-	cmd_start = cmd_list;
 	execute(cmd_list, envp, token_list, vars);
-	last_cmd = cmd_start;
-	while (last_cmd && last_cmd->next)
-		last_cmd = last_cmd->next;
-	if (last_cmd)
-	{
-		return_value = ft_itoa(last_cmd->return_value);
-		add_static_var(vars, "?", return_value);
-		free(return_value);
-	}
-	free_command_list(cmd_start);
+	update_return_value(cmd_list, vars);
+	free_command_list(cmd_list);
 }
 
 void	parser(char *input, t_vars **vars, char ***envp)

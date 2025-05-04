@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 12:55:28 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 14:37:00 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ void	handle_sigint(int signum);
 void	setup_child_signals(void);
 
 //--------------------------PARSER-----------------------------------
+char	*process_dollar(char *result, int *i, t_vars **vars);
 void			parser(char *input, t_vars **vars, char ***envp);
 t_lexer			*lexer(char *input);
 t_lexer			*create_token(char *str, t_tokens token_type, int index);

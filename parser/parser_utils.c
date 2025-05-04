@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/01 12:08:54 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/04 14:36:40 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+char	*process_dollar(char *result, int *i, t_vars **vars)
+{
+	if (result[*i + 1] == '?')
+	{
+		result = replace_env_var(result, *i, vars);
+		*i = -1;
+		return (result);
+	}
+	if (result[*i + 1] && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_'
+			|| (ft_isdigit(result[*i + 1]) && result[*i + 1] != ' ')))
+	{
+		result = replace_env_var(result, *i, vars);
+		*i = -1;
+	}
+	else
+		(*i)++;
+	return (result);
+}
 
 int	init_cmd(t_simple_cmds **cmd)
 {
