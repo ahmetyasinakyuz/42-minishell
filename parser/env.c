@@ -45,13 +45,21 @@ char	*replace_env_var(char *result, int i, t_vars **vars)
 	char	*env_value;
 
 	j = 1;
-	if (ft_isdigit(result[i + j]))
-		j++;
+	if (result[i + 1] == '?')
+	{
+		j = 2;
+		env_var = ft_substr(result, i + 1, 1);
+	}
 	else
-		while (result[i + j] && (ft_isalnum(result[i + j]) || result[i
-					+ j] == '_' || result[i + j] == '?'))
+	{
+		if (ft_isdigit(result[i + j]))
 			j++;
-	env_var = ft_substr(result, i + 1, j - 1);
+		else
+			while (result[i + j] && (ft_isalnum(result[i + j]) || result[i
+						+ j] == '_'))
+				j++;
+		env_var = ft_substr(result, i + 1, j - 1);
+	}
 	env_value = get_env_value(env_var, vars);
 	free(env_var);
 	result = join_env_parts(result, i, env_value, j - 1);
