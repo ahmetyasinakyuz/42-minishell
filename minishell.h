@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 22:55:39 by ahmtemel         ###   ########.fr       */
+/*   Updated: 2025/05/05 01:12:04 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,7 @@ void	free_paths(char **paths);
 void	io_handle(t_simple_cmds *cmd_list);
 void	env_builtin(t_simple_cmds *cmd_list, char ***envp);
 void	export_builtin(t_simple_cmds *cmd_list, char ***envp, int flag);
+void	empty_export(char ***envp);
 void	unset_builtin(t_simple_cmds *cmd_list, char ***envp);
 void    pwd_builtin(t_simple_cmds *cmd_list);
 void	cd_builtin(t_simple_cmds *cmd_list, char **envp);

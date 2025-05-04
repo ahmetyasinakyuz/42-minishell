@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 11:02:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 22:05:06 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 01:13:01 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 char	**new_env_maker(char ***envp, int extra)
 {
-	char **new;
-	int len;
-	int i;
+	char	**new;
+	int		len;
+	int		i;
 
 	if (extra <= 0)
 		return (NULL);
@@ -39,66 +39,6 @@ char	**new_env_maker(char ***envp, int extra)
 	}
 	new[i] = NULL;
 	return (new);
-}
-
-void	empty_export(char ***envp)
-{
-	int		i, j;
-	char	**sorted_env;
-	char	*temp;
-	int		count = 0;
-
-	while ((*envp)[count])
-		count++;
-
-	sorted_env = malloc(sizeof(char *) * (count + 1));
-	if (!sorted_env)
-		return;
-
-	i = 0;
-	while (i < count)
-	{
-		sorted_env[i] = ft_strdup((*envp)[i]);
-		i++;
-	}
-	sorted_env[i] = NULL;
-
-	for (i = 0; i < count - 1; i++)
-	{
-		for (j = 0; j < count - i - 1; j++)
-		{
-			if (ft_strncmp(sorted_env[j], sorted_env[j + 1],
-				ft_strlen(sorted_env[j]) > ft_strlen(sorted_env[j + 1]) ?
-				ft_strlen(sorted_env[j]) : ft_strlen(sorted_env[j + 1])) > 0)
-			{
-				temp = sorted_env[j];
-				sorted_env[j] = sorted_env[j + 1];
-				sorted_env[j + 1] = temp;
-			}
-		}
-	}
-
-	i = 0;
-	while (sorted_env[i])
-	{
-		char *eq = ft_strchr(sorted_env[i], '=');
-		if (eq)
-		{
-			int key_len = eq - sorted_env[i];
-			write(1, "declare -x ", 11);
-			write(1, sorted_env[i], key_len);
-			write(1, "=\"", 2);
-			write(1, eq + 1, ft_strlen(eq + 1));
-			write(1, "\"\n", 2);
-		}
-		else
-		{
-			printf("declare -x %s\n", sorted_env[i]);
-		}
-		free(sorted_env[i]);
-		i++;
-	}
-	free(sorted_env);
 }
 
 char	*get_env_key(const char *env_str)
@@ -152,6 +92,7 @@ int	is_valid_identifier(const char *s)
 
 void	export_builtin(t_simple_cmds *cmd_list, char ***envp, int flag)
 {
+	int		i;
 	int		j;
 	char	*key;
 	int		idx;
@@ -159,6 +100,7 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp, int flag)
 	int		invalid_found;
 
 	j = 1;
+	i = 0;
 	invalid_found = 0;
 	if (cmd_list->flag)
 	{
@@ -213,8 +155,11 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp, int flag)
 					free(new_entry);
 					exit(1);
 				}
-				for (int i = 0; i < len; i++)
+				while (i < len)
+				{
 					new_env[i] = ft_strdup((*envp)[i]);
+					i++;
+				}
 				new_env[len] = new_entry;
 				new_env[len + 1] = NULL;
 			
@@ -225,5 +170,8 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp, int flag)
 			j++;
 		}
 	}
-	cmd_list->return_value = invalid_found ? 1 : 0;
+	if (invalid_found)
+		cmd_list->return_value = 1;
+	else
+		cmd_list->return_value = 0;
 }
