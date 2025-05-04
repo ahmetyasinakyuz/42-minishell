@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 15:51:39 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 15:54:47 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	none_built_in(t_simple_cmds *cmd_list, char **envp, t_free *free_struct)
 	char	*path;
 	char	**cmd;
 	struct stat	path_stat;
+	int		return_value;
 
 	path = NULL;
 	none_built_in_path_control(cmd_list, envp, &path);
@@ -87,12 +88,13 @@ void	none_built_in(t_simple_cmds *cmd_list, char **envp, t_free *free_struct)
 			ft_putstr_fd(": command not found\n", 2);
 			cmd_list->return_value = 127;
 		}
+		return_value = cmd_list->return_value;
 		free_command_list(cmd_list);
 		free_lexer_list(free_struct->token_list);
 		free(free_struct->pids);
 		clear_vars(free_struct->vars);
 		free_env(free_struct->envp);
-		exit(cmd_list->return_value);
+		exit(return_value);
 	}
 	if (access(path, F_OK) != 0)
 	{
@@ -100,13 +102,14 @@ void	none_built_in(t_simple_cmds *cmd_list, char **envp, t_free *free_struct)
 		ft_putstr_fd(path, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
 		cmd_list->return_value = 127;
+		return_value = cmd_list->return_value;
 		free(path);
 		free_command_list(cmd_list);
 		free_lexer_list(free_struct->token_list);
 		free(free_struct->pids);
 		clear_vars(free_struct->vars);
 		free_env(free_struct->envp);
-		exit(cmd_list->return_value);
+		exit(return_value);
 	}
 	if (stat(path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
 	{
@@ -114,13 +117,14 @@ void	none_built_in(t_simple_cmds *cmd_list, char **envp, t_free *free_struct)
 		ft_putstr_fd(path, 2);
 		ft_putstr_fd(": Is a directory\n", 2);
 		cmd_list->return_value = 126;
+		return_value = cmd_list->return_value;
 		free(path);
 		free_command_list(cmd_list);
 		free_lexer_list(free_struct->token_list);
 		free(free_struct->pids);
 		clear_vars(free_struct->vars);
 		free_env(free_struct->envp);
-		exit(cmd_list->return_value);
+		exit(return_value);
 	}
 	if (access(path, X_OK) != 0)
 	{
@@ -128,13 +132,14 @@ void	none_built_in(t_simple_cmds *cmd_list, char **envp, t_free *free_struct)
 		ft_putstr_fd(path, 2);
 		ft_putstr_fd(": Permission denied\n", 2);
 		cmd_list->return_value = 126;
+		return_value = cmd_list->return_value;
 		free(path);
 		free_command_list(cmd_list);
 		free_lexer_list(free_struct->token_list);
 		free(free_struct->pids);
 		clear_vars(free_struct->vars);
 		free_env(free_struct->envp);
-		exit(cmd_list->return_value);
+		exit(return_value);
 	}
 	if (cmd_list->flag == NULL)
 		cmd = cmd_list->str;
