@@ -46,7 +46,6 @@ void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 		path = cmd_list->str[1];
 	if (chdir(path) != 0)
 	{
-		// perror("minishell: cd: No such file or directory\n");
 		write(2, "minishell: cd: ", 15);
 		write(2, path, ft_strlen(path));
 		write(2, ": ", 2);
