@@ -56,7 +56,10 @@ void	exit_builtin_value(int i, int flag, t_simple_cmds *cmd_list)
 {
 	if (i == 400 || flag == -1)
 	{
-		printf("minishell: exit: %s: numeric argument required\n", cmd_list->content[1]);
+		write(2, "minishell: exit: ", 17);
+		write(2, cmd_list->content[1], ft_strlen(cmd_list->content[1]));
+		write(2, ": ", 2);
+		write(2, "numeric argument required\n", 26);
 		free_command_list(cmd_list);
 		exit(2);
 	}
@@ -119,7 +122,7 @@ void	exit_builtin(t_simple_cmds *cmd_list, t_free *free_struct)
 	{
 		if (cmd_list->content[1] && cmd_list->content[2])
 		{
-			printf("minishell: exit: too many arguments\n");
+			perror("minishell: exit: too many arguments\n");
 			cmd_list->return_value = 1;
 			return ;
 		}

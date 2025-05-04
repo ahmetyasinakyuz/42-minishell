@@ -17,6 +17,12 @@ void	pwd_builtin(t_simple_cmds *cmd_list)
 	char	*cwd;
 
 	cmd_list->return_value = 0;
+	if (cmd_list->flag)
+	{
+		printf("This command only works without the flag.\n");
+		cmd_list->return_value = 1;
+		exit(0);
+	}
 	cwd = getcwd(NULL, 0);
 	if (cwd != NULL)
 	{

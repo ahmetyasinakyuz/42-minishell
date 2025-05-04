@@ -37,7 +37,7 @@ void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 		path = ft_getenv_home(envp);
 		if (!path)
 		{
-			fprintf(stderr, "minishell: cd: HOME not set\n");
+			perror("minishell: cd: HOME not set\n");
 			cmd_list->return_value = 1;
 			return ;
 		}
@@ -46,7 +46,11 @@ void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 		path = cmd_list->str[1];
 	if (chdir(path) != 0)
 	{
-		fprintf(stderr, "minishell: cd: %s: %s\n", path, strerror(errno));
+		// perror("minishell: cd: No such file or directory\n");
+		write(2, "minishell: cd: ", 15);
+		write(2, path, ft_strlen(path));
+		write(2, ": ", 2);
+		write(2, strerror(errno), ft_strlen(strerror(errno)));
 		cmd_list->return_value = 1;
 		return ;
 	}
