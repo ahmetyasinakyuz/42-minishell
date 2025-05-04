@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 18:40:02 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 20:03:43 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,18 @@ void	builtin_control(t_simple_cmds *cmd_list, char ***envp,
 	int				exit_status;
 
 	current_cmd = cmd_list;
+	io_handle(current_cmd);
+	if (current_cmd->return_value != 0)
+	{
+		exit_status = current_cmd->return_value;
+		free_command_list(cmd_list);
+		free_lexer_list(token_list);
+		free(pids);
+		clear_vars(vars);
+		free_env(*envp);
+		exit(exit_status);
+	}
+
 	if (ft_strncmp("echo", *current_cmd->str, 5) == 0)
 		echo_builtin(current_cmd);
 	else if (ft_strncmp("export", *current_cmd->str, 7) == 0)

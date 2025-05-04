@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 17:15:31 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 20:03:43 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,21 @@ char	*unquote_filename(char *str)
 	return (result);
 }
 
+/*
+ * Handle file operation errors with proper cleanup
+ * Returns 1 if error occurred, 0 otherwise
+ */
+int	handle_file_error(t_simple_cmds *cmd_list, char *filename, char *error_msg)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(filename, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(error_msg, 2);
+	ft_putstr_fd("\n", 2);
+	cmd_list->return_value = 1;
+	return (1);
+}
+
 void	i_handle(t_simple_cmds *cmd_list)
 {
 	t_lexer	*current;
@@ -56,9 +71,9 @@ void	i_handle(t_simple_cmds *cmd_list)
 			cmd_list->input_fd = open(cmd_list->hd_file_name, O_RDONLY);
 			if (cmd_list->input_fd < 0)
 			{
-				ft_putstr_fd("minishell: heredoc: Cannot open temporary file\n",
-					2);
-				exit(1);
+				handle_file_error(cmd_list, "heredoc", 
+					"Cannot open temporary file");
+				return;
 			}
 			dup2(cmd_list->input_fd, STDIN_FILENO);
 		}
@@ -71,20 +86,18 @@ void	i_handle(t_simple_cmds *cmd_list)
 			unquoted_filename = unquote_filename(current->next->str);
 			if (access(unquoted_filename, F_OK) != 0)
 			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(unquoted_filename, 2);
-				ft_putstr_fd(": No such file or directory\n", 2);
+				handle_file_error(cmd_list, unquoted_filename, 
+					"No such file or directory");
 				free(unquoted_filename);
-				exit(1);
+				return;
 			}
 			cmd_list->input_fd = open(unquoted_filename, O_RDONLY);
 			if (cmd_list->input_fd < 0)
 			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(unquoted_filename, 2);
-				ft_putstr_fd(": Permission denied\n", 2);
+				handle_file_error(cmd_list, unquoted_filename, 
+					"Permission denied");
 				free(unquoted_filename);
-				exit(1);
+				return;
 			}
 			free(unquoted_filename);
 			dup2(cmd_list->input_fd, STDIN_FILENO);
@@ -92,7 +105,7 @@ void	i_handle(t_simple_cmds *cmd_list)
 		if (current->next->next)
 			current = current->next->next;
 		else
-			break ;
+			break;
 	}
 }
 
@@ -116,11 +129,10 @@ void	o_handle(t_simple_cmds *cmd_list)
 					O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (cmd_list->output_fd < 0)
 			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(unquoted_filename, 2);
-				ft_putstr_fd(": Permission denied\n", 2);
+				handle_file_error(cmd_list, unquoted_filename, 
+					"Permission denied");
 				free(unquoted_filename);
-				exit(1);
+				return;
 			}
 			free(unquoted_filename);
 			dup2(cmd_list->output_fd, STDOUT_FILENO);
@@ -132,11 +144,10 @@ void	o_handle(t_simple_cmds *cmd_list)
 					O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (cmd_list->output_fd < 0)
 			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(unquoted_filename, 2);
-				ft_putstr_fd(": Permission denied\n", 2);
+				handle_file_error(cmd_list, unquoted_filename, 
+					"Permission denied");
 				free(unquoted_filename);
-				exit(1);
+				return;
 			}
 			free(unquoted_filename);
 			dup2(cmd_list->output_fd, STDOUT_FILENO);
@@ -144,12 +155,14 @@ void	o_handle(t_simple_cmds *cmd_list)
 		if (current->next->next)
 			current = current->next->next;
 		else
-			break ;
+			break;
 	}
 }
 
 void	io_handle(t_simple_cmds *cmd_list)
 {
 	o_handle(cmd_list);
+	if (cmd_list->return_value != 0)
+		return;
 	i_handle(cmd_list);
 }
