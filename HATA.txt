@@ -3,3 +3,6 @@ git reset --soft HEAD~1
 
 echo "deneme" >> folder
 bunda reachable leak alıyor
+
+chmod 000 deneme.txt
+echo salih >> deneme.txt de dosya içine yazıyor
