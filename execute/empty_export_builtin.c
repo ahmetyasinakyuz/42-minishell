@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 01:11:01 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 01:11:46 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 01:20:09 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,65 +14,73 @@
 
 int	env_count(char **envp)
 {
-	int count = 0;
+	int	count;
+
+	count = 0;
 	while (envp[count])
 		count++;
-	return count;
+	return (count);
 }
 
 char	**copy_env(char **envp, int count)
 {
 	char	**copy;
-	int		i = 0;
+	int		i;
 
+	i = 0;
 	copy = malloc(sizeof(char *) * (count + 1));
 	if (!copy)
-		return NULL;
+		return (NULL);
 	while (i < count)
 	{
 		copy[i] = ft_strdup(envp[i]);
 		i++;
 	}
 	copy[i] = NULL;
-	return copy;
+	return (copy);
 }
 
 void	sort_env(char **env, int count)
 {
-	int		i, j;
+	int		i[2];
+	int		max_len;
 	char	*temp;
 
-	i = 0;
-	while (i < count - 1)
+	i[0] = 0;
+	while (i[0] < count - 1)
 	{
-		j = 0;
-		while (j < count - i - 1)
+		i[1] = 0;
+		while (i[1] < count - i[0] - 1)
 		{
-			if (ft_strncmp(env[j], env[j + 1],
-				ft_strlen(env[j]) > ft_strlen(env[j + 1]) ?
-				ft_strlen(env[j]) : ft_strlen(env[j + 1])) > 0)
+			if (ft_strlen(env[i[1]]) > ft_strlen(env[i[1] + 1]))
+				max_len = ft_strlen(env[i[1]]);
+			else
+				max_len = ft_strlen(env[i[1] + 1]);
+			if (ft_strncmp(env[i[1]], env[i[1] + 1], max_len) > 0)
 			{
-				temp = env[j];
-				env[j] = env[j + 1];
-				env[j + 1] = temp;
+				temp = env[i[1]];
+				env[i[1]] = env[i[1] + 1];
+				env[i[1] + 1] = temp;
 			}
-			j++;
+			i[1]++;
 		}
-		i++;
+		i[0]++;
 	}
 }
 
 void	print_sorted_env(char **env)
 {
-	int		i = 0;
+	int		i;
 	char	*eq;
+	int		key_len;
 
+	i = 0;
 	while (env[i])
 	{
 		eq = ft_strchr(env[i], '=');
 		if (eq)
 		{
-			int key_len = eq - env[i];
+			key_len = eq - env[i];
 			write(1, "declare -x ", 11);
 			write(1, env[i], key_len);
 			write(1, "=\"", 2);
@@ -94,7 +102,7 @@ void	empty_export(char ***envp)
 	count = env_count(*envp);
 	sorted_env = copy_env(*envp, count);
 	if (!sorted_env)
-		return;
+		return ;
 	sort_env(sorted_env, count);
 	print_sorted_env(sorted_env);
 	free(sorted_env);

@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 01:12:04 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 01:39:30 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,4 +205,11 @@ void	cd_builtin(t_simple_cmds *cmd_list, char **envp);
 void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars);
 int		ft_new_atoi(const char *str, int *flag);
 void	free_env(char **env);
+char	**new_env_maker(char ***envp, int extra);
+char	*get_env_key(const char *env_str);
+int		find_env_index(char **envp, const char *key);
+int		is_valid_identifier(const char *s);
+void	export_with_flag_error(t_simple_cmds *cmd_list);
+void	print_invalid_identifier(char *str);
+void	update_env_entry(char **envp, int idx, char *new_entry);
 #endif
