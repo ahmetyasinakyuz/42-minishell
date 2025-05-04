@@ -1,6 +1,2 @@
-HATA
-
-HATA 2 
-touch readonly.txt
-chmod 444 readonly.txt
-echo "deneme" >> readonly.txt
+valgrind --leak-check=full --show-leak-kinds=all--suppressions=readline.supp ./minishell
+git reset --soft HEAD~1
