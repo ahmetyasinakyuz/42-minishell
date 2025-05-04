@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 13:04:39 by ahmtemel          #+#    #+#             */
-/*   Updated: 2025/05/04 13:04:40 by ahmtemel         ###   ########.fr       */
+/*   Updated: 2025/05/04 14:37:07 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,11 @@ int	remove_quotes_from_arg(char *str)
 {
 	if (!str)
 		return (0);
-	
 	if (str[0] == '\0')
 		return (0);
-		
-	if ((str[0] == '"' && str[ft_strlen(str) - 1] == '"') || 
-		(str[0] == '\'' && str[ft_strlen(str) - 1] == '\''))
+	if ((str[0] == '"' && str[ft_strlen(str) - 1] == '"') || (str[0] == '\''
+			&& str[ft_strlen(str) - 1] == '\''))
 		return (1);
-		
 	return (0);
 }
 
@@ -75,11 +72,10 @@ char	*extract_number(char *str)
 	char	*result;
 	int		len;
 	int		is_quoted;
-	
+
 	is_quoted = remove_quotes_from_arg(str);
-	
 	if (is_quoted)
-	{ 
+	{
 		len = ft_strlen(str) - 2;
 		result = ft_substr(str, 1, len);
 	}
@@ -87,7 +83,6 @@ char	*extract_number(char *str)
 	{
 		result = ft_strdup(str);
 	}
-	
 	return (result);
 }
 
@@ -112,12 +107,12 @@ void	exit_builtin(t_simple_cmds *cmd_list, t_free *free_struct)
 		{
 			exit_arg = cmd_list->content[1];
 			num_str = extract_number(exit_arg);
-			
+
 			if (ft_isnum(num_str))
 				i = ft_new_atoi(num_str, &flag);
 			else
 				i = 400;
-				
+
 			free(num_str);
 		}
 		write(STDOUT_FILENO, "exit\n", 5);
