@@ -13,3 +13,9 @@ echo > deneme de yeni dosya oluşturması lazım oluşturmuyor
 
 
 pipe değşişke n export
+
+
+HATA 2 
+touch readonly.txt
+chmod 444 readonly.txt
+echo "deneme" >> readonly.txt
