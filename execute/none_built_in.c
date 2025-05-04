@@ -94,23 +94,19 @@ void	none_built_in(t_simple_cmds *cmd_list, char ***envp)
 
 	if (cmd_list->str[0] == NULL)
 	{
-		cmd_list->return_value = 127;
+		cmd_list->return_value = 0;
 		return;
 	}
-	
 	if (ft_strchr(cmd_list->str[0], '='))
 	{
 		cmd_list->return_value = 0;
 		return;
 	}
-	
 	if (cmd_list->str[0][0] == '\0')
 	{
-		ft_putstr_fd("minishell: : command not found\n", 2);
-		cmd_list->return_value = 127;
+		cmd_list->return_value = 0;
 		return;
 	}
-	
 	if (cmd_list->str[0][0] == '/' || (cmd_list->str[0][0] == '.' &&
 		cmd_list->str[0][1] == '/') || (cmd_list->str[0][0] == '.' &&
 		cmd_list->str[0][1] == '.' && cmd_list->str[0][2] == '/'))

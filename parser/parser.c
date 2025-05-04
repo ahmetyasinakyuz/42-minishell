@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 15:39:24 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 18:01:39 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,14 @@ void	handle_current_token(t_lexer **current, t_lexer **start,
 		t_simple_cmds **cmd_list, t_vars **vars)
 {
 	if ((*current)->token == WORD)
+	{
 		handle_word_token(*current, vars);
+		if ((*current)->str && (*current)->str[0] == '\0')
+		{
+			if (*current == *start)
+				*start = (*current)->next;
+		}
+	}
 	if ((*current)->token == PIPE)
 		handle_pipe_token(current, start, cmd_list, **vars);
 	else if (!(*current)->next)
