@@ -6,10 +6,9 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 14:33:28 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 16:45:34 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 21:43:37 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../minishell.h"
 
@@ -18,6 +17,17 @@ static int	ft_white_space(int i, const char *str)
 	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
 		i++;
 	return (i);
+}
+
+void	sign_control(const char *str, int *sign, int *i)
+{
+	if (str[*i] == '+')
+		(*i)++;
+	else if (str[*i] == '-')
+	{
+		*sign = -1;
+		(*i)++;
+	}
 }
 
 int	ft_new_atoi(const char *str, int *flag)
@@ -31,13 +41,7 @@ int	ft_new_atoi(const char *str, int *flag)
 	result = 0;
 	sign = 1;
 	i = ft_white_space(i, str);
-	if (str[i] == '+')
-		i++;
-	else if (str[i] == '-')
-	{
-		sign = -1;
-		i++;
-	}
+	sign_control(str, &sign, &i);
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		if (sign == 1)
