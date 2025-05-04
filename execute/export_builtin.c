@@ -6,10 +6,9 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 11:02:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 18:22:51 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 18:28:26 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../minishell.h"
 
@@ -122,6 +121,7 @@ int find_env_index(char **envp, const char *key)
 	}
 	return -1;
 }
+
 int	is_valid_identifier(const char *s)
 {
 	int i = 0;
@@ -157,59 +157,58 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp, int flag)
 		cmd_list->return_value = 0;
 		return;
 	}
-
-	while (cmd_list->str[j])
+	if(!(cmd_list->prev) && !(cmd_list->next))
 	{
-		if (!is_valid_identifier(cmd_list->str[j]))
+		while (cmd_list->str[j])
 		{
-			write(2, "minishell: export: `", 21);
-			write(2, cmd_list->str[j], ft_strlen(cmd_list->str[j]));
-			write(2, "': not a valid identifier\n", 27);
-			invalid_found = 1;
-			j++;
-			continue;
-		}
-
-		new_entry = ft_strdup(cmd_list->str[j]);
-		if (!new_entry)
-			exit(1);
-
-		key = get_env_key(new_entry);
-		if (!key)
-		{
-			free(new_entry);
-			exit(1);
-		}
-
-		idx = find_env_index(*envp, key);
-		if (idx != -1)
-		{
-			free((*envp)[idx]);
-			(*envp)[idx] = new_entry;
-		}
-		else
-		{
-			int len = 0;
-			while ((*envp)[len])
-				len++;
-
-			char **new_env = malloc(sizeof(char *) * (len + 2));
-			if (!new_env)
+			if (!is_valid_identifier(cmd_list->str[j]))
 			{
-				free(key);
+				write(2, "minishell: export: `", 21);
+				write(2, cmd_list->str[j], ft_strlen(cmd_list->str[j]));
+				write(2, "': not a valid identifier\n", 27);
+				invalid_found = 1;
+				j++;
+				continue;
+			}
+			new_entry = ft_strdup(cmd_list->str[j]);
+			if (!new_entry)
+				exit(1);
+			key = get_env_key(new_entry);
+			if (!key)
+			{
 				free(new_entry);
 				exit(1);
 			}
-			for (int i = 0; i < len; i++)
-				new_env[i] = ft_strdup((*envp)[i]);
-			new_env[len] = new_entry;
-			new_env[len + 1] = NULL;
-
-			free_env(*envp);
-			*envp = new_env;
+			idx = find_env_index(*envp, key);
+			if (idx != -1)
+			{
+				free((*envp)[idx]);
+				(*envp)[idx] = new_entry;
+			}
+			else
+			{
+				int len = 0;
+				while ((*envp)[len])
+					len++;
+			
+				char **new_env = malloc(sizeof(char *) * (len + 2));
+				if (!new_env)
+				{
+					free(key);
+					free(new_entry);
+					exit(1);
+				}
+				for (int i = 0; i < len; i++)
+					new_env[i] = ft_strdup((*envp)[i]);
+				new_env[len] = new_entry;
+				new_env[len + 1] = NULL;
+			
+				free_env(*envp);
+				*envp = new_env;
+			}
+			free(key);
+			j++;
 		}
-		free(key);
-		j++;
 	}
 	cmd_list->return_value = invalid_found ? 1 : 0;
 }
