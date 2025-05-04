@@ -38,10 +38,10 @@ void	handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 	}
 	cmd->output_fd = pipe_fd[1];
 	cmd->output_type = IO_PIPE_OUT;
-	cmd->pipe = 1;  // Mark command as part of a pipeline
+	cmd->pipe = 1;
 	next->input_fd = pipe_fd[0];
 	next->input_type = IO_PIPE_IN;
-	next->pipe = 1;  // Mark next command as part of a pipeline
+	next->pipe = 1;
 }
 
 void	count_commands(t_simple_cmds *cmd_list, int *cmd_count, t_simple_cmds **last_cmd)
@@ -98,35 +98,41 @@ void	run_single_command(t_simple_cmds *cmd, t_free *free_struct, pid_t *pids, in
 		close(cmd->input_fd);
 }
 
-void	wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *cmd_list)
+static void handle_child_status(int status, t_simple_cmds *cmd)
+{
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+			write(STDERR_FILENO, "Quit (core dumped)\n", 19);
+		else if (WTERMSIG(status) == SIGINT)
+			write(STDOUT_FILENO, "\n", 1);
+		cmd->return_value = 128 + WTERMSIG(status);
+	}
+	else if (WIFEXITED(status))
+		cmd->return_value = WEXITSTATUS(status);
+}
+
+void wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *cmd_list)
 {
 	int	i;
 	int	status;
-	t_simple_cmds *current_cmd;
+	t_simple_cmds *curr;
 
 	i = 0;
-	current_cmd = cmd_list;
+	curr = cmd_list;
 	while (i < cmd_count)
 	{
 		if (pids[i] > 0)
 		{
 			waitpid(pids[i], &status, 0);
-			if (WIFSIGNALED(status))
-			{
-				if (WTERMSIG(status) == SIGQUIT)
-					write(STDERR_FILENO, "Quit (core dumped)\n", 19);
-				else if (WTERMSIG(status) == SIGINT)
-					write(STDOUT_FILENO, "\n", 1);
-				current_cmd->return_value = 128 + WTERMSIG(status);
-			}
-			else if (WIFEXITED(status))
-				current_cmd->return_value = WEXITSTATUS(status);
+			handle_child_status(status, curr);
 		}
-		if (current_cmd && current_cmd->next)
-			current_cmd = current_cmd->next;
+		if (curr && curr->next)
+			curr = curr->next;
 		i++;
 	}
 }
+
 
 static int handle_builtin_commands(t_exec_state *state)
 {
@@ -134,7 +140,6 @@ static int handle_builtin_commands(t_exec_state *state)
 	int is_pipeline = (state->current_cmd->pipe || 
 		(state->current_cmd->next != NULL || state->current_cmd->prev != NULL));
 
-	// For built-ins in a pipeline, we need to fork to ensure changes stay local to that process
 	if (is_pipeline && (ft_strncmp("export", cmd, 7) == 0 || 
 						ft_strncmp("unset", cmd, 6) == 0 || 
 						ft_strncmp("cd", cmd, 3) == 0))
@@ -147,7 +152,6 @@ static int handle_builtin_commands(t_exec_state *state)
 		}
 		if (pid == 0)
 		{
-			// Child process handles the built-in
 			setup_child_signals();
 			io_handle(state->current_cmd);
 			if (ft_strncmp("export", cmd, 7) == 0)
@@ -158,7 +162,6 @@ static int handle_builtin_commands(t_exec_state *state)
 				cd_builtin(state->current_cmd, state->free_struct.envp);
 			exit(state->current_cmd->return_value);
 		}
-		// Parent continues and notes this child in the pids array
 		state->pids[state->i++] = pid;
 		if (state->current_cmd->output_type == IO_PIPE_OUT)
 			close(state->current_cmd->output_fd);
