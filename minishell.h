@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 15:24:08 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 16:47:01 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,21 +191,18 @@ char			*remove_whitespaces(char *str);
 
 //--------------------------EXECUTE-----------------------------------
 void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars);
-void	builtin_control(t_simple_cmds *cmd_list, t_free *free_struct);
+void	builtin_control(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, pid_t *pids, t_vars **vars);
 void	echo_builtin(t_simple_cmds *cmd_list);
 char	*path_finder(char *cmd, char **envp);
-void	none_built_in(t_simple_cmds *cmd_list, char **envp, t_free *free_struct);
+void	none_built_in(t_simple_cmds *cmd_list, char ***envp);
 void	free_paths(char **paths);
 void	io_handle(t_simple_cmds *cmd_list);
-void	env_builtin(t_simple_cmds *cmd_list, char **envp);
+void	env_builtin(t_simple_cmds *cmd_list, char ***envp);
 void	export_builtin(t_simple_cmds *cmd_list, char ***envp);
 void	unset_builtin(t_simple_cmds *cmd_list, char ***envp);
 void    pwd_builtin(t_simple_cmds *cmd_list);
 void	cd_builtin(t_simple_cmds *cmd_list, char **envp);
-void	exit_builtin(t_simple_cmds *cmd_list, t_free *free_struct);
-void	exit_builtin_value(int i, int flag, t_simple_cmds *cmd_list);
-int		ft_isnum(char *str);
+void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars);
 int		ft_new_atoi(const char *str, int *flag);
 void	free_env(char **env);
-void	free_all(t_free *free_struct);
 #endif

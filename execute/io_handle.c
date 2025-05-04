@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   io_handle.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 11:00:24 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 16:45:42 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../minishell.h"
 
 void	i_handle(t_simple_cmds *cmd_list)
 {
 	t_lexer	*current;
-	char	*filename;
 
 	if (cmd_list->input_type == IO_PIPE_IN)
 	{
@@ -40,26 +40,22 @@ void	i_handle(t_simple_cmds *cmd_list)
 	{
 		if (current->token == REDIRECT_IN)
 		{
-			filename = remove_quotes(ft_strdup(current->next->str));
-			if (access(filename, F_OK) != 0)
+			if (access(current->next->str, F_OK) != 0)
 			{
 				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(filename, 2);
+				ft_putstr_fd(current->next->str, 2);
 				ft_putstr_fd(": No such file or directory\n", 2);
-				free(filename);
 				exit(1);
 			}
-			cmd_list->input_fd = open(filename, O_RDONLY);
+			cmd_list->input_fd = open(current->next->str, O_RDONLY);
 			if (cmd_list->input_fd < 0)
 			{
 				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(filename, 2);
+				ft_putstr_fd(current->next->str, 2);
 				ft_putstr_fd(": Permission denied\n", 2);
-				free(filename);
 				exit(1);
 			}
 			dup2(cmd_list->input_fd, STDIN_FILENO);
-			free(filename);
 		}
 		if (current->next->next)
 			current = current->next->next;
@@ -71,7 +67,6 @@ void	i_handle(t_simple_cmds *cmd_list)
 void	o_handle(t_simple_cmds *cmd_list)
 {
 	t_lexer	*current;
-	char	*filename;
 
 	if (cmd_list->output_type == IO_PIPE_OUT)
 	{
@@ -82,35 +77,29 @@ void	o_handle(t_simple_cmds *cmd_list)
 	{
 		if (current->token == REDIRECT_OUT)
 		{
-			filename = remove_quotes(ft_strdup(current->next->str));
-			cmd_list->output_fd = open(filename,
+			cmd_list->output_fd = open(current->next->str,
 					O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (cmd_list->output_fd < 0)
 			{
 				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(filename, 2);
+				ft_putstr_fd(current->next->str, 2);
 				ft_putstr_fd(": Permission denied\n", 2);
-				free(filename);
 				exit(1);
 			}
 			dup2(cmd_list->output_fd, STDOUT_FILENO);
-			free(filename);
 		}
 		else if (current->token == REDIRECT_APPEND)
 		{
-			filename = remove_quotes(ft_strdup(current->next->str));
-			cmd_list->output_fd = open(filename,
+			cmd_list->output_fd = open(current->next->str,
 					O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (cmd_list->output_fd < 0)
 			{
 				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(filename, 2);
+				ft_putstr_fd(current->next->str, 2);
 				ft_putstr_fd(": Permission denied\n", 2);
-				free(filename);
 				exit(1);
 			}
 			dup2(cmd_list->output_fd, STDOUT_FILENO);
-			free(filename);
 		}
 		if (current->next->next)
 			current = current->next->next;

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_new_atoi.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 14:33:28 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 12:29:09 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 16:45:34 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../minishell.h"
 
@@ -17,18 +18,6 @@ static int	ft_white_space(int i, const char *str)
 	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
 		i++;
 	return (i);
-}
-
-void	sign_control(int *sign, int *i, const char *str)
-{
-	*sign = 1;
-	if (str[*i] == '+')
-		(*i)++;
-	else if (str[*i] == '-')
-	{
-		*sign = -1;
-		(*i)++;
-	}
 }
 
 int	ft_new_atoi(const char *str, int *flag)
@@ -40,8 +29,15 @@ int	ft_new_atoi(const char *str, int *flag)
 
 	i = 0;
 	result = 0;
+	sign = 1;
 	i = ft_white_space(i, str);
-	sign_control(&sign, &i, str);
+	if (str[i] == '+')
+		i++;
+	else if (str[i] == '-')
+	{
+		sign = -1;
+		i++;
+	}
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		if (sign == 1)
@@ -56,13 +52,5 @@ int	ft_new_atoi(const char *str, int *flag)
 		}
 		result = result * 10 + (str[i++] - '0');
 	}
-	if (str[i] != '\0')
-	{
-		*flag = -1;
-		return (-1);
-	}
-	if (sign == -1)
-		return ((256 - (result % 256)) % 256);
-	else
-		return (result % 256);
+	return ((long long)(result * sign) % 256);
 }
