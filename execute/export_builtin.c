@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 11:02:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 20:59:30 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 22:05:06 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,11 @@ void	empty_export(char ***envp)
 	free(sorted_env);
 }
 
-char *get_env_key(const char *env_str)
+char	*get_env_key(const char *env_str)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (env_str[i] && env_str[i] != '=')
 		i++;
 	return ft_substr(env_str, 0, i);
@@ -111,8 +113,11 @@ char *get_env_key(const char *env_str)
 
 int find_env_index(char **envp, const char *key)
 {
-	int i = 0;
-	int key_len = strlen(key);
+	int	i;
+	int	key_len ;
+
+	i = 0;
+	key_len = strlen(key);
 	while (envp[i])
 	{
 		if (strncmp(envp[i], key, key_len) == 0 && envp[i][key_len] == '=')
@@ -124,20 +129,18 @@ int find_env_index(char **envp, const char *key)
 
 int	is_valid_identifier(const char *s)
 {
-	int i = 0;
-
+	int	i;
+	
+	i = 0;
 	if (!s || !*s)
 		return (0);
 
-	// Check for lone equal sign
 	if (s[0] == '=')
 		return (0);
 
-	// Check first character must be alpha or underscore
 	if (!(ft_isalpha(s[0]) || s[0] == '_'))
 		return (0);
 
-	// Check rest of the identifier before any equal sign
 	while (s[i] && s[i] != '=')
 	{
 		if (!(ft_isalnum(s[i]) || s[i] == '_'))
@@ -149,12 +152,14 @@ int	is_valid_identifier(const char *s)
 
 void	export_builtin(t_simple_cmds *cmd_list, char ***envp, int flag)
 {
-	int j = 1;
-	char *key;
-	int idx;
-	char *new_entry;
-	int invalid_found = 0;
+	int		j;
+	char	*key;
+	int		idx;
+	char	*new_entry;
+	int		invalid_found;
 
+	j = 1;
+	invalid_found = 0;
 	if (cmd_list->flag)
 	{
 		write(2, "This command only works without the flag.\n", 43);

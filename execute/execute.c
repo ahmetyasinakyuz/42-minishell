@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 21:20:45 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 22:03:31 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 void	free_env(char **env)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!env)
-		return;
+		return ;
 	while (env[i])
 	{
 		free(env[i]);
@@ -28,7 +29,7 @@ void	free_env(char **env)
 
 int	ft_isnum(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if(str[0] == '+' || str[0] == '-')
@@ -46,8 +47,8 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 {
 	if(!(cmd_list->prev) && !(cmd_list->next))
 	{
-		int i;
-		int flag;
+		int	i;
+		int	flag;
 		
 		i = 0;
 		flag = 0;
@@ -87,9 +88,9 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 
 }
 
-void handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
+void	handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 {
-	int pipe_fd[2];
+	int	pipe_fd[2];
 
 	if (pipe(pipe_fd) == -1)
 	{
@@ -102,15 +103,17 @@ void handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 	next->input_type = IO_PIPE_IN;
 }
 
-void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars)
+void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars)
 {
-	t_simple_cmds *current_cmd;
-	t_simple_cmds *last_cmd;
-	pid_t *pids;
-	int cmd_count = 0;
-	int i;
-	int status = 0;
+	t_simple_cmds	*current_cmd;
+	t_simple_cmds	*last_cmd;
+	pid_t			*pids;
+	int				cmd_count;
+	int				i;
+	int				status;
 	
+	cmd_count = 0;
+	status = 0;
 	last_cmd = cmd_list;
 	current_cmd = cmd_list;
 	while (current_cmd)
