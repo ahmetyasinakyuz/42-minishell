@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:14:44 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 21:30:17 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 21:34:48 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	handle_word_token(t_lexer *current, t_vars **vars)
 	if (str[0] == '\'')
 		return ;
 	if (current->prev && current->prev->token == REDIRECT_HEREDOC)
-		return;
+		return ;
 	if (ft_strchr(str, '=') && current->prev)
 	{
 		start = current;
