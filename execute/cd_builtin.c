@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:25:00 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 13:10:55 by ahmtemel         ###   ########.fr       */
+/*   Updated: 2025/05/04 13:19:45 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 			return ;
 		}
 	}
-	if (cmd_list->content[1] && cmd_list->content[1])
+	else if (cmd_list->content[2])
 	{
 		write(2, "minishell: cd: too many arguments\n", 34);
 		cmd_list->return_value = 1;
@@ -56,6 +56,7 @@ void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 		write(2, path, ft_strlen(path));
 		write(2, ": ", 2);
 		write(2, strerror(errno), ft_strlen(strerror(errno)));
+		write(2, "\n", 1);
 		cmd_list->return_value = 1;
 		return ;
 	}
