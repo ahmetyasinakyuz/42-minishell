@@ -6,10 +6,9 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 16:45:09 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 17:32:35 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../minishell.h"
 
@@ -54,7 +53,7 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 		flag = 0;
 		if(cmd_list->content[1] && cmd_list->content[2])
 		{
-			printf("minishell: exit: too many arguments\n");
+			perror("minishell: exit: too many arguments\n");
 			cmd_list->return_value = 1;
 			return;
 		}
@@ -73,7 +72,10 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 		rl_clear_history();
 		if(i == 400 || flag == -1)
 		{
-			printf("minishell: exit: %s: numeric argument required\n", cmd_list->content[1]);
+			// printf("minishell: exit: %s: numeric argument required\n", cmd_list->content[1]);
+			write(2, "minishell: exit: ", 17);
+			write(2, cmd_list->content[1], ft_strlen(cmd_list->content[1]));
+			write(2, " numeric argument required\n", 26);
 			free_command_list(cmd_list);
 			exit(2);
 		}
