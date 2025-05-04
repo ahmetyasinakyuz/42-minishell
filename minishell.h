@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 11:30:53 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 12:55:28 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include <stdio.h>
-# include "libs/get_next_line/get_next_line.h"
 # include "libs/libft/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>

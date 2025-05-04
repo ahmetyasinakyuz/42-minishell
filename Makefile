@@ -6,7 +6,7 @@
 #    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/04 11:30:53 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/05/04 12:55:02 by aakyuz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,7 @@ NAME = minishell
 CC = cc
 C_FLAGS = -Wall -Wextra -Werror
 
-SRCS =	libs/get_next_line/get_next_line.c  \
-		parser/flags.c                      \
+SRCS =	parser/flags.c                      \
 		parser/command.c                    \
 		parser/command_ultis.c              \
 		parser/token.c                      \

@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:30:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 18:19:26 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 12:51:22 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <fcntl.h>
-#include <readline/readline.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 static char	*generate_temp_filename(void)
 {
