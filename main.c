@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 18:44:48 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 10:57:51 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	run_shell(t_vars **vars, char ***envp)
 		{
 			if (g_received_signal == SIGINT)
 				exit(130);
+			ft_putendl_fd("exit", STDOUT_FILENO);
 			break ;
 		}
 		if (ft_strlen(input) > 0)

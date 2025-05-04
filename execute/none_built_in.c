@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   none_built_in.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 10:27:10 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 11:07:15 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,7 @@ void	none_built_in(t_simple_cmds *cmd_list, char **envp)
 	if (cmd_list->flag == NULL)
 		cmd = cmd_list->str;
 	else
-	{
 		cmd = merge_cmd_and_flags(cmd_list->str, cmd_list->flag);
-	}
 	setup_child_signals();
 	execve(path, cmd, envp);
 	perror("execve");

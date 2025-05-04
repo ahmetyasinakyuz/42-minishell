@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 18:03:08 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 11:30:53 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,19 @@ typedef struct s_free
 	t_lexer *token_list;
 	pid_t *pids;
 	t_vars **vars;
+	t_simple_cmds	*cmd_list; 
 }						t_free;
+
+typedef struct s_exec_state
+{
+	t_simple_cmds	*current_cmd;
+	t_simple_cmds	*last_cmd;
+	pid_t			*pids;
+	int				cmd_count;
+	int				i;
+	t_free			free_struct;
+}	t_exec_state;
+
 
 extern volatile sig_atomic_t	g_received_signal;
 

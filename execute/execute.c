@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 10:11:32 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 11:30:53 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,45 +192,43 @@ void	wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *last_cmd)
 }
 
 void	execute(t_simple_cmds *cmd_list, char ***envp,
-			t_lexer *token_list, t_vars **vars)
+	t_lexer *token_list, t_vars **vars)
 {
-	t_simple_cmds	*current_cmd;
-	t_simple_cmds	*last_cmd;
-	pid_t			*pids;
-	int				cmd_count;
-	int				i;
-	t_free			free_struct;
-
-	count_commands(cmd_list, &cmd_count, &last_cmd);
-	if (!init_execute_struct(&free_struct, &pids, cmd_count, token_list, vars, envp))
+	t_exec_state	state;
+	
+	count_commands(cmd_list, &state.cmd_count, &state.last_cmd);
+	if (!init_execute_struct(&state.free_struct, &state.pids, state.cmd_count, token_list, vars, envp))
 		return ;
 	setup_execute_signals();
-	current_cmd = cmd_list;
-	i = 0;
-	while (current_cmd)
+	state.free_struct.cmd_list = cmd_list;
+	state.current_cmd = cmd_list;
+	state.i = 0;
+	while (state.current_cmd)
 	{
-		if (ft_strncmp("export", *current_cmd->str, 7) == 0)
-			export_builtin(current_cmd, envp);
-		else if (ft_strncmp("unset", *current_cmd->str, 6) == 0)
-			unset_builtin(current_cmd, envp);
-		else if (ft_strncmp("cd", *current_cmd->str, 3) == 0)
-			cd_builtin(current_cmd, *envp);
-		else if (ft_strncmp("exit", *current_cmd->str, 5) == 0)
-		{
-			free_struct.envp = *envp;
-			free_struct.token_list = token_list;
-			free_struct.pids = pids;
-			free_struct.vars = vars;
-			exit_builtin(current_cmd, &free_struct);
-		}
-		else
-			run_single_command(current_cmd, &free_struct, pids, i++);
-		current_cmd = current_cmd->next;
+	if (ft_strncmp("export", *state.current_cmd->str, 7) == 0)
+		export_builtin(state.current_cmd, envp);
+	else if (ft_strncmp("unset", *state.current_cmd->str, 6) == 0)
+		unset_builtin(state.current_cmd, envp);
+	else if (ft_strncmp("cd", *state.current_cmd->str, 3) == 0)
+		cd_builtin(state.current_cmd, *envp);
+	else if (ft_strncmp("exit", *state.current_cmd->str, 5) == 0)
+	{
+		state.free_struct.envp = *envp;
+		state.free_struct.token_list = token_list;
+		state.free_struct.pids = state.pids;
+		state.free_struct.vars = vars;
+		exit_builtin(state.current_cmd, &state.free_struct);
 	}
-	wait_for_children(pids, cmd_count, last_cmd);
+	else
+		run_single_command(state.current_cmd, &state.free_struct, state.pids, state.i++);
+	state.current_cmd = state.current_cmd->next;
+	}
+	wait_for_children(state.pids, state.cmd_count, state.last_cmd);
 	setup_signals();
-	free(pids);
+	free(state.pids);
 }
+
+
 
 //echo "test 42 minishell" | cat | grep "test" | cat | cat | grep "42" | cat | cat | grep "minishell" | cat
 //echo "42 minishell Ayse Sude" | tr 'a-z' 'A-Z' | tr ' ' '\n' | sort | uniq | rev | tr 'A-Z' 'a-z' | cat | cat | wc -l | cat

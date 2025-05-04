@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_ultis.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akyuz <akyuz@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 13:01:51 by akyuz             #+#    #+#             */
-/*   Updated: 2025/05/01 13:07:53 by akyuz            ###   ########.fr       */
+/*   Updated: 2025/05/04 10:59:03 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,17 @@ char	*get_env_value(char *env_var, t_vars **vars)
 	char	*env_value;
 	char	*result;
 
+	if (ft_strncmp(env_var, "?", 2) == 0)
+	{
+		if (is_in_vars(env_var, vars))
+		{
+			env_value = get_var(env_var, vars);
+			if (!env_value || !*env_value)
+				return (ft_strdup("0"));
+			return (ft_strdup(env_value));
+		}
+		return (ft_strdup("0"));
+	}
 	if (is_in_vars(env_var, vars))
 	{
 		env_value = get_var(env_var, vars);

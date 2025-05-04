@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/03 18:20:04 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 10:58:14 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,8 @@ void	parser(char *input, t_vars **vars, char ***envp)
 	add_static_var(vars, "0", "minishell");
 	process = remove_whitespaces(input);
 	token_list = lexer(process);
+	if (process)
+		free(process);
 	if (!token_list)
 		return ;
 	parse_commands(token_list, vars, envp);
