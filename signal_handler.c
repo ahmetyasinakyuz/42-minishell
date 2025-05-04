@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 10:40:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/02 18:50:58 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/05 02:26:39 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,14 @@ void	handle_sigint(int signum)
 	//readline girdisini temizler
 	rl_replace_line("", 0);
 	rl_redisplay(); 
+}
+
+// Specific handler for SIGINT during execution
+void	handle_sigint_exec(int signum)
+{
+	g_received_signal = signum;
+	// No need to do anything else - we just need to handle the signal
+	// The rest is handled by the waiting parent process
 }
 
 // Ana süreç (interaktif kabuk) için sinyal ayarları
@@ -62,19 +70,19 @@ void	setup_child_signals(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-// Komut çalıştırma (execute) sırasında ana süreç için sinyal ayarları
+// Ensure we ignore SIGINT during execution
 void	setup_execute_signals(void)
 {
 	struct sigaction	sa_int;
 	struct sigaction	sa_quit;
 
-	// SIGINT için özel işleyici - alt süreçlerin kontrolünü bozmaz
-	sa_int.sa_handler = SIG_IGN; // Execute sırasında ana süreç sinyalleri yok sayar
+	// SIGINT is ignored during execute - parent will handle child termination
+	sa_int.sa_handler = SIG_IGN; 
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = 0;
 	sigaction(SIGINT, &sa_int, NULL);
 
-	// SIGQUIT için varsayılan davranışa geri dön (alt süreçlerin core dump üretmesine izin ver)
+	// SIGQUIT is also ignored
 	sa_quit.sa_handler = SIG_IGN;
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;
