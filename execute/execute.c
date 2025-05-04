@@ -126,57 +126,129 @@ void	wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *cmd_list)
 	}
 }
 
-void	execute(t_simple_cmds *cmd_list, char ***envp,
-	t_lexer *token_list, t_vars **vars)
+static int handle_builtin_commands(t_exec_state *state)
 {
-	t_exec_state	state;
-	
-	count_commands(cmd_list, &state.cmd_count, &state.last_cmd);
-	if (!init_execute_struct(&state.free_struct, &state.pids, state.cmd_count, token_list, vars, envp))
-		return ;
-	setup_execute_signals();
-	state.free_struct.cmd_list = cmd_list;
-	state.current_cmd = cmd_list;
-	state.i = 0;
-	while (state.current_cmd)
+	char *cmd = *state->current_cmd->str;
+
+	if (ft_strncmp("export", cmd, 7) == 0)
+		export_builtin(state->current_cmd, &state->free_struct.envp);
+	else if (ft_strncmp("unset", cmd, 6) == 0)
+		unset_builtin(state->current_cmd, &state->free_struct.envp);
+	else if (ft_strncmp("cd", cmd, 3) == 0)
+		cd_builtin(state->current_cmd, state->free_struct.envp);
+	else if (ft_strncmp("echo", cmd, 5) == 0 &&
+		!state->current_cmd->next && !state->current_cmd->prev)
+		echo_builtin(state->current_cmd);
+	else if (ft_strncmp("pwd", cmd, 4) == 0 &&
+		!state->current_cmd->next && !state->current_cmd->prev)
+		pwd_builtin(state->current_cmd);
+	else if (ft_strncmp("env", cmd, 4) == 0 &&
+		!state->current_cmd->next && !state->current_cmd->prev)
+		env_builtin(state->current_cmd, state->free_struct.envp);
+	else if (ft_strncmp("exit", cmd, 5) == 0)
 	{
-		if (ft_strncmp("export", *state.current_cmd->str, 7) == 0)
-			export_builtin(state.current_cmd, envp);
-		else if (ft_strncmp("unset", *state.current_cmd->str, 6) == 0)
-			unset_builtin(state.current_cmd, envp);
-		else if (ft_strncmp("cd", *state.current_cmd->str, 3) == 0)
-			cd_builtin(state.current_cmd, *envp);
-		else if (ft_strncmp("echo", *state.current_cmd->str, 5) == 0 && 
-				(!state.current_cmd->next && !state.current_cmd->prev))
-		{
-			echo_builtin(state.current_cmd);
-		}
-		else if (ft_strncmp("pwd", *state.current_cmd->str, 4) == 0 && 
-				(!state.current_cmd->next && !state.current_cmd->prev))
-		{
-			pwd_builtin(state.current_cmd);
-		}
-		else if (ft_strncmp("env", *state.current_cmd->str, 4) == 0 && 
-				(!state.current_cmd->next && !state.current_cmd->prev))
-		{
-			env_builtin(state.current_cmd, *envp);
-		}
-		else if (ft_strncmp("exit", *state.current_cmd->str, 5) == 0)
-		{
-			state.free_struct.envp = *envp;
-			state.free_struct.token_list = token_list;
-			state.free_struct.pids = state.pids;
-			state.free_struct.vars = vars;
-			exit_builtin(state.current_cmd, &state.free_struct);
-		}
-		else
-			run_single_command(state.current_cmd, &state.free_struct, state.pids, state.i++);
-		state.current_cmd = state.current_cmd->next;
+		state->free_struct.token_list = state->free_struct.token_list;
+		state->free_struct.pids = state->pids;
+		state->free_struct.vars = state->free_struct.vars;
+		exit_builtin(state->current_cmd, &state->free_struct);
 	}
+	else
+		return (0);
+	return (1);
+}
+
+
+static void execute_loop(t_exec_state *state)
+{
+	while (state->current_cmd)
+	{
+		if (!handle_builtin_commands(state))
+			run_single_command(state->current_cmd, &state->free_struct, state->pids, state->i++);
+		state->current_cmd = state->current_cmd->next;
+	}
+}
+
+static int init_execute_state(t_exec_state *state, t_simple_cmds *cmd_list, t_context *ctx)
+{
+	count_commands(cmd_list, &state->cmd_count, &state->last_cmd);
+	if (!init_execute_struct(&state->free_struct, &state->pids,
+		state->cmd_count, ctx->token_list, ctx->vars, ctx->envp))
+		return (0);
+	setup_execute_signals();
+	state->free_struct.cmd_list = cmd_list;
+	state->current_cmd = cmd_list;
+	state->i = 0;
+	return (1);
+}
+
+void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars)
+{
+	t_exec_state state;
+	t_context ctx;
+
+	ctx.envp = envp;
+	ctx.token_list = token_list;
+	ctx.vars = vars;
+
+	if (!init_execute_state(&state, cmd_list, &ctx))
+		return ;
+	execute_loop(&state);
 	wait_for_children(state.pids, state.i, cmd_list);
 	setup_signals();
 	free(state.pids);
 }
+
+// void	execute(t_simple_cmds *cmd_list, char ***envp,
+// 	t_lexer *token_list, t_vars **vars)
+// {
+// 	t_exec_state	state;
+	
+// 	count_commands(cmd_list, &state.cmd_count, &state.last_cmd);
+// 	if (!init_execute_struct(&state.free_struct, &state.pids, state.cmd_count, token_list, vars, envp))
+// 		return ;
+// 	setup_execute_signals();
+// 	state.free_struct.cmd_list = cmd_list;
+// 	state.current_cmd = cmd_list;
+// 	state.i = 0;
+// 	while (state.current_cmd)
+// 	{
+// 		if (ft_strncmp("export", *state.current_cmd->str, 7) == 0)
+// 			export_builtin(state.current_cmd, envp);
+// 		else if (ft_strncmp("unset", *state.current_cmd->str, 6) == 0)
+// 			unset_builtin(state.current_cmd, envp);
+// 		else if (ft_strncmp("cd", *state.current_cmd->str, 3) == 0)
+// 			cd_builtin(state.current_cmd, *envp);
+// 		else if (ft_strncmp("echo", *state.current_cmd->str, 5) == 0 && 
+// 				(!state.current_cmd->next && !state.current_cmd->prev))
+// 		{
+// 			echo_builtin(state.current_cmd);
+// 		}
+// 		else if (ft_strncmp("pwd", *state.current_cmd->str, 4) == 0 && 
+// 				(!state.current_cmd->next && !state.current_cmd->prev))
+// 		{
+// 			pwd_builtin(state.current_cmd);
+// 		}
+// 		else if (ft_strncmp("env", *state.current_cmd->str, 4) == 0 && 
+// 				(!state.current_cmd->next && !state.current_cmd->prev))
+// 		{
+// 			env_builtin(state.current_cmd, *envp);
+// 		}
+// 		else if (ft_strncmp("exit", *state.current_cmd->str, 5) == 0)
+// 		{
+// 			state.free_struct.envp = *envp;
+// 			state.free_struct.token_list = token_list;
+// 			state.free_struct.pids = state.pids;
+// 			state.free_struct.vars = vars;
+// 			exit_builtin(state.current_cmd, &state.free_struct);
+// 		}
+// 		else
+// 			run_single_command(state.current_cmd, &state.free_struct, state.pids, state.i++);
+// 		state.current_cmd = state.current_cmd->next;
+// 	}
+// 	wait_for_children(state.pids, state.i, cmd_list);
+// 	setup_signals();
+// 	free(state.pids);
+// }
 
 //echo "test 42 minishell" | cat | grep "test" | cat | cat | grep "42" | cat | cat | grep "minishell" | cat
 //echo "42 minishell Ayse Sude" | tr 'a-z' 'A-Z' | tr ' ' '\n' | sort | uniq | rev | tr 'A-Z' 'a-z' | cat | cat | wc -l | cat
