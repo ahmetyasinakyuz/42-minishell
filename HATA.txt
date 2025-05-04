@@ -6,3 +6,25 @@ bunda reachable leak alıyor
 
 chmod 000 deneme.txt
 echo salih >> deneme.txt de dosya içine yazıyor
+
+
+ps aux \
+| grep -v grep \
+| grep -i "bash" \
+| awk '{print $1}' \
+| sort \
+| uniq \
+| xargs -I {} echo "Kullanıcı: {}" \
+| sed 's/Kullanıcı/User/' \
+| tr '[:lower:]' '[:upper:]' \
+| sort \
+| uniq \
+| nl \
+| awk '{print $1 ":" $2}' \
+| sed 's/:/ -> /' \
+| tee /dev/null \
+| head -n 5 \
+| tail -n 3 \
+| cut -d' ' -f2 \
+| tr -d '\n' \
+| wc -c
