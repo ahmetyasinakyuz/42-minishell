@@ -28,3 +28,8 @@ ps aux \
 | cut -d' ' -f2 \
 | tr -d '\n' \
 | wc -c
+
+cat << ahmet 
+dhaskjd
+ahdslfsa
+ctrl D ve ctrl C yapıncaki durumları kontrol et
