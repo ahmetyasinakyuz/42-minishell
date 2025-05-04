@@ -1,0 +1,25 @@
+Test  50: ❌ exit hello 
+mini output = (minishell: exit: hello: numeric argument required)
+bash output = ()
+mini error = ()
+bash error = ( numeric argument required)
+
+Test  51: ❌ exit 42 world 
+mini output = (minishell: exit: too many arguments)
+bash output = ()
+mini error = ()
+bash error = ( too many arguments)
+
+Test  40: ❌ cd $PWD hi 
+mini exit code = 0
+bash exit code = 1
+mini error = ()
+bash error = ( too many arguments)
+
+Test  22: ❌ pwd 
+mini output = (/sgoinfre/aakyuz/bbb/minishell_tester)
+bash output = (/home/aakyuz/sgoinfre/bbb/minishell_tester)
+
+Test  23: ❌ pwd oi 
+mini output = (/sgoinfre/aakyuz/bbb/minishell_tester)
+bash output = (/home/aakyuz/sgoinfre/bbb/minishell_tester)

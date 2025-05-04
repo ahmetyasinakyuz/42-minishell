@@ -6,33 +6,38 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 17:13:06 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 17:15:31 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../minishell.h"
 
-/* Remove quotes from filename if present */
+/* Remove all quotes from filename for proper handling of adjacent quoted strings */
 char	*unquote_filename(char *str)
 {
-	int		len;
 	char	*result;
+	int		i;
+	int		j;
+	int		len;
 
 	if (!str)
 		return (NULL);
 	len = ft_strlen(str);
-	if (len >= 2 && (str[0] == '"' && str[len - 1] == '"'))
+	result = malloc(sizeof(char) * (len + 1));
+	if (!result)
+		return (NULL);
+	
+	i = 0;
+	j = 0;
+	while (i < len)
 	{
-		result = ft_substr(str, 1, len - 2);
-		return (result);
+		if (str[i] != '"' && str[i] != '\'')
+			result[j++] = str[i];
+		i++;
 	}
-	else if (len >= 2 && (str[0] == '\'' && str[len - 1] == '\''))
-	{
-		result = ft_substr(str, 1, len - 2);
-		return (result);
-	}
-	return (ft_strdup(str));
+	result[j] = '\0';
+	return (result);
 }
 
 void	i_handle(t_simple_cmds *cmd_list)
