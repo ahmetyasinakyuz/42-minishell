@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 11:02:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 18:28:26 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 18:40:02 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp, int flag)
 		cmd_list->return_value = 1;
 		return;
 	}
-	if (flag == 0)
+	if (flag == 0 || !cmd_list->str[1])
 	{
 		empty_export(envp);
 		cmd_list->return_value = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 18:21:48 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 18:42:33 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 		rl_clear_history();
 		if(i == 400 || flag == -1)
 		{
-			// printf("minishell: exit: %s: numeric argument required\n", cmd_list->content[1]);
 			write(2, "minishell: exit: ", 17);
 			write(2, cmd_list->content[1], ft_strlen(cmd_list->content[1]));
 			write(2, " numeric argument required\n", 26);
@@ -129,19 +128,48 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 	for (i = 0; i < cmd_count; i++)
 		pids[i] = -1;
 	setup_execute_signals();
-
 	current_cmd = cmd_list;
 	i = 0;
 	while (current_cmd)
 	{
-		if (ft_strncmp("export", *current_cmd->str, 7) == 0 && cmd_list->content[1])
-			export_builtin(current_cmd, envp, 1);
-		else if(ft_strncmp("unset", *current_cmd->str, 6) == 0)
-			unset_builtin(current_cmd, envp);
-		else if(ft_strncmp("cd", *current_cmd->str, 3) == 0)
-			cd_builtin(current_cmd, *envp);
-		else if(ft_strncmp("exit", *current_cmd->str, 5) == 0)
-			exit_builtin(current_cmd, *envp, token_list, pids, vars);
+		if (current_cmd->pipe == 0 && !current_cmd->prev)
+		{
+			if (ft_strncmp("export", *current_cmd->str, 7) == 0)
+			{
+				if (current_cmd->content && current_cmd->content[1])
+					export_builtin(current_cmd, envp, 1);
+				else
+					export_builtin(current_cmd, envp, 0);
+			}
+			else if(ft_strncmp("unset", *current_cmd->str, 6) == 0)
+				unset_builtin(current_cmd, envp);
+			else if(ft_strncmp("cd", *current_cmd->str, 3) == 0)
+				cd_builtin(current_cmd, *envp);
+			else if(ft_strncmp("exit", *current_cmd->str, 5) == 0)
+				exit_builtin(current_cmd, *envp, token_list, pids, vars);
+			else
+			{
+				if (current_cmd->next)
+					handle_pipe(current_cmd, current_cmd->next);
+				pids[i] = fork();
+				if (pids[i] == -1)
+				{
+					perror("fork");
+					exit(1);
+				}
+				if (pids[i] == 0)
+				{
+					setup_child_signals();
+					io_handle(current_cmd);
+					builtin_control(current_cmd, envp, token_list, pids, vars);
+				}
+				if (current_cmd->output_type == IO_PIPE_OUT)
+					close(current_cmd->output_fd);
+				if (current_cmd->input_type == IO_PIPE_IN)
+					close(current_cmd->input_fd);
+				i++;
+			}
+		}
 		else
 		{
 			if (current_cmd->next)
@@ -167,8 +195,6 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		last_cmd = current_cmd;
 		current_cmd = current_cmd->next;
 	} 
-
-
 	i = 0;
 	while (i < cmd_count)
 	{
@@ -190,9 +216,6 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 		}
 		i++;
 	}
-
-	// Komut yürütme tamamlandığında, ana sinyal işlemeyi geri yükle
 	setup_signals();
-
 	free(pids);
 }
