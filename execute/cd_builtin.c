@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:25:00 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 14:54:38 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 15:12:47 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 	}
 	else
 		path = cmd_list->str[1];
-	if (chdir(*path) != 0)
+	if (chdir(path) != 0)
 	{
 		cd_none_path(cmd_list, &path);
 		return ;

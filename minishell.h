@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 14:49:53 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 15:24:08 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 void	builtin_control(t_simple_cmds *cmd_list, t_free *free_struct);
 void	echo_builtin(t_simple_cmds *cmd_list);
 char	*path_finder(char *cmd, char **envp);
-void	none_built_in(t_simple_cmds *cmd_list, char **envp);
+void	none_built_in(t_simple_cmds *cmd_list, char **envp, t_free *free_struct);
 void	free_paths(char **paths);
 void	io_handle(t_simple_cmds *cmd_list);
 void	env_builtin(t_simple_cmds *cmd_list, char **envp);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_control.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 14:29:22 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 15:48:37 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	builtin_control(t_simple_cmds *cmd_list, t_free *free_struct)
 	{
 		free_struct->cmd_list = cmd_list;
 		exit_builtin(cmd_list, free_struct);
-		exit(cmd_list->return_value);
 	}
 	else if (ft_strncmp("echo", cmd_list->str[0], 5) == 0)
 		echo_builtin(cmd_list);
@@ -69,6 +68,10 @@ void	builtin_control(t_simple_cmds *cmd_list, t_free *free_struct)
 	else if (ft_strncmp("env", cmd_list->str[0], 4) == 0)
 		env_builtin(cmd_list, free_struct->envp);
 	else
-		none_built_in(cmd_list, free_struct->envp);
-	exit(cmd_list->return_value);
+		none_built_in(cmd_list, free_struct->envp, free_struct);
+	free_command_list(cmd_list);
+	free_lexer_list(free_struct->token_list);
+	clear_vars(free_struct->vars);
+	free_env(free_struct->envp);
+	exit(0);
 }
