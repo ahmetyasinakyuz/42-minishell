@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 18:42:33 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 21:20:45 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 		flag = 0;
 		if(cmd_list->content[1] && cmd_list->content[2])
 		{
-			perror("minishell: exit: too many arguments\n");
+			write(2, "minishell: exit: too many arguments\n", 36);
 			cmd_list->return_value = 1;
 			return;
 		}
@@ -74,7 +74,7 @@ void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid
 		{
 			write(2, "minishell: exit: ", 17);
 			write(2, cmd_list->content[1], ft_strlen(cmd_list->content[1]));
-			write(2, " numeric argument required\n", 26);
+			write(2, ": numeric argument required\n", 28);
 			free_command_list(cmd_list);
 			exit(2);
 		}
