@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:25:00 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 14:30:54 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 14:54:38 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,12 @@ char	*ft_getenv_home(char **envp)
 
 void	cd_none_path(t_simple_cmds *cmd_list, char	**path)
 {
-	if (chdir(*path) != 0)
-	{
-		write(2, "minishell: cd: ", 15);
-		write(2, *path, ft_strlen(*path));
-		write(2, ": ", 2);
-		write(2, strerror(errno), ft_strlen(strerror(errno)));
-		write(2, "\n", 1);
-		cmd_list->return_value = 1;
-		return ;
-	}
+	write(2, "minishell: cd: ", 15);
+	write(2, *path, ft_strlen(*path));
+	write(2, ": ", 2);
+	write(2, strerror(errno), ft_strlen(strerror(errno)));
+	write(2, "\n", 1);
+	cmd_list->return_value = 1;
 }
 
 void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
@@ -64,6 +60,10 @@ void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 	}
 	else
 		path = cmd_list->str[1];
-	cd_none_path(cmd_list, &path);
+	if (chdir(*path) != 0)
+	{
+		cd_none_path(cmd_list, &path);
+		return ;
+	}
 	cmd_list->return_value = 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 14:37:00 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 14:49:53 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,8 @@ void	unset_builtin(t_simple_cmds *cmd_list, char ***envp);
 void    pwd_builtin(t_simple_cmds *cmd_list);
 void	cd_builtin(t_simple_cmds *cmd_list, char **envp);
 void	exit_builtin(t_simple_cmds *cmd_list, t_free *free_struct);
+void	exit_builtin_value(int i, int flag, t_simple_cmds *cmd_list);
+int		ft_isnum(char *str);
 int		ft_new_atoi(const char *str, int *flag);
 void	free_env(char **env);
 void	free_all(t_free *free_struct);

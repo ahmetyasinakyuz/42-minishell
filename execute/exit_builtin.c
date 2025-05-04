@@ -6,54 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 13:04:39 by ahmtemel          #+#    #+#             */
-/*   Updated: 2025/05/04 14:37:07 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 14:50:20 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	free_all(t_free *free_struct)
-{
-	free_lexer_list(free_struct->token_list);
-	free(free_struct->pids);
-	clear_vars(free_struct->vars);
-	free_env(free_struct->envp);
-	rl_clear_history();
-}
-
-void	exit_builtin_value(int i, int flag, t_simple_cmds *cmd_list)
-{
-	if (i == 400 || flag == -1)
-	{
-		write(2, "minishell: exit: ", 17);
-		write(2, cmd_list->content[1], ft_strlen(cmd_list->content[1]));
-		write(2, ": ", 2);
-		write(2, "numeric argument required\n", 26);
-		free_command_list(cmd_list);
-		exit(2);
-	}
-	else
-	{
-		free_command_list(cmd_list);
-		exit(i);
-	}
-}
-
-int	ft_isnum(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (str[0] == '+' || str[0] == '-')
-		i++;
-	while (str[i])
-	{
-		if (ft_isdigit(str[i]) == 0)
-			return (0);
-		i++;
-	}
-	return (1);
-}
 
 int	remove_quotes_from_arg(char *str)
 {
@@ -86,14 +43,27 @@ char	*extract_number(char *str)
 	return (result);
 }
 
-void	exit_builtin(t_simple_cmds *cmd_list, t_free *free_struct)
+static int	get_exit_status(t_simple_cmds *cmd_list, int *flag)
 {
-	int		i;
-	int		flag;
 	char	*exit_arg;
 	char	*num_str;
+	int		status;
 
-	i = 0;
+	exit_arg = cmd_list->content[1];
+	num_str = extract_number(exit_arg);
+	if (ft_isnum(num_str))
+		status = ft_new_atoi(num_str, flag);
+	else
+		status = 400;
+	free(num_str);
+	return (status);
+}
+
+void	exit_builtin(t_simple_cmds *cmd_list, t_free *free_struct)
+{
+	int	status;
+	int	flag;
+
 	flag = 0;
 	if (!(cmd_list->prev) && !(cmd_list->next))
 	{
@@ -104,19 +74,11 @@ void	exit_builtin(t_simple_cmds *cmd_list, t_free *free_struct)
 			return ;
 		}
 		if (cmd_list->content[1])
-		{
-			exit_arg = cmd_list->content[1];
-			num_str = extract_number(exit_arg);
-
-			if (ft_isnum(num_str))
-				i = ft_new_atoi(num_str, &flag);
-			else
-				i = 400;
-
-			free(num_str);
-		}
+			status = get_exit_status(cmd_list, &flag);
+		else
+			status = 0;
 		write(STDOUT_FILENO, "exit\n", 5);
 		free_all(free_struct);
-		exit_builtin_value(i, flag, cmd_list);
+		exit_builtin_value(status, flag, cmd_list);
 	}
 }
