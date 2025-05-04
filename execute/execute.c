@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 11:30:53 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 12:18:31 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,12 +164,14 @@ void	run_single_command(t_simple_cmds *cmd, t_free *free_struct, pid_t *pids, in
 		close(cmd->input_fd);
 }
 
-void	wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *last_cmd)
+void	wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *cmd_list)
 {
 	int	i;
 	int	status;
+	t_simple_cmds *current_cmd;
 
 	i = 0;
+	current_cmd = cmd_list;
 	while (i < cmd_count)
 	{
 		if (pids[i] > 0)
@@ -181,12 +183,13 @@ void	wait_for_children(pid_t *pids, int cmd_count, t_simple_cmds *last_cmd)
 					write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 				else if (WTERMSIG(status) == SIGINT)
 					write(STDOUT_FILENO, "\n", 1);
-				if (last_cmd && i == cmd_count - 1)
-					last_cmd->return_value = 128 + WTERMSIG(status);
+				current_cmd->return_value = 128 + WTERMSIG(status);
 			}
-			else if (WIFEXITED(status) && last_cmd && i == cmd_count - 1)
-				last_cmd->return_value = WEXITSTATUS(status);
+			else if (WIFEXITED(status))
+				current_cmd->return_value = WEXITSTATUS(status);
 		}
+		if (current_cmd && current_cmd->next)
+			current_cmd = current_cmd->next;
 		i++;
 	}
 }
@@ -205,30 +208,43 @@ void	execute(t_simple_cmds *cmd_list, char ***envp,
 	state.i = 0;
 	while (state.current_cmd)
 	{
-	if (ft_strncmp("export", *state.current_cmd->str, 7) == 0)
-		export_builtin(state.current_cmd, envp);
-	else if (ft_strncmp("unset", *state.current_cmd->str, 6) == 0)
-		unset_builtin(state.current_cmd, envp);
-	else if (ft_strncmp("cd", *state.current_cmd->str, 3) == 0)
-		cd_builtin(state.current_cmd, *envp);
-	else if (ft_strncmp("exit", *state.current_cmd->str, 5) == 0)
-	{
-		state.free_struct.envp = *envp;
-		state.free_struct.token_list = token_list;
-		state.free_struct.pids = state.pids;
-		state.free_struct.vars = vars;
-		exit_builtin(state.current_cmd, &state.free_struct);
+		if (ft_strncmp("export", *state.current_cmd->str, 7) == 0)
+			export_builtin(state.current_cmd, envp);
+		else if (ft_strncmp("unset", *state.current_cmd->str, 6) == 0)
+			unset_builtin(state.current_cmd, envp);
+		else if (ft_strncmp("cd", *state.current_cmd->str, 3) == 0)
+			cd_builtin(state.current_cmd, *envp);
+		else if (ft_strncmp("echo", *state.current_cmd->str, 5) == 0 && 
+				(!state.current_cmd->next && !state.current_cmd->prev))
+		{
+			echo_builtin(state.current_cmd);
+		}
+		else if (ft_strncmp("pwd", *state.current_cmd->str, 4) == 0 && 
+				(!state.current_cmd->next && !state.current_cmd->prev))
+		{
+			pwd_builtin(state.current_cmd);
+		}
+		else if (ft_strncmp("env", *state.current_cmd->str, 4) == 0 && 
+				(!state.current_cmd->next && !state.current_cmd->prev))
+		{
+			env_builtin(state.current_cmd, *envp);
+		}
+		else if (ft_strncmp("exit", *state.current_cmd->str, 5) == 0)
+		{
+			state.free_struct.envp = *envp;
+			state.free_struct.token_list = token_list;
+			state.free_struct.pids = state.pids;
+			state.free_struct.vars = vars;
+			exit_builtin(state.current_cmd, &state.free_struct);
+		}
+		else
+			run_single_command(state.current_cmd, &state.free_struct, state.pids, state.i++);
+		state.current_cmd = state.current_cmd->next;
 	}
-	else
-		run_single_command(state.current_cmd, &state.free_struct, state.pids, state.i++);
-	state.current_cmd = state.current_cmd->next;
-	}
-	wait_for_children(state.pids, state.cmd_count, state.last_cmd);
+	wait_for_children(state.pids, state.i, cmd_list);
 	setup_signals();
 	free(state.pids);
 }
-
-
 
 //echo "test 42 minishell" | cat | grep "test" | cat | cat | grep "42" | cat | cat | grep "minishell" | cat
 //echo "42 minishell Ayse Sude" | tr 'a-z' 'A-Z' | tr ' ' '\n' | sort | uniq | rev | tr 'A-Z' 'a-z' | cat | cat | wc -l | cat

@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 10:58:14 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 12:18:31 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)
 {
 	t_simple_cmds	*cmd_list;
 	t_simple_cmds	*cmd_start;
+	t_simple_cmds	*last_cmd;
 	t_lexer			*start;
 	t_lexer			*current;
 	char			*return_value;
@@ -175,12 +176,19 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)
 	}
 	cmd_start = cmd_list;
 	execute(cmd_list, envp, token_list, vars);
-	while (cmd_list->pipe == 1)
-		cmd_list = cmd_list->next;
-	return_value = ft_itoa(cmd_list->return_value);
-	add_static_var(vars, "?", return_value);
+	
+	// Find the last command to get its return value
+	last_cmd = cmd_start;
+	while (last_cmd && last_cmd->next)
+		last_cmd = last_cmd->next;
+	
+	if (last_cmd)
+	{
+		return_value = ft_itoa(last_cmd->return_value);
+		add_static_var(vars, "?", return_value);
+		free(return_value);
+	}
 	//print_cmd_list(cmd_start);
-	free(return_value);
 	free_command_list(cmd_start);
 }
 

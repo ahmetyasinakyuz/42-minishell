@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 11:07:15 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 12:18:31 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,16 @@ char	**merge_cmd_and_flags(char **cmd, char **flags)
 void	none_built_in_path_control(t_simple_cmds *cmd_list,
 		char **envp, char **path)
 {
-	if (cmd_list->str[0] == NULL)
+	if (cmd_list->str[0] == NULL || cmd_list->str[0][0] == '\0')
 	{
-		cmd_list->return_value = 127;
+		cmd_list->return_value = 0;
+		*path = NULL;
 		return ;
 	}
 	if (ft_strchr(cmd_list->str[0], '='))
 	{
 		cmd_list->return_value = 0;
+		*path = NULL;
 		return ;
 	}
 	if (cmd_list->str[0][0] == '/' || (cmd_list->str[0][0] == '.'
@@ -72,16 +74,32 @@ void	none_built_in(t_simple_cmds *cmd_list, char **envp)
 {
 	char	*path;
 	char	**cmd;
+	struct stat	path_stat;
 
+	path = NULL;
 	none_built_in_path_control(cmd_list, envp, &path);
 	if (path == NULL)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd_list->str[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
-		cmd_list->return_value = 127;
+		if (cmd_list->str[0] && cmd_list->str[0][0] != '\0')
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(cmd_list->str[0], 2);
+			ft_putstr_fd(": command not found\n", 2);
+			cmd_list->return_value = 127;
+		}
 		return ;
 	}
+	
+	// Check if path is a directory
+	if (stat(path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		cmd_list->return_value = 126;
+		return;
+	}
+
 	if (cmd_list->flag == NULL)
 		cmd = cmd_list->str;
 	else
