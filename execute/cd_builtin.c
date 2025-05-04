@@ -6,10 +6,9 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:25:00 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 16:43:55 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 17:06:02 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include	"../minishell.h"
 
@@ -29,6 +28,16 @@ char	*ft_getenv_home(char **envp)
 	return (NULL);
 }
 
+void	cd_none_path(t_simple_cmds *cmd_list, char	**path)
+{
+	write(2, "minishell: cd: ", 15);
+	write(2, *path, ft_strlen(*path));
+	write(2, ": ", 2);
+	write(2, strerror(errno), ft_strlen(strerror(errno)));
+	write(2, "\n", 1);
+	cmd_list->return_value = 1;
+}
+
 void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 {
 	char	*path;
@@ -38,17 +47,22 @@ void	cd_builtin(t_simple_cmds *cmd_list, char **envp)
 		path = ft_getenv_home(envp);
 		if (!path)
 		{
-			fprintf(stderr, "minishell: cd: HOME not set\n");
+			perror("minishell: cd: HOME not set\n");
 			cmd_list->return_value = 1;
 			return ;
 		}
+	}
+	else if (cmd_list->content[2])
+	{
+		write(2, "minishell: cd: too many arguments\n", 34);
+		cmd_list->return_value = 1;
+		return ;
 	}
 	else
 		path = cmd_list->str[1];
 	if (chdir(path) != 0)
 	{
-		fprintf(stderr, "minishell: cd: %s: %s\n", path, strerror(errno));
-		cmd_list->return_value = 1;
+		cd_none_path(cmd_list, &path);
 		return ;
 	}
 	cmd_list->return_value = 0;
