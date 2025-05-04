@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 11:02:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 16:46:44 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 18:22:51 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int	is_valid_identifier(const char *s)
 	return (1);
 }
 
-void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
+void	export_builtin(t_simple_cmds *cmd_list, char ***envp, int flag)
 {
 	int j = 1;
 	char *key;
@@ -151,7 +151,7 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp)
 		cmd_list->return_value = 1;
 		return;
 	}
-	if (!cmd_list->str[1])
+	if (flag == 0)
 	{
 		empty_export(envp);
 		cmd_list->return_value = 0;

@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 16:47:01 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 18:21:13 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ void	none_built_in(t_simple_cmds *cmd_list, char ***envp);
 void	free_paths(char **paths);
 void	io_handle(t_simple_cmds *cmd_list);
 void	env_builtin(t_simple_cmds *cmd_list, char ***envp);
-void	export_builtin(t_simple_cmds *cmd_list, char ***envp);
+void	export_builtin(t_simple_cmds *cmd_list, char ***envp, int flag);
 void	unset_builtin(t_simple_cmds *cmd_list, char ***envp);
 void    pwd_builtin(t_simple_cmds *cmd_list);
 void	cd_builtin(t_simple_cmds *cmd_list, char **envp);

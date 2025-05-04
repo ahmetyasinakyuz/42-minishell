@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 17:32:35 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/04 18:21:48 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,8 +134,8 @@ void execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars 
 	i = 0;
 	while (current_cmd)
 	{
-		if (ft_strncmp("export", *current_cmd->str, 7) == 0)
-			export_builtin(current_cmd, envp);
+		if (ft_strncmp("export", *current_cmd->str, 7) == 0 && cmd_list->content[1])
+			export_builtin(current_cmd, envp, 1);
 		else if(ft_strncmp("unset", *current_cmd->str, 6) == 0)
 			unset_builtin(current_cmd, envp);
 		else if(ft_strncmp("cd", *current_cmd->str, 3) == 0)
