@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 11:02:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 18:40:02 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 20:59:30 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,18 @@ int	is_valid_identifier(const char *s)
 {
 	int i = 0;
 
-	if (!s || !(ft_isalpha(s[0]) || s[0] == '_'))
+	if (!s || !*s)
 		return (0);
+
+	// Check for lone equal sign
+	if (s[0] == '=')
+		return (0);
+
+	// Check first character must be alpha or underscore
+	if (!(ft_isalpha(s[0]) || s[0] == '_'))
+		return (0);
+
+	// Check rest of the identifier before any equal sign
 	while (s[i] && s[i] != '=')
 	{
 		if (!(ft_isalnum(s[i]) || s[i] == '_'))
@@ -163,9 +173,9 @@ void	export_builtin(t_simple_cmds *cmd_list, char ***envp, int flag)
 		{
 			if (!is_valid_identifier(cmd_list->str[j]))
 			{
-				write(2, "minishell: export: `", 21);
+				write(2, "minishell: export: `", 20);
 				write(2, cmd_list->str[j], ft_strlen(cmd_list->str[j]));
-				write(2, "': not a valid identifier\n", 27);
+				write(2, "': not a valid identifier\n", 26);
 				invalid_found = 1;
 				j++;
 				continue;

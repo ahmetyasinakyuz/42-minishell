@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 20:03:43 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/04 21:01:41 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void	o_handle(t_simple_cmds *cmd_list)
 		dup2(cmd_list->output_fd, STDOUT_FILENO);
 	}
 	current = cmd_list->redirections;
-	while (current && current->next)
+	while (current && current->next && cmd_list->return_value == 0)
 	{
 		unquoted_filename = NULL;
 		if (current->token == REDIRECT_OUT)
