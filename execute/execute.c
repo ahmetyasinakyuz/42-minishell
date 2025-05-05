@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:09:59 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 01:17:58 by ahmtemel         ###   ########.fr       */
+/*   Updated: 2025/05/05 02:21:46 by aycami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 void	free_env(char **env)
 {
-	int	i = 0;
+	int	i;
+
+	i = 0;
 	if (!env)
 		return ;
 	while (env[i])
@@ -24,7 +26,9 @@ void	free_env(char **env)
 
 int	ft_isnum(char *str)
 {
-	int	i = 0;
+	int	i;
+
+	i = 0;
 	if (str[0] == '+' || str[0] == '-')
 		i++;
 	while (str[i])
@@ -36,8 +40,35 @@ int	ft_isnum(char *str)
 	return (1);
 }
 
-void	cleanup_and_exit(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list,
-						pid_t *pids, t_vars **vars, int code)
+int	handle_exit_errors(t_simple_cmds *cmd_list)
+{
+	int	flag;
+	int	re;
+
+	flag = 0;
+	re = 0;
+	if (cmd_list->content[1] && cmd_list->content[2])
+	{
+		write(2, "minishell: exit: too many arguments\n", 36);
+		return (1);
+	}
+	if (cmd_list->content[1])
+	{
+		if (!ft_isnum(cmd_list->content[1]))
+			return (2);
+		else
+		{
+			re = ft_new_atoi(cmd_list->content[1], &flag);
+			if (flag == -1)
+				return (2);
+			return (re);
+		}
+	}
+	return (0);
+}
+
+void	cleanup_and_exit(t_simple_cmds *cmd_list, char **envp,
+		t_lexer *token_list, pid_t *pids, t_vars **vars, int code)
 {
 	write(STDOUT_FILENO, "exit\n", 5);
 	free_lexer_list(token_list);
@@ -50,29 +81,17 @@ void	cleanup_and_exit(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list,
 }
 
 void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list,
-					pid_t *pids, t_vars **vars)
+		pid_t *pids, t_vars **vars)
 {
-	int	i = 0;
-	int	flag = 0;
+	int	error_code;
 
-	if (cmd_list->prev || cmd_list->next)
-		return ;
-	if (cmd_list->content[1] && cmd_list->content[2])
+	error_code = handle_exit_errors(cmd_list);
+	if (error_code == 2)
 	{
-		write(2, "minishell: exit: too many arguments\n", 36);
-		cmd_list->return_value = 1;
-		return ;
-	}
-	if (cmd_list->content[1])
-		i = ft_isnum(cmd_list->content[1]) ? ft_new_atoi(cmd_list->content[1], &flag) : 400;
-	if (i == 400 || flag == -1)
-	{
-		write(2, "minishell: exit: ", 17);
-		write(2, cmd_list->content[1], ft_strlen(cmd_list->content[1]));
-		write(2, ": numeric argument required\n", 28);
+		write(2, "minishell: exit: numeric argument required\n", 42);
 		cleanup_and_exit(cmd_list, envp, token_list, pids, vars, 2);
 	}
-	cleanup_and_exit(cmd_list, envp, token_list, pids, vars, i);
+	cleanup_and_exit(cmd_list, envp, token_list, pids, vars, error_code);
 }
 
 void	handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
@@ -92,6 +111,9 @@ void	handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
 
 void	init_exec_state(t_exec_state *st, t_simple_cmds *cmd_list)
 {
+	int	i;
+
+	i = 0;
 	st->cmd_count = 0;
 	st->status = 0;
 	st->last_cmd = cmd_list;
@@ -108,12 +130,15 @@ void	init_exec_state(t_exec_state *st, t_simple_cmds *cmd_list)
 		perror("malloc");
 		exit(1);
 	}
-	for (int i = 0; i < st->cmd_count; i++)
+	while (i < st->cmd_count)
+	{
 		st->pids[i] = -1;
+		i++;
+	}
 }
 
 void	execute_child(t_simple_cmds *cmd, char ***envp, t_lexer *token_list,
-						pid_t *pids, t_vars **vars)
+		pid_t *pids, t_vars **vars)
 {
 	setup_child_signals();
 	io_handle(cmd);
@@ -121,7 +146,7 @@ void	execute_child(t_simple_cmds *cmd, char ***envp, t_lexer *token_list,
 }
 
 void	fork_and_execute(t_exec_state *st, t_simple_cmds *cmd_list,
-						char ***envp, t_lexer *token_list, t_vars **vars)
+		char ***envp, t_lexer *token_list, t_vars **vars)
 {
 	if (cmd_list->next)
 		handle_pipe(cmd_list, cmd_list->next);
@@ -157,18 +182,20 @@ void	wait_for_children(t_exec_state *st)
 				if (st->last_cmd && st->i == st->cmd_count - 1)
 					st->last_cmd->return_value = 128 + WTERMSIG(st->status);
 			}
-			else if (WIFEXITED(st->status) && st->last_cmd && st->i == st->cmd_count - 1)
+			else if (WIFEXITED(st->status) && st->last_cmd
+				&& st->i == st->cmd_count - 1)
 				st->last_cmd->return_value = WEXITSTATUS(st->status);
 		}
 		st->i++;
 	}
 }
 
-void	handle_builtin(t_exec_state *st, char ***envp,
-						t_lexer *token_list, t_vars **vars)
+void	handle_builtin(t_exec_state *st, char ***envp, t_lexer *token_list,
+		t_vars **vars)
 {
-	t_simple_cmds *cmd = st->current_cmd;
+	t_simple_cmds	*cmd;
 
+	cmd = st->current_cmd;
 	if (cmd->pipe == 0 && !cmd->prev)
 	{
 		if (ft_strncmp("export", *cmd->str, 7) == 0)
@@ -186,8 +213,8 @@ void	handle_builtin(t_exec_state *st, char ***envp,
 		fork_and_execute(st, cmd, envp, token_list, vars);
 }
 
-void	execute(t_simple_cmds *cmd_list, char ***envp,
-				t_lexer *token_list, t_vars **vars)
+void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list,
+		t_vars **vars)
 {
 	t_exec_state	st;
 
@@ -197,10 +224,10 @@ void	execute(t_simple_cmds *cmd_list, char ***envp,
 	st.i = 0;
 	while (st.current_cmd)
 	{
-		if (!((st.current_cmd->pipe == 1 || st.current_cmd->prev) &&
-			(ft_strncmp("unset", *st.current_cmd->str, 6) == 0 ||
-			ft_strncmp("cd", *st.current_cmd->str, 3) == 0 ||
-			ft_strncmp("exit", *st.current_cmd->str, 5) == 0)))
+		if (!((st.current_cmd->pipe == 1 || st.current_cmd->prev)
+				&& (ft_strncmp("unset", *st.current_cmd->str, 6) == 0
+					|| ft_strncmp("cd", *st.current_cmd->str, 3) == 0
+					|| ft_strncmp("exit", *st.current_cmd->str, 5) == 0)))
 			handle_builtin(&st, envp, token_list, vars);
 		st.last_cmd = st.current_cmd;
 		st.current_cmd = st.current_cmd->next;
