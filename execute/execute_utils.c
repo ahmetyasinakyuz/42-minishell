@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 09:13:57 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 09:13:59 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 09:56:30 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,10 @@ void	wait_for_children(t_exec_state *st)
 				if (WTERMSIG(st->status) == SIGQUIT)
 					write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 				else if (WTERMSIG(st->status) == SIGINT)
-					write(STDOUT_FILENO, "\n", 1);
+				{
+					if (isatty(STDOUT_FILENO))
+						write(STDOUT_FILENO, "\n", 1);
+				}
 				if (st->last_cmd && st->i == st->cmd_count - 1)
 					st->last_cmd->return_value = 128 + WTERMSIG(st->status);
 			}

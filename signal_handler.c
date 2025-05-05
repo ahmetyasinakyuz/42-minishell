@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 10:40:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 09:00:40 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 09:55:06 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,12 @@ void	handle_sigint(int signum)
 {
 	g_received_signal = signum;
 	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	if (isatty(STDIN_FILENO))
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
 
 void	setup_signals(void)

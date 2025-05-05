@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   none_built_in.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 08:33:43 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 09:55:06 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,14 @@ static void	handle_parent_process(pid_t child_pid, t_simple_cmds *cmd_list,
 	waitpid(child_pid, &status, 0);
 	sigaction(SIGINT, old_int, NULL);
 	sigaction(SIGQUIT, old_quit, NULL);
-	if (WIFEXITED(status))
-		cmd_list->return_value = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT && isatty(STDOUT_FILENO))
+			write(STDOUT_FILENO, "\n", 1);
 		cmd_list->return_value = 128 + WTERMSIG(status);
+	}
+	else if (WIFEXITED(status))
+		cmd_list->return_value = WEXITSTATUS(status);
 	else
 		cmd_list->return_value = 1;
 }
