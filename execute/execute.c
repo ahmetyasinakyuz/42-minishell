@@ -69,12 +69,12 @@ int	handle_exit_errors(t_simple_cmds *cmd_list)
 
 typedef struct s_cleanup_ctx
 {
-	char			**envp;
-	t_lexer			*token_list;
-	pid_t			*pids;
-	t_vars			**vars;
-	int				code;
-}					t_cleanup_ctx;
+	char	**envp;
+	t_lexer	*token_list;
+	pid_t	*pids;
+	t_vars	**vars;
+	int		code;
+}			t_cleanup_ctx;
 
 void	cleanup_and_exit(t_simple_cmds *cmd_list, t_cleanup_ctx *ctx)
 {
@@ -148,25 +148,16 @@ void	init_exec_state(t_exec_state *st, t_simple_cmds *cmd_list)
 
 void	execute_child(t_simple_cmds *cmd, t_exec_child_ctx *ctx)
 {
-	t_builtin_ctx builtin_ctx;
+	t_builtin_ctx	builtin_ctx;
 
 	builtin_ctx.envp = ctx->envp;
 	builtin_ctx.token_list = ctx->token_list;
 	builtin_ctx.pids = ctx->pids;
 	builtin_ctx.vars = ctx->vars;
-	
 	setup_child_signals();
 	io_handle(cmd);
 	builtin_control(cmd, &builtin_ctx);
 }
-
-typedef struct s_fork_exec_ctx
-{
-	t_simple_cmds	*cmd_list;
-	char			***envp;
-	t_lexer			*token_list;
-	t_vars			**vars;
-}					t_fork_exec_ctx;
 
 void	fork_and_execute(t_exec_state *st, t_fork_exec_ctx *ctx)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 04:50:25 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/05 05:07:32 by ahmtemel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,14 @@ typedef struct s_builtin_ctx
 	pid_t		*pids;
 	t_vars		**vars;
 }	t_builtin_ctx;
+
+typedef struct s_fork_exec_ctx
+{
+	t_simple_cmds	*cmd_list;
+	char			***envp;
+	t_lexer			*token_list;
+	t_vars			**vars;
+}					t_fork_exec_ctx;
 
 extern volatile sig_atomic_t	g_received_signal;
 
