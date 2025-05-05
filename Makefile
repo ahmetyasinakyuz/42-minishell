@@ -6,7 +6,7 @@
 #    By: aycami <aycami@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/05 08:51:49 by aycami           ###   ########.fr        #
+#    Updated: 2025/05/05 09:11:00 by aycami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,18 +61,18 @@ OBJ =$(SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@make -C libs/libft/
-	@$(CC) $(C_FLAGS) $(OBJ) ./libs/libft/libft.a -o $(NAME) -lreadline
+	@make -C libft/
+	@$(CC) $(C_FLAGS) $(OBJ) ./libft/libft.a -o $(NAME) -lreadline
 
 %.o: %.c
 	@$(CC) $(C_FLAGS) -c $< -o $@
 
 fclean: clean
-	@make fclean -C libs/libft
+	@make fclean -C libft
 	@rm -rf $(NAME) $(NAME_C)
 
 clean:
-	@make clean -C libs/libft
+	@make clean -C libft
 	@rm -rf $(OBJ) $(OBJ_C)
 
 
