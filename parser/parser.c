@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 06:14:28 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/05 06:29:37 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,8 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)
 		handle_current_token(&current, &start, &cmd_list, vars);
 		current = current->next;
 	}
-	
-	// Don't try to execute if we received SIGINT
 	if (g_received_signal != SIGINT && cmd_list)
 		execute(cmd_list, envp, token_list, vars);
-		
 	if (cmd_list)
 	{
 		update_return_value(cmd_list, vars);

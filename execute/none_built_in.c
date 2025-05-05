@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   none_built_in.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 02:26:32 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 06:29:22 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,34 +51,40 @@ char	*resolve_command_path(t_simple_cmds *cmd_list, char **envp,
 	return (path);
 }
 
-void	handle_child_execution(t_simple_cmds *cmd_list, char *path,
-	char ***envp)
-{
-	char	**cmd;
-
-	if (cmd_list->flag == NULL)
-		cmd = cmd_list->str;
-	else
-		cmd = merge_cmd_and_flags(cmd_list->str, cmd_list->flag);
-	setup_child_signals();
-	execve(path, cmd, *envp);
-	perror("execve");
-	exit(EXIT_FAILURE);
-}
-
 void	execute_command(t_simple_cmds *cmd_list, char *path, char ***envp)
 {
 	pid_t	child_pid;
 	int		status;
+	struct sigaction	old_int, old_quit;
+	char	**cmd;
+	int		cmd_allocated;
 
+	cmd_allocated = 0;
+	if (cmd_list->flag == NULL)
+		cmd = cmd_list->str;
+	else
+	{
+		cmd = merge_cmd_and_flags(cmd_list->str, cmd_list->flag);
+		cmd_allocated = 1;
+	}
+	sigaction(SIGINT, NULL, &old_int);
+	sigaction(SIGQUIT, NULL, &old_quit);
+	setup_execute_signals();
 	child_pid = fork();
 	if (child_pid == 0)
 	{
-		handle_child_execution(cmd_list, path, envp);
+		setup_child_signals();
+		execve(path, cmd, *envp);
+		perror("execve");
+		if (cmd_allocated)
+			free(cmd);
+		exit(EXIT_FAILURE);
 	}
 	else if (child_pid > 0)
 	{
 		waitpid(child_pid, &status, 0);
+		sigaction(SIGINT, &old_int, NULL);
+		sigaction(SIGQUIT, &old_quit, NULL);
 		if (WIFEXITED(status))
 			cmd_list->return_value = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
@@ -88,9 +94,13 @@ void	execute_command(t_simple_cmds *cmd_list, char *path, char ***envp)
 	}
 	else
 	{
+		sigaction(SIGINT, &old_int, NULL);
+		sigaction(SIGQUIT, &old_quit, NULL);
 		perror("fork");
 		cmd_list->return_value = 1;
 	}
+	if (cmd_allocated)
+		free(cmd);
 }
 
 void	none_built_in(t_simple_cmds *cmd_list, char ***envp)
