@@ -6,11 +6,15 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:30:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 06:14:28 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/05 08:21:38 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <setjmp.h>
+
+// For signaling between handler and main code
+static jmp_buf heredoc_jmp;
 
 static char	*generate_temp_filename(void)
 {
@@ -26,46 +30,30 @@ static char	*generate_temp_filename(void)
 	return (filename);
 }
 
-// Child process function to handle heredoc input
-static void	child_heredoc_process(int fd, char *delimiter, t_vars *vars)
+// Updated signal handler
+static void	heredoc_sigint_handler(int signum)
 {
-	char	*line;
-	struct sigaction sa;
+	(void)signum;
+	g_received_signal = SIGINT;
+	// Jump back to where setjmp was called
+	siglongjmp(heredoc_jmp, 1);
+}
 
-	// Setup proper signal handling for heredoc input
-	sa.sa_handler = SIG_DFL;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGQUIT, &sa, NULL);
-	
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)  // EOF or error
-			exit(EXIT_SUCCESS);
-		
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
-		{
-			free(line);
-			break;
-		}
-		
-		line = is_dolar(line, &vars);
-		ft_putendl_fd(line, fd);
-		free(line);
-	}
-	close(fd);
-	exit(EXIT_SUCCESS);
+// Define an event hook for readline to check for our signal
+static int heredoc_event_hook(void)
+{
+	if (g_received_signal == SIGINT)
+		rl_done = 1;
+	return 0;
 }
 
 char	*create_heredoc_file(char *delimiter, t_vars *vars)
 {
-	pid_t	pid;
 	char	*filename;
 	int		fd;
-	int		status;
 	struct sigaction	old_int, old_quit;
+	struct sigaction	sa_int, sa_quit;
+	char	*line;
 
 	filename = generate_temp_filename();
 	if (!filename)
@@ -82,63 +70,84 @@ char	*create_heredoc_file(char *delimiter, t_vars *vars)
 	sigaction(SIGINT, NULL, &old_int);
 	sigaction(SIGQUIT, NULL, &old_quit);
 	
-	// Set special signal handlers for heredoc
-	struct sigaction sa_int;
-	sa_int.sa_handler = SIG_IGN;
+	// Setup custom signal handlers
+	sa_int.sa_handler = heredoc_sigint_handler;
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = 0;
+	
+	sa_quit.sa_handler = SIG_IGN;
+	sigemptyset(&sa_quit.sa_mask);
+	sa_quit.sa_flags = 0;
+	
 	sigaction(SIGINT, &sa_int, NULL);
-
-	pid = fork();
-	if (pid == -1)
+	sigaction(SIGQUIT, &sa_quit, NULL);
+	
+	// Set up event hook for readline to check for signals
+	rl_event_hook = heredoc_event_hook;
+	
+	// Reset signal flag
+	g_received_signal = 0;
+	
+	// Use setjmp to allow jumping back here on SIGINT
+	if (sigsetjmp(heredoc_jmp, 1) == 0)
 	{
-		// Restore signal handlers
-		sigaction(SIGINT, &old_int, NULL);
-		sigaction(SIGQUIT, &old_quit, NULL);
-		close(fd);
-		free(filename);
-		return (NULL);
+		while (1)
+		{
+			line = readline("> ");
+			
+			if (!line || g_received_signal == SIGINT)
+				break;
+			
+			if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
+			{
+				free(line);
+				break;
+			}
+			
+			line = is_dolar(line, &vars);
+			ft_putendl_fd(line, fd);
+			free(line);
+		}
 	}
 	
-	if (pid == 0)  // Child process
-		child_heredoc_process(fd, delimiter, vars);
-	else  // Parent process
+	close(fd);
+	
+	// Restore signal handlers
+	sigaction(SIGINT, &old_int, NULL);
+	sigaction(SIGQUIT, &old_quit, NULL);
+	
+	// Reset the readline event hook
+	rl_event_hook = NULL;
+	
+	// If we received a signal, clean up and return NULL
+	if (g_received_signal == SIGINT)
 	{
-		close(fd);  // Parent doesn't need the file descriptor
-		waitpid(pid, &status, 0);
-		
-		// Restore signal handlers
-		sigaction(SIGINT, &old_int, NULL);
-		sigaction(SIGQUIT, &old_quit, NULL);
-		
-		// If child was terminated by a signal (Ctrl+C)
-		if (WIFSIGNALED(status))
-		{
-			unlink(filename);  // Remove temp file
-			free(filename);
-			g_received_signal = SIGINT;
-			// Force a newline to ensure clean prompt display
-			write(STDOUT_FILENO, "\n", 1);
-			rl_on_new_line();
-			return (NULL);
-		}
+		unlink(filename);
+		free(filename);
+		write(1, "\n", 1);  // For clean output
+		return (NULL);
 	}
 	
 	return (filename);
 }
 
-void	process_single_heredoc(t_simple_cmds *cmd, t_lexer *current,
-			t_vars *vars)
+void	process_single_heredoc(t_simple_cmds *cmd, t_lexer *current, t_vars *vars)
 {
 	char	*delimiter;
 	char	*filename;
 
 	if (current->token == REDIRECT_HEREDOC && current->next)
 	{
-		delimiter = current->next->str;
-		delimiter = remove_quotes(ft_strdup(delimiter));
+		delimiter = ft_strdup(current->next->str);
+		if (!delimiter)
+			return;
+		
+		delimiter = remove_quotes(delimiter);
+		
 		filename = create_heredoc_file(delimiter, vars);
+		
 		free(delimiter);
+		
 		if (filename)
 		{
 			if (cmd->hd_file_name)
@@ -158,11 +167,13 @@ void	handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections, t_vars *vars)
 	while (current)
 	{
 		process_single_heredoc(cmd, current, vars);
+		
 		if (g_received_signal == SIGINT)
 			break;
+		
 		if (current->next)
 			current = current->next->next;
 		else
-			break ;
+			break;
 	}
 }

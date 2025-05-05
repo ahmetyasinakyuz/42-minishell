@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 10:40:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 06:28:14 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/05 08:24:00 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,12 @@ volatile sig_atomic_t	g_received_signal = 0;
 
 void	handle_sigint(int signum)
 {
-	//ctrl + c sinyali geldiğinde g_received_signal değişkenine sinyalin numarası atanır
 	g_received_signal = signum;
 	
-	// Clear the current line and move to a new line
+	// Ensure visible newline
 	write(STDOUT_FILENO, "\n", 1);
 	
-	// Make sure readline knows we're on a new line
+	// Reset readline state
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay(); 
@@ -100,4 +99,5 @@ void	setup_execute_signals(void)
 void	reset_signal_handling(void)
 {
 	g_received_signal = 0;
+	// Important - clear any readline state that might be pending
 }

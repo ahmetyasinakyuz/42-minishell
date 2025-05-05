@@ -3,14 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 05:13:53 by ahmtemel         ###   ########.fr       */
+/*   Updated: 2025/05/05 07:49:05 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	clean_exit(t_vars **vars, char ***envp)
+{
+	rl_clear_history();
+	clear_vars(vars);
+	free_env(*envp);
+}
 
 void	run_shell(t_vars **vars, char ***envp)
 {
@@ -24,18 +31,19 @@ void	run_shell(t_vars **vars, char ***envp)
 		if (!input)
 		{
 			if (g_received_signal == SIGINT)
+			{
+				clean_exit(vars, envp);
 				exit(130);
+			}
 			ft_putendl_fd("exit", STDOUT_FILENO);
-			break ;
+			break;
 		}
 		if (ft_strlen(input) > 0)
 			add_history(input);
 		parser(input, vars, envp);
 		free(input);
 	}
-	rl_clear_history();
-	clear_vars(vars);
-	free_env(*envp);
+	clean_exit(vars, envp);
 }
 
 char	**env_maker(char **envp)
