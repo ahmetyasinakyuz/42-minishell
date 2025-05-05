@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 09:15:32 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 09:22:30 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,6 @@ int	validate_quotes(char *str)
 		i++;
 	}
 	return (0);
-}
-
-void	handle_quote_status(char *input, int *i, int *in_squote, int *in_dquote)
-{
-	if (input[*i] == '\'' && !(*in_dquote))
-		*in_squote = !(*in_squote);
-	else if (input[*i] == '\"' && !(*in_squote))
-		*in_dquote = !(*in_dquote);
 }
 
 void	process_quotes(char *str, char *result, int *i, int *j)

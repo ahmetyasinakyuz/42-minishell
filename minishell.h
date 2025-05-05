@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 09:11:08 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 09:22:56 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,6 @@ void							handle_redirections(t_simple_cmds *cmd,
 									t_lexer **token_list);
 void							add_redirection(t_lexer **redirection_list,
 									t_lexer *token);
-void							remove_token(t_lexer **list, t_lexer *token);
 int								is_redirection(t_tokens token);
 int								validate_quotes(char *str);
 int								handle_quoted_string(char *str, int *i,
@@ -223,10 +222,6 @@ void							fill_flags(t_simple_cmds *cmd, t_lexer *start,
 char							*handle_dollar_char(char *result, int *i,
 									t_vars **vars);
 char							*remove_quotes(char *str);
-int								handle_quoted_string(char *str, int *i,
-									char quote);
-void							handle_quote_status(char *input, int *i,
-									int *in_squote, int *in_dquote);
 void							process_quotes(char *str, char *result, int *i,
 									int *j);
 void							handle_word_token(t_lexer *current,
