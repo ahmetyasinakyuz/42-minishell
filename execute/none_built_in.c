@@ -3,102 +3,70 @@
 /*                                                        :::      ::::::::   */
 /*   none_built_in.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 06:29:22 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/05 08:33:43 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	is_direct_path(char *str)
+static void	handle_child_process(char **cmd, char *path, char ***envp,
+	int cmd_allocated)
 {
-	if (str[0] == '/')
-		return (1);
-	if (str[0] == '.' && str[1] == '/')
-		return (1);
-	if (str[0] == '.' && str[1] == '.' && str[2] == '/')
-		return (1);
-	return (0);
+	setup_child_signals();
+	execve(path, cmd, *envp);
+	perror("execve");
+	if (cmd_allocated)
+		free(cmd);
+	exit(EXIT_FAILURE);
 }
 
-char	*resolve_command_path(t_simple_cmds *cmd_list, char **envp,
-	int *allocated)
+static void	handle_parent_process(pid_t child_pid, t_simple_cmds *cmd_list,
+	struct sigaction *old_int, struct sigaction *old_quit)
 {
-	char	*path;
+	int	status;
 
-	*allocated = 0;
-	if (is_direct_path(cmd_list->str[0]))
-	{
-		if (access(cmd_list->str[0], F_OK) != 0)
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(cmd_list->str[0], 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
-			cmd_list->return_value = 127;
-			return (NULL);
-		}
-		return (cmd_list->str[0]);
-	}
-	path = path_finder(cmd_list->str[0], envp);
-	if (!path)
-	{
-		print_cmd_not_found(cmd_list->str[0], &cmd_list->return_value);
-		return (NULL);
-	}
-	*allocated = 1;
-	return (path);
+	waitpid(child_pid, &status, 0);
+	sigaction(SIGINT, old_int, NULL);
+	sigaction(SIGQUIT, old_quit, NULL);
+	if (WIFEXITED(status))
+		cmd_list->return_value = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		cmd_list->return_value = 128 + WTERMSIG(status);
+	else
+		cmd_list->return_value = 1;
+}
+
+static void	handle_fork_error(t_simple_cmds *cmd_list,
+	struct sigaction *old_int, struct sigaction *old_quit)
+{
+	sigaction(SIGINT, old_int, NULL);
+	sigaction(SIGQUIT, old_quit, NULL);
+	perror("fork");
+	cmd_list->return_value = 1;
 }
 
 void	execute_command(t_simple_cmds *cmd_list, char *path, char ***envp)
 {
-	pid_t	child_pid;
-	int		status;
-	struct sigaction	old_int, old_quit;
-	char	**cmd;
-	int		cmd_allocated;
+	pid_t				child_pid;
+	struct sigaction	old_int;
+	struct sigaction	old_quit;
+	char				**cmd;
+	int					cmd_allocated;
 
-	cmd_allocated = 0;
-	if (cmd_list->flag == NULL)
-		cmd = cmd_list->str;
-	else
-	{
-		cmd = merge_cmd_and_flags(cmd_list->str, cmd_list->flag);
-		cmd_allocated = 1;
-	}
+	cmd = prepare_cmd(cmd_list, &cmd_allocated);
 	sigaction(SIGINT, NULL, &old_int);
 	sigaction(SIGQUIT, NULL, &old_quit);
 	setup_execute_signals();
 	child_pid = fork();
 	if (child_pid == 0)
-	{
-		setup_child_signals();
-		execve(path, cmd, *envp);
-		perror("execve");
-		if (cmd_allocated)
-			free(cmd);
-		exit(EXIT_FAILURE);
-	}
+		handle_child_process(cmd, path, envp, cmd_allocated);
 	else if (child_pid > 0)
-	{
-		waitpid(child_pid, &status, 0);
-		sigaction(SIGINT, &old_int, NULL);
-		sigaction(SIGQUIT, &old_quit, NULL);
-		if (WIFEXITED(status))
-			cmd_list->return_value = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			cmd_list->return_value = 128 + WTERMSIG(status);
-		else
-			cmd_list->return_value = 1;
-	}
+		handle_parent_process(child_pid, cmd_list, &old_int, &old_quit);
 	else
-	{
-		sigaction(SIGINT, &old_int, NULL);
-		sigaction(SIGQUIT, &old_quit, NULL);
-		perror("fork");
-		cmd_list->return_value = 1;
-	}
+		handle_fork_error(cmd_list, &old_int, &old_quit);
 	if (cmd_allocated)
 		free(cmd);
 }

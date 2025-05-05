@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 06:17:40 by ahmtemel         ###   ########.fr       */
+/*   Updated: 2025/05/05 08:34:45 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,5 +306,9 @@ void							fork_and_execute(t_exec_state *st,
 void							wait_for_children(t_exec_state *st);
 void							cleanup(t_simple_cmds *cmd_list,
 									t_cleanup_ctx *ctx);
+int								is_direct_path(char *str);
+char							*resolve_command_path(t_simple_cmds *cmd_list, char **envp,
+										int *allocated);
+char							**prepare_cmd(t_simple_cmds *cmd_list, int *cmd_allocated);
 
 #endif

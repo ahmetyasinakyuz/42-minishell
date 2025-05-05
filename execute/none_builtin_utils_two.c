@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 02:25:53 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 02:26:37 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 08:34:23 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,19 @@ int	is_invalid_command(t_simple_cmds *cmd_list)
 	if (cmd_list->str[0][0] == '\0')
 		return (1);
 	return (0);
+}
+
+char	**prepare_cmd(t_simple_cmds *cmd_list, int *cmd_allocated)
+{
+	char	**cmd;
+
+	*cmd_allocated = 0;
+	if (cmd_list->flag == NULL)
+		cmd = cmd_list->str;
+	else
+	{
+		cmd = merge_cmd_and_flags(cmd_list->str, cmd_list->flag);
+		*cmd_allocated = 1;
+	}
+	return (cmd);
 }
