@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:30:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 02:37:14 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/05 06:14:28 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static void	child_heredoc_process(int fd, char *delimiter, t_vars *vars)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
 	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
 	
 	while (1)
 	{
@@ -116,6 +117,9 @@ char	*create_heredoc_file(char *delimiter, t_vars *vars)
 			unlink(filename);  // Remove temp file
 			free(filename);
 			g_received_signal = SIGINT;
+			// Force a newline to ensure clean prompt display
+			write(STDOUT_FILENO, "\n", 1);
+			rl_on_new_line();
 			return (NULL);
 		}
 	}
@@ -154,6 +158,8 @@ void	handle_heredoc(t_simple_cmds *cmd, t_lexer *redirections, t_vars *vars)
 	while (current)
 	{
 		process_single_heredoc(cmd, current, vars);
+		if (g_received_signal == SIGINT)
+			break;
 		if (current->next)
 			current = current->next->next;
 		else

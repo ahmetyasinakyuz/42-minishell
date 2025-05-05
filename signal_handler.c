@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 10:40:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 02:26:39 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/05 06:14:28 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,21 @@ void	handle_sigint(int signum)
 {
 	//ctrl + c sinyali geldiğinde g_received_signal değişkenine sinyalin numarası atanır
 	g_received_signal = signum;
-	//ctrl + c sinyali geldiğinde terminalde yeni bir satır açılır
+	
+	// Clear the current line and move to a new line
 	write(STDOUT_FILENO, "\n", 1);
 	
-	//Yeni bir satır başlatıldığını readline (rl) kütüphanesine bildiriyor.
+	// Make sure readline knows we're on a new line
 	rl_on_new_line();
-	//readline girdisini temizler
 	rl_replace_line("", 0);
 	rl_redisplay(); 
+}
+
+// Add this function to help with heredoc interruption
+void clean_readline_after_signal(void)
+{
+	rl_on_new_line();
+	rl_replace_line("", 0);
 }
 
 // Specific handler for SIGINT during execution
