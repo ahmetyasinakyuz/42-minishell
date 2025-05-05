@@ -3,30 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 10:57:51 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/05 05:13:53 by ahmtemel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-//sadece = komut bulunamadı hatası
-//
-// built in return value (echo, cd, pwd, export, unset, env, exit)
-// norm
-// bash$ echo "aaa" << $OK
-//> 
-//aaa
-//bash$ 
-// diameter de dolar işleme
-//
-//- Try ctrl-C in a prompt after you wrote some stuff should show a new line with a new prompt
-//- Try ctrl-D in a prompt after you wrote some stuff should not do anything
-//- Try ctrl-\ in a prompt after you wrote some stuff should quit minishell --> RELAUNCH!
-//
-
 
 void	run_shell(t_vars **vars, char ***envp)
 {
@@ -54,7 +38,7 @@ void	run_shell(t_vars **vars, char ***envp)
 	free_env(*envp);
 }
 
-char **env_maker(char **envp)
+char	**env_maker(char **envp)
 {
 	int		i;
 	char	**local_envp;
@@ -78,7 +62,7 @@ char **env_maker(char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_vars	*vars;
-	char **local_envp;
+	char	**local_envp;
 
 	local_envp = env_maker(envp);
 	vars = NULL;
