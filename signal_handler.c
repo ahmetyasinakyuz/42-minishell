@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 10:40:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 08:24:00 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/05 08:39:13 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,6 @@ void	handle_sigint(int signum)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay(); 
-}
-
-// Add this function to help with heredoc interruption
-void clean_readline_after_signal(void)
-{
-	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-}
-
-// Specific handler for SIGINT during execution
-void	handle_sigint_exec(int signum)
-{
-	g_received_signal = signum;
-	// No need to do anything else - we just need to handle the signal
-	// The rest is handled by the waiting parent process
 }
 
 // Ana süreç (interaktif kabuk) için sinyal ayarları

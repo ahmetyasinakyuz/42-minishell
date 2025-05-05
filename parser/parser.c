@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 08:21:38 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/05 08:48:13 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,33 +72,14 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)
 	cmd_list = NULL;
 	start = token_list;
 	current = token_list;
-	
-	// Reset signal flag before processing
-	g_received_signal = 0;
-	
-	while (current && g_received_signal != SIGINT)
+	while (current)
 	{
 		handle_current_token(&current, &start, &cmd_list, vars);
-		if (g_received_signal == SIGINT)
-			break;
 		current = current->next;
 	}
-	
-	// If we received SIGINT, properly clean up
-	if (g_received_signal == SIGINT)
-	{
-		if (cmd_list)
-			free_command_list(cmd_list);
-		return;
-	}
-	
-	// Normal execution path
-	if (cmd_list)
-	{
-		execute(cmd_list, envp, token_list, vars);
-		update_return_value(cmd_list, vars);
-		free_command_list(cmd_list);
-	}
+	execute(cmd_list, envp, token_list, vars);
+	update_return_value(cmd_list, vars);
+	free_command_list(cmd_list);
 }
 
 void	parser(char *input, t_vars **vars, char ***envp)
