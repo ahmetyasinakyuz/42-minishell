@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_control.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 01:46:20 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 04:14:50 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,22 @@ void	builtin_control(t_simple_cmds *cmd_list, char ***envp,
 		t_lexer *token_list, pid_t *pids, t_vars **vars)
 {
 	t_simple_cmds	*current_cmd;
-	int				exit_status;
+	t_exit_params	params;
 
 	current_cmd = cmd_list;
 	io_handle(current_cmd);
+	
+	// Prepare exit parameters
+	params.cmd_list = cmd_list;
+	params.envp = *envp;
+	params.token_list = token_list;
+	params.pids = pids;
+	params.vars = vars;
+
 	if (current_cmd->return_value != 0)
 	{
-		exit_status = current_cmd->return_value;
-		free_command_list(cmd_list);
-		free_lexer_list(token_list);
-		free(pids);
-		clear_vars(vars);
-		free_env(*envp);
-		exit(exit_status);
+		params.code = current_cmd->return_value;
+		cleanup_and_exit(&params);
 	}
 
 	if (ft_strncmp("echo", *current_cmd->str, 5) == 0)
@@ -47,11 +50,6 @@ void	builtin_control(t_simple_cmds *cmd_list, char ***envp,
 	else
 		none_built_in(current_cmd, envp);
 	
-	exit_status = current_cmd->return_value;
-	free_command_list(cmd_list);
-	free_lexer_list(token_list);
-	free(pids);
-	clear_vars(vars);
-	free_env(*envp);
-	exit(exit_status);
+	params.code = current_cmd->return_value;
+	cleanup_and_exit(&params);
 }

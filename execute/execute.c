@@ -67,31 +67,38 @@ int	handle_exit_errors(t_simple_cmds *cmd_list)
 	return (0);
 }
 
-void	cleanup_and_exit(t_simple_cmds *cmd_list, char **envp,
-		t_lexer *token_list, pid_t *pids, t_vars **vars, int code)
+void	cleanup_and_exit(t_exit_params *params)
 {
 	write(STDOUT_FILENO, "exit\n", 5);
-	free_lexer_list(token_list);
-	free(pids);
-	clear_vars(vars);
-	free_env(envp);
+	free_lexer_list(params->token_list);
+	free(params->pids);
+	clear_vars(params->vars);
+	free_env(params->envp);
 	rl_clear_history();
-	free_command_list(cmd_list);
-	exit(code);
+	free_command_list(params->cmd_list);
+	exit(params->code);
 }
 
 void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list,
-		pid_t *pids, t_vars **vars)
+		t_exit_params *exit_params)
 {
-	int	error_code;
+	int				error_code;
+	t_exit_params	params;
 
+	params.cmd_list = cmd_list;
+	params.envp = envp;
+	params.token_list = token_list;
+	params.pids = exit_params->pids;
+	params.vars = exit_params->vars;
 	error_code = handle_exit_errors(cmd_list);
 	if (error_code == 2)
 	{
 		write(2, "minishell: exit: numeric argument required\n", 42);
-		cleanup_and_exit(cmd_list, envp, token_list, pids, vars, 2);
+		params.code = 2;
+		cleanup_and_exit(&params);
 	}
-	cleanup_and_exit(cmd_list, envp, token_list, pids, vars, error_code);
+	params.code = error_code;
+	cleanup_and_exit(&params);
 }
 
 void	handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
@@ -137,16 +144,16 @@ void	init_exec_state(t_exec_state *st, t_simple_cmds *cmd_list)
 	}
 }
 
-void	execute_child(t_simple_cmds *cmd, char ***envp, t_lexer *token_list,
-		pid_t *pids, t_vars **vars)
+void	execute_child(t_simple_cmds *cmd, t_exec_params *params)
 {
 	setup_child_signals();
 	io_handle(cmd);
-	builtin_control(cmd, envp, token_list, pids, vars);
+	builtin_control(cmd, params->envp, params->token_list, params->pids,
+		params->vars);
 }
 
 void	fork_and_execute(t_exec_state *st, t_simple_cmds *cmd_list,
-		char ***envp, t_lexer *token_list, t_vars **vars)
+		t_exec_params *params)
 {
 	if (cmd_list->next)
 		handle_pipe(cmd_list, cmd_list->next);
@@ -157,7 +164,7 @@ void	fork_and_execute(t_exec_state *st, t_simple_cmds *cmd_list,
 		exit(1);
 	}
 	if (st->pids[st->i] == 0)
-		execute_child(cmd_list, envp, token_list, st->pids, vars);
+		execute_child(cmd_list, params);
 	if (cmd_list->output_type == IO_PIPE_OUT)
 		close(cmd_list->output_fd);
 	if (cmd_list->input_type == IO_PIPE_IN)
@@ -190,35 +197,42 @@ void	wait_for_children(t_exec_state *st)
 	}
 }
 
-void	handle_builtin(t_exec_state *st, char ***envp, t_lexer *token_list,
-		t_vars **vars)
+void	handle_builtin(t_exec_state *st, t_exec_params *params)
 {
 	t_simple_cmds	*cmd;
+	t_exit_params	exit_params;
 
 	cmd = st->current_cmd;
+	exit_params.pids = st->pids;
+	exit_params.vars = params->vars;
 	if (cmd->pipe == 0 && !cmd->prev)
 	{
 		if (ft_strncmp("export", *cmd->str, 7) == 0)
-			export_builtin(cmd, envp, cmd->content && cmd->content[1]);
+			export_builtin(cmd, params->envp, cmd->content && cmd->content[1]);
 		else if (ft_strncmp("unset", *cmd->str, 6) == 0)
-			unset_builtin(cmd, envp);
+			unset_builtin(cmd, params->envp);
 		else if (ft_strncmp("cd", *cmd->str, 3) == 0)
-			cd_builtin(cmd, *envp);
+			cd_builtin(cmd, *params->envp);
 		else if (ft_strncmp("exit", *cmd->str, 5) == 0)
-			exit_builtin(cmd, *envp, token_list, st->pids, vars);
+			exit_builtin(cmd, *params->envp, params->token_list, &exit_params);
 		else
-			fork_and_execute(st, cmd, envp, token_list, vars);
+			fork_and_execute(st, cmd, params);
 	}
 	else
-		fork_and_execute(st, cmd, envp, token_list, vars);
+		fork_and_execute(st, cmd, params);
 }
 
 void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list,
 		t_vars **vars)
 {
 	t_exec_state	st;
+	t_exec_params	params;
 
+	params.envp = envp;
+	params.token_list = token_list;
+	params.vars = vars;
 	init_exec_state(&st, cmd_list);
+	params.pids = st.pids;
 	setup_execute_signals();
 	st.current_cmd = cmd_list;
 	st.i = 0;
@@ -228,7 +242,7 @@ void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list,
 				&& (ft_strncmp("unset", *st.current_cmd->str, 6) == 0
 					|| ft_strncmp("cd", *st.current_cmd->str, 3) == 0
 					|| ft_strncmp("exit", *st.current_cmd->str, 5) == 0)))
-			handle_builtin(&st, envp, token_list, vars);
+			handle_builtin(&st, &params);
 		st.last_cmd = st.current_cmd;
 		st.current_cmd = st.current_cmd->next;
 	}
