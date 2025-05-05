@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 02:27:37 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 04:50:25 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,30 @@ typedef struct s_exec_state
 	int				status;
 }	t_exec_state;
 
+typedef struct s_exec_child_ctx
+{
+	char	***envp;
+	t_lexer	*token_list;
+	pid_t	*pids;
+	t_vars	**vars;
+}	t_exec_child_ctx;
+
+typedef struct s_exitb_ctx
+{
+	char	**envp;
+	t_lexer	*token_list;
+	pid_t	*pids;
+	t_vars	**vars;
+}	t_exitb_ctx;
+
+typedef struct s_builtin_ctx
+{
+	char		***envp;
+	t_lexer		*token_list;
+	pid_t		*pids;
+	t_vars		**vars;
+}	t_builtin_ctx;
+
 extern volatile sig_atomic_t	g_received_signal;
 
 //--------------------------ANA KISIM--------------------------------
@@ -190,7 +214,7 @@ char			*remove_whitespaces(char *str);
 
 //--------------------------EXECUTE-----------------------------------
 void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, t_vars **vars);
-void	builtin_control(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list, pid_t *pids, t_vars **vars);
+void	builtin_control(t_simple_cmds *cmd_list, t_builtin_ctx *ctx);
 void	echo_builtin(t_simple_cmds *cmd_list);
 char	*path_finder(char *cmd, char **envp);
 void	none_built_in(t_simple_cmds *cmd_list, char ***envp);
@@ -202,7 +226,7 @@ void	empty_export(char ***envp);
 void	unset_builtin(t_simple_cmds *cmd_list, char ***envp);
 void    pwd_builtin(t_simple_cmds *cmd_list);
 void	cd_builtin(t_simple_cmds *cmd_list, char **envp);
-void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list, pid_t *pids, t_vars **vars);
+void	exit_builtin(t_simple_cmds *cmd_list, t_exitb_ctx *ctx);
 int		ft_new_atoi(const char *str, int *flag);
 void	free_env(char **env);
 char	**new_env_maker(char ***envp, int extra);

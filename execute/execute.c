@@ -67,38 +67,40 @@ int	handle_exit_errors(t_simple_cmds *cmd_list)
 	return (0);
 }
 
-void	cleanup_and_exit(t_exit_params *params)
+typedef struct s_cleanup_ctx
+{
+	char			**envp;
+	t_lexer			*token_list;
+	pid_t			*pids;
+	t_vars			**vars;
+	int				code;
+}					t_cleanup_ctx;
+
+void	cleanup_and_exit(t_simple_cmds *cmd_list, t_cleanup_ctx *ctx)
 {
 	write(STDOUT_FILENO, "exit\n", 5);
-	free_lexer_list(params->token_list);
-	free(params->pids);
-	clear_vars(params->vars);
-	free_env(params->envp);
+	free_lexer_list(ctx->token_list);
+	free(ctx->pids);
+	clear_vars(ctx->vars);
+	free_env(ctx->envp);
 	rl_clear_history();
-	free_command_list(params->cmd_list);
-	exit(params->code);
+	free_command_list(cmd_list);
+	exit(ctx->code);
 }
 
-void	exit_builtin(t_simple_cmds *cmd_list, char **envp, t_lexer *token_list,
-		t_exit_params *exit_params)
+void	exit_builtin(t_simple_cmds *cmd_list, t_exitb_ctx *ctx)
 {
-	int				error_code;
-	t_exit_params	params;
+	int	error_code;
 
-	params.cmd_list = cmd_list;
-	params.envp = envp;
-	params.token_list = token_list;
-	params.pids = exit_params->pids;
-	params.vars = exit_params->vars;
 	error_code = handle_exit_errors(cmd_list);
 	if (error_code == 2)
 	{
-		write(2, "minishell: exit: numeric argument required\n", 42);
-		params.code = 2;
-		cleanup_and_exit(&params);
+		write(2, "minishell: exit: numeric argument required\n", 43);
+		cleanup_and_exit(cmd_list, &((t_cleanup_ctx){ctx->envp, ctx->token_list,
+				ctx->pids, ctx->vars, 2}));
 	}
-	params.code = error_code;
-	cleanup_and_exit(&params);
+	cleanup_and_exit(cmd_list, &((t_cleanup_ctx){ctx->envp, ctx->token_list,
+			ctx->pids, ctx->vars, error_code}));
 }
 
 void	handle_pipe(t_simple_cmds *cmd, t_simple_cmds *next)
@@ -144,19 +146,32 @@ void	init_exec_state(t_exec_state *st, t_simple_cmds *cmd_list)
 	}
 }
 
-void	execute_child(t_simple_cmds *cmd, t_exec_params *params)
+void	execute_child(t_simple_cmds *cmd, t_exec_child_ctx *ctx)
 {
+	t_builtin_ctx builtin_ctx;
+
+	builtin_ctx.envp = ctx->envp;
+	builtin_ctx.token_list = ctx->token_list;
+	builtin_ctx.pids = ctx->pids;
+	builtin_ctx.vars = ctx->vars;
+	
 	setup_child_signals();
 	io_handle(cmd);
-	builtin_control(cmd, params->envp, params->token_list, params->pids,
-		params->vars);
+	builtin_control(cmd, &builtin_ctx);
 }
 
-void	fork_and_execute(t_exec_state *st, t_simple_cmds *cmd_list,
-		t_exec_params *params)
+typedef struct s_fork_exec_ctx
 {
-	if (cmd_list->next)
-		handle_pipe(cmd_list, cmd_list->next);
+	t_simple_cmds	*cmd_list;
+	char			***envp;
+	t_lexer			*token_list;
+	t_vars			**vars;
+}					t_fork_exec_ctx;
+
+void	fork_and_execute(t_exec_state *st, t_fork_exec_ctx *ctx)
+{
+	if (ctx->cmd_list->next)
+		handle_pipe(ctx->cmd_list, ctx->cmd_list->next);
 	st->pids[st->i] = fork();
 	if (st->pids[st->i] == -1)
 	{
@@ -164,11 +179,12 @@ void	fork_and_execute(t_exec_state *st, t_simple_cmds *cmd_list,
 		exit(1);
 	}
 	if (st->pids[st->i] == 0)
-		execute_child(cmd_list, params);
-	if (cmd_list->output_type == IO_PIPE_OUT)
-		close(cmd_list->output_fd);
-	if (cmd_list->input_type == IO_PIPE_IN)
-		close(cmd_list->input_fd);
+		execute_child(ctx->cmd_list, &((t_exec_child_ctx){ctx->envp,
+				ctx->token_list, st->pids, ctx->vars}));
+	if (ctx->cmd_list->output_type == IO_PIPE_OUT)
+		close(ctx->cmd_list->output_fd);
+	if (ctx->cmd_list->input_type == IO_PIPE_IN)
+		close(ctx->cmd_list->input_fd);
 	st->i++;
 }
 
@@ -197,42 +213,37 @@ void	wait_for_children(t_exec_state *st)
 	}
 }
 
-void	handle_builtin(t_exec_state *st, t_exec_params *params)
+void	handle_builtin(t_exec_state *st, char ***envp, t_lexer *token_list,
+		t_vars **vars)
 {
 	t_simple_cmds	*cmd;
-	t_exit_params	exit_params;
 
 	cmd = st->current_cmd;
-	exit_params.pids = st->pids;
-	exit_params.vars = params->vars;
 	if (cmd->pipe == 0 && !cmd->prev)
 	{
 		if (ft_strncmp("export", *cmd->str, 7) == 0)
-			export_builtin(cmd, params->envp, cmd->content && cmd->content[1]);
+			export_builtin(cmd, envp, cmd->content && cmd->content[1]);
 		else if (ft_strncmp("unset", *cmd->str, 6) == 0)
-			unset_builtin(cmd, params->envp);
+			unset_builtin(cmd, envp);
 		else if (ft_strncmp("cd", *cmd->str, 3) == 0)
-			cd_builtin(cmd, *params->envp);
+			cd_builtin(cmd, *envp);
 		else if (ft_strncmp("exit", *cmd->str, 5) == 0)
-			exit_builtin(cmd, *params->envp, params->token_list, &exit_params);
+			exit_builtin(cmd, &((t_exitb_ctx){*envp, token_list, st->pids,
+					vars}));
 		else
-			fork_and_execute(st, cmd, params);
+			fork_and_execute(st, &((t_fork_exec_ctx){cmd, envp, token_list,
+					vars}));
 	}
 	else
-		fork_and_execute(st, cmd, params);
+		fork_and_execute(st, &((t_fork_exec_ctx){cmd, envp, token_list, vars}));
 }
 
 void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list,
 		t_vars **vars)
 {
 	t_exec_state	st;
-	t_exec_params	params;
 
-	params.envp = envp;
-	params.token_list = token_list;
-	params.vars = vars;
 	init_exec_state(&st, cmd_list);
-	params.pids = st.pids;
 	setup_execute_signals();
 	st.current_cmd = cmd_list;
 	st.i = 0;
@@ -242,7 +253,7 @@ void	execute(t_simple_cmds *cmd_list, char ***envp, t_lexer *token_list,
 				&& (ft_strncmp("unset", *st.current_cmd->str, 6) == 0
 					|| ft_strncmp("cd", *st.current_cmd->str, 3) == 0
 					|| ft_strncmp("exit", *st.current_cmd->str, 5) == 0)))
-			handle_builtin(&st, &params);
+			handle_builtin(&st, envp, token_list, vars);
 		st.last_cmd = st.current_cmd;
 		st.current_cmd = st.current_cmd->next;
 	}
