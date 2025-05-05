@@ -6,7 +6,7 @@
 #    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/05 09:20:21 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/05/05 10:32:01 by aakyuz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,9 +77,4 @@ clean:
 
 re: fclean all
 
-a: re
-	@rm -f $(OBJ)
-	$(MAKE) clean
-	clear
-
-.PHONY: all clean fclean re a
+.PHONY: all clean fclean re
