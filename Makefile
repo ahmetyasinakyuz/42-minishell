@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aycami <aycami@student.42.fr>              +#+  +:+       +#+         #
+#    By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/05 02:28:51 by aycami           ###   ########.fr        #
+#    Updated: 2025/05/05 06:14:12 by ahmtemel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,8 @@ SRCS =	parser/flags.c                      \
 		execute/ft_new_atoi.c               \
 		signal_handler.c                    \
 		main.c                              \
+		execute/execute_utils_oth.c					\
+		execute/execute_utils.c					
 
 OBJ =$(SRCS:.c=.o)
 
