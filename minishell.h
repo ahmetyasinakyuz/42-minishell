@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 08:34:45 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/05 08:54:13 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,5 +310,9 @@ int								is_direct_path(char *str);
 char							*resolve_command_path(t_simple_cmds *cmd_list, char **envp,
 										int *allocated);
 char							**prepare_cmd(t_simple_cmds *cmd_list, int *cmd_allocated);
+void							i_handle(t_simple_cmds *cmd_list);
+void							o_handle(t_simple_cmds *cmd_list);
+int								handle_file_error(t_simple_cmds *cmd_list, char *filename, char *error_msg);
+char							*unquote_filename(char *str);
 
 #endif

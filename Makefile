@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+         #
+#    By: aycami <aycami@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/05 06:14:12 by ahmtemel         ###   ########.fr        #
+#    Updated: 2025/05/05 08:51:49 by aycami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,8 @@ SRCS =	parser/flags.c                      \
 		execute/pwd_builtin.c               \
 		execute/cd_builtin.c                \
 		execute/io_handle.c                 \
+		execute/i_handle.c                  \
+		execute/o_handle.c                  \
 		execute/ft_new_atoi.c               \
 		signal_handler.c                    \
 		main.c                              \
