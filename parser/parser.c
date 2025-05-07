@@ -63,11 +63,34 @@ void	update_return_value(t_simple_cmds *cmd_list, t_vars **vars)
 	}
 }
 
+int	validate_redirections(t_lexer *token_list)
+{
+	t_lexer	*current;
+
+	current = token_list;
+	while (current)
+	{
+		if (is_redirection(current->token))
+		{
+			if (!current->next || is_redirection(current->next->token) 
+				|| current->next->token == PIPE)
+			{
+				ft_putstr_fd("bash: syntax error near unexpected token `newline'\n", 
+					STDERR_FILENO);
+				return (2);  // Return 2 instead of 0 to represent the syntax error
+			}
+		}
+		current = current->next;
+	}
+	return (0);  // Return 0 for successful validation
+}
+
 void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)
 {
 	t_simple_cmds	*cmd_list;
 	t_lexer			*start;
 	t_lexer			*current;
+	int				validation_result;
 
 	cmd_list = NULL;
 	start = token_list;
@@ -77,8 +100,14 @@ void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)
 		handle_current_token(&current, &start, &cmd_list, vars);
 		current = current->next;
 	}
-	execute(cmd_list, envp, token_list, vars);
-	update_return_value(cmd_list, vars);
+	validation_result = validate_redirections(token_list);
+	if (validation_result == 0)
+	{
+		execute(cmd_list, envp, token_list, vars);
+		update_return_value(cmd_list, vars);
+	}
+	else
+		add_static_var(vars, "?", "2");
 	free_command_list(cmd_list);
 }
 
