@@ -43,7 +43,10 @@ void	free_command_content(t_simple_cmds *cmd)
 	free_str_array(cmd->flag);
 	free_str_array(cmd->content);
 	if (cmd->hd_file_name)
+	{
+		unlink(cmd->hd_file_name);
 		free(cmd->hd_file_name);
+	}
 	if (cmd->redirections)
 		free_lexer_list(cmd->redirections);
 }

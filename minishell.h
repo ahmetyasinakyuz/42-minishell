@@ -20,6 +20,7 @@
 # include <readline/readline.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
+# include <unistd.h>
 
 typedef enum e_tokens
 {
