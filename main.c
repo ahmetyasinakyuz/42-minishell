@@ -118,6 +118,8 @@ void	run_shell(t_vars **vars, char ***envp)
 			if (input)
 				parser(input, vars, envp);
 		}
+		else if (input)
+			free(input);
 	}
 	clean_exit(vars, envp);
 }
