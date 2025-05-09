@@ -53,34 +53,31 @@ int	is_input_incomplete(char *input)
 char	*get_continuation(char *input)
 {
 	char	*continuation;
-	char	*temp;
 	char	*combined;
+	char	*temp;
 
 	continuation = readline("> ");
 	if (!continuation)
 		return (input);
 	
-	if (*continuation == '\0')  // More efficient empty check
+	if (ft_strlen(continuation) > 0)
 	{
+		temp = ft_strjoin(input, " ");
+		if (!temp)
+		{
+			free(continuation);
+			return (input);
+		}
+		combined = ft_strjoin(temp, continuation);
+		free(temp);
+		free(input);
 		free(continuation);
-		return (input);
+		if (!combined)
+			return (NULL);
+		return (combined);
 	}
-	
-	temp = ft_strjoin(input, " ");
-	free(input);  // Free input immediately after using it
-	
-	if (!temp)
-	{
-		free(continuation);
-		return (NULL);
-	}
-	
-	combined = ft_strjoin(temp, continuation);
-	free(temp);
 	free(continuation);
-	
-	// Even if combined is NULL, we've freed all other memory
-	return (combined);
+	return (input);
 }
 
 void	run_shell(t_vars **vars, char ***envp)
@@ -115,8 +112,10 @@ void	run_shell(t_vars **vars, char ***envp)
 			}
 			if (input)
 				parser(input, vars, envp);
+			
 		}
-		free(input);
+		if (input)
+			free(input);
 	}
 	clean_exit(vars, envp);
 }

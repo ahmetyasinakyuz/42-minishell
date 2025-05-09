@@ -127,6 +127,8 @@ void	parser(char *input, t_vars **vars, char ***envp)
 
 	add_static_var(vars, "0", "minishell");
 	process = remove_whitespaces(input);
+	if (input)
+		free(input);
 	token_list = lexer(process);
 	if (process)
 		free(process);
