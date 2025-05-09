@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aysesudecami <aysesudecami@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:25:00 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/04 21:31:11 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/10 01:27:09 by aysesudecam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	"../minishell.h"
+#include "../minishell.h"
 
 char	*ft_getenv_home(char **envp)
 {

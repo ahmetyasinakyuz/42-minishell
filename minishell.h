@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aysesudecami <aysesudecami@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 11:03:49 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/10 01:40:10 by aysesudecam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,5 +306,9 @@ void							o_handle(t_simple_cmds *cmd_list);
 int								handle_file_error(t_simple_cmds *cmd_list,
 									char *filename, char *error_msg);
 char							*unquote_filename(char *str);
+void							clean_exit(t_vars **vars, char ***envp);
+int								is_quote_closed(char *input);
+int								is_input_incomplete(char *input);
+char							*get_continuation(char *input);
 
 #endif

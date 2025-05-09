@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aysesudecami <aysesudecami@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 08:48:13 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/10 01:30:02 by aysesudecam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,26 +72,21 @@ int	validate_redirections(t_lexer *token_list)
 	{
 		if (is_redirection(current->token))
 		{
-			if (!current->next || is_redirection(current->next->token) 
+			if (!current->next || is_redirection(current->next->token)
 				|| current->next->token == PIPE)
 			{
-				ft_putstr_fd("bash: syntax error near unexpected token `newline'\n", 
-					STDERR_FILENO);
-				return (2);  // Return 2 for the syntax error
+				ft_putstr_fd("bash: syntax error near unexpected token `newline'\n", STDERR_FILENO);
+				return (2);
 			}
 		}
 		else if (current->token == PIPE)
 		{
 			if (!current->next)
-			{
-				// We don't need to report an error here anymore as we handle this case
-				// in the main.c with the continuation prompt
 				return (0);
-			}
 		}
 		current = current->next;
 	}
-	return (0);  // Return 0 for successful validation
+	return (0);
 }
 
 void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)
