@@ -77,7 +77,16 @@ int	validate_redirections(t_lexer *token_list)
 			{
 				ft_putstr_fd("bash: syntax error near unexpected token `newline'\n", 
 					STDERR_FILENO);
-				return (2);  // Return 2 instead of 0 to represent the syntax error
+				return (2);  // Return 2 for the syntax error
+			}
+		}
+		else if (current->token == PIPE)
+		{
+			if (!current->next)
+			{
+				// We don't need to report an error here anymore as we handle this case
+				// in the main.c with the continuation prompt
+				return (0);
 			}
 		}
 		current = current->next;

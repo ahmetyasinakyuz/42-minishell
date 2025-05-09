@@ -19,6 +19,70 @@ void	clean_exit(t_vars **vars, char ***envp)
 	free_env(*envp);
 }
 
+int	is_input_incomplete(char *input)
+{
+	int	len;
+	int	i;
+	int	in_squote;
+	int	in_dquote;
+
+	len = ft_strlen(input);
+	if (len == 0)
+		return (0);
+	i = len - 1;
+	while (i >= 0 && (input[i] == ' ' || input[i] == '\t'))
+		i--;
+	if (i < 0)
+		return (0);
+	if (input[i] != '|')
+		return (0);
+	in_squote = 0;
+	in_dquote = 0;
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '\'' && !in_dquote)
+			in_squote = !in_squote;
+		else if (input[i] == '\"' && !in_squote)
+			in_dquote = !in_dquote;
+		i++;
+	}
+	return (!in_squote && !in_dquote);
+}
+
+char	*get_continuation(char *input)
+{
+	char	*continuation;
+	char	*temp;
+	char	*combined;
+
+	continuation = readline("> ");
+	if (!continuation)
+		return (input);
+	
+	if (*continuation == '\0')  // More efficient empty check
+	{
+		free(continuation);
+		return (input);
+	}
+	
+	temp = ft_strjoin(input, " ");
+	free(input);  // Free input immediately after using it
+	
+	if (!temp)
+	{
+		free(continuation);
+		return (NULL);
+	}
+	
+	combined = ft_strjoin(temp, continuation);
+	free(temp);
+	free(continuation);
+	
+	// Even if combined is NULL, we've freed all other memory
+	return (combined);
+}
+
 void	run_shell(t_vars **vars, char ***envp)
 {
 	char	*input;
@@ -39,8 +103,19 @@ void	run_shell(t_vars **vars, char ***envp)
 			break ;
 		}
 		if (ft_strlen(input) > 0)
+		{
 			add_history(input);
-		parser(input, vars, envp);
+			while (is_input_incomplete(input))
+			{
+				input = get_continuation(input);
+				if (!input)
+					break;
+				if (ft_strlen(input) > 0)
+					add_history(input);
+			}
+			if (input)
+				parser(input, vars, envp);
+		}
 		free(input);
 	}
 	clean_exit(vars, envp);
