@@ -99,6 +99,11 @@ void	run_shell(t_vars **vars, char ***envp)
 			ft_putendl_fd("exit", STDOUT_FILENO);
 			break ;
 		}
+		if (g_received_signal == SIGINT)
+		{
+			add_static_var(vars, "?", "130");
+			g_received_signal = 0;
+		}
 		if (ft_strlen(input) > 0)
 		{
 			add_history(input);
@@ -112,7 +117,6 @@ void	run_shell(t_vars **vars, char ***envp)
 			}
 			if (input)
 				parser(input, vars, envp);
-			
 		}
 	}
 	clean_exit(vars, envp);
