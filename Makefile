@@ -52,8 +52,9 @@ SRCS =	parser/flags.c                      \
 		execute/ft_new_atoi.c               \
 		signal_handler.c                    \
 		main.c                              \
+		main_utils.c                        \
 		execute/execute_utils_oth.c	        \
-		execute/execute_utils.c	            
+		execute/execute_utils.c
 
 OBJ =$(SRCS:.c=.o)
 

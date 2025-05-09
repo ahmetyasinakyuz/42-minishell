@@ -310,5 +310,9 @@ void							clean_exit(t_vars **vars, char ***envp);
 int								is_quote_closed(char *input);
 int								is_input_incomplete(char *input);
 char							*get_continuation(char *input);
+void							run_shell(t_vars **vars, char ***envp);
+int								handle_null_input(t_vars **vars, char ***envp);
+void							handle_input_loop(char *input, t_vars **vars, char ***envp);
+char							**env_maker(char **envp);
 
 #endif
