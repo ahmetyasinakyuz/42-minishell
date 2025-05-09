@@ -114,8 +114,6 @@ void	run_shell(t_vars **vars, char ***envp)
 				parser(input, vars, envp);
 			
 		}
-		if (input)
-			free(input);
 	}
 	clean_exit(vars, envp);
 }
