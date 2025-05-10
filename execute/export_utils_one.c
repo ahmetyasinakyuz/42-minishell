@@ -57,12 +57,14 @@ int	find_env_index(char **envp, const char *key)
 	int	key_len;
 
 	i = 0;
-	key_len = strlen(key);
+	key_len = ft_strlen(key);
 	while (envp[i])
 	{
-		if (strncmp(envp[i], key, key_len) == 0 && envp[i][key_len] == '=')
+		if ((ft_strncmp(envp[i], key, key_len) == 0) &&
+			(envp[i][key_len] == '=' || envp[i][key_len] == '\0'))
 			return (i);
 		i++;
 	}
 	return (-1);
 }
+
