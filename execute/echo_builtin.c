@@ -19,7 +19,7 @@ void	echo_builtin(t_simple_cmds *cmd_list)
 
 	i = 1;
 	flag = 0;
-	if ((cmd_list->content && cmd_list->content[1])
+	if ((cmd_list->content && cmd_list->content[1]) && !cmd_list->content[1][2]
 		&& (cmd_list->content[1][0]) == '-' && (cmd_list->content[1][1] == 'n'))
 	{
 		flag = 1;
