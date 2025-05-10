@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_ultis.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 09:14:48 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 09:14:50 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/10 12:21:53 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,15 @@ char	*get_var(char *key, t_vars **vars)
 char	*get_env_value(char *env_var, t_vars **vars)
 {
 	char	*env_value;
+	pid_t	shell_pid;
 
+	if (ft_strncmp(env_var, "$", 2) == 0)
+	{
+		shell_pid = get_shell_pid();
+		if (shell_pid > 0)
+			return (pid_to_string(shell_pid));
+		return (ft_strdup("0"));
+	}
 	if (ft_strncmp(env_var, "?", 2) == 0)
 	{
 		if (is_in_vars(env_var, vars))

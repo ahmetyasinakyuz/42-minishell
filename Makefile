@@ -6,7 +6,7 @@
 #    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/05 10:32:01 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/05/10 12:29:51 by aakyuz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,9 +28,11 @@ SRCS =	parser/flags.c                      \
 		parser/lexer_utils.c                \
 		parser/env.c                        \
 		parser/env_ultis.c                  \
+		parser/pid_utils.c                  \
 		parser/free.c                       \
 		parser/handle.c                     \
 		parser/heredoc.c                    \
+		parser/pid.c                        \
 		execute/builtin_control.c           \
 		execute/none_built_in.c             \
 		execute/none_builtin_utils_one.c    \

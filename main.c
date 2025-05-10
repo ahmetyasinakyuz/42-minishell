@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/10 09:22:30 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/10 12:14:16 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	handle_input_loop(char *input, t_vars **vars, char ***envp)
 		printf("bash: syntax error near unexpected token `|'\n");
 		add_static_var(vars, "?", "2");
 		free(input);
-		return;
+		return ;
 	}
 	while (is_input_incomplete(input))
 	{

@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/10 09:10:57 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/10 12:31:36 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,5 +316,10 @@ void							handle_input_loop(char *input,
 									t_vars **vars,	char ***envp);
 char							**env_maker(char **envp);
 int								validate_redirections(t_lexer *token_list);
+char							*join_env_parts(char *result, int i,
+									char *env_value, int j);
+pid_t							get_shell_pid(void);
+char							*pid_to_string(pid_t pid);
+pid_t							process_ps_lines(char *buffer, int i);
 
 #endif
