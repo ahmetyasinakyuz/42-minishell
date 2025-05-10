@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aysesudecami <aysesudecami@student.42.f    +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/10 01:40:10 by aysesudecam      ###   ########.fr       */
+/*   Updated: 2025/05/10 09:10:57 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,5 +315,6 @@ int								handle_null_input(t_vars **vars, char ***envp);
 void							handle_input_loop(char *input,
 									t_vars **vars,	char ***envp);
 char							**env_maker(char **envp);
+int								validate_redirections(t_lexer *token_list);
 
 #endif

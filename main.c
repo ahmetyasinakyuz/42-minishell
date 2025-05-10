@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aysesudecami <aysesudecami@student.42.f    +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/10 01:38:59 by aysesudecam      ###   ########.fr       */
+/*   Updated: 2025/05/10 09:22:30 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,19 @@ int	handle_null_input(t_vars **vars, char ***envp)
 
 void	handle_input_loop(char *input, t_vars **vars, char ***envp)
 {
+	int	i;
+
 	add_history(input);
+	i = 0;
+	while (input[i] && (input[i] == ' ' || input[i] == '\t'))
+		i++;
+	if (input[i] == '|')
+	{
+		printf("bash: syntax error near unexpected token `|'\n");
+		add_static_var(vars, "?", "2");
+		free(input);
+		return;
+	}
 	while (is_input_incomplete(input))
 	{
 		input = get_continuation(input);

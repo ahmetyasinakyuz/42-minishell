@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aysesudecami <aysesudecami@student.42.f    +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 01:37:46 by aysesudecam       #+#    #+#             */
-/*   Updated: 2025/05/10 01:39:10 by aysesudecam      ###   ########.fr       */
+/*   Updated: 2025/05/10 09:22:17 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ int	is_input_incomplete(char *input)
 
 	len = ft_strlen(input);
 	if (len == 0)
+		return (0);
+	i = 0;
+	while (i < len && (input[i] == ' ' || input[i] == '\t'))
+		i++;
+	if (i < len && input[i] == '|')
 		return (0);
 	i = len - 1;
 	while (i >= 0 && (input[i] == ' ' || input[i] == '\t'))

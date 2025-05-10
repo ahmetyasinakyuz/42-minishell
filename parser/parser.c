@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aysesudecami <aysesudecami@student.42.f    +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:14 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/10 01:30:02 by aysesudecam      ###   ########.fr       */
+/*   Updated: 2025/05/10 09:10:22 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,33 +61,6 @@ void	update_return_value(t_simple_cmds *cmd_list, t_vars **vars)
 		add_static_var(vars, "?", return_value);
 		free(return_value);
 	}
-}
-
-int	validate_redirections(t_lexer *token_list)
-{
-	t_lexer	*current;
-
-	current = token_list;
-	while (current)
-	{
-		if (is_redirection(current->token))
-		{
-			if (!current->next || is_redirection(current->next->token)
-				|| current->next->token == PIPE)
-			{
-				ft_printf("bash: syntax error near unexpected token");
-				ft_putstr_fd("`newline'\n", STDERR_FILENO);
-				return (2);
-			}
-		}
-		else if (current->token == PIPE)
-		{
-			if (!current->next)
-				return (0);
-		}
-		current = current->next;
-	}
-	return (0);
 }
 
 void	parse_commands(t_lexer *token_list, t_vars **vars, char ***envp)
