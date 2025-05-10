@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:14:44 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/04 21:34:48 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/10 20:06:01 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	handle_word_token(t_lexer *current, t_vars **vars)
 			return ;
 		}
 	}
+	found_var(str, vars);
 	current->str = is_dolar(str, vars);
 }
 
