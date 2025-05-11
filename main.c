@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 12:19:01 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:31:39 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,32 +23,48 @@ int	handle_null_input(t_vars **vars, char ***envp)
 	return (1);
 }
 
-void	handle_input_loop(char *input, t_vars **vars, char ***envp)
+static int	is_leading_pipe(char *input)
 {
 	int	i;
 
-	add_history(input);
 	i = 0;
 	while (input[i] && (input[i] == ' ' || input[i] == '\t'))
 		i++;
 	if (input[i] == '|')
 	{
-		printf("bash: syntax error near unexpected token `|'\n");
+		printf("bash: syntax error near unexpected token |'\n");
+		return (1);
+	}
+	return (0);
+}
+
+static int	handle_incomplete_input(char **input, t_vars **vars)
+{
+	while (is_input_incomplete(*input))
+	{
+		*input = get_continuation(*input);
+		if (!*input)
+		{
+			add_static_var(vars, "?", "130");
+			return (0);
+		}
+		if (ft_strlen(*input) > 0)
+			add_history(*input);
+	}
+	return (1);
+}
+
+void	handle_input_loop(char *input, t_vars **vars, char ***envp)
+{
+	add_history(input);
+	if (is_leading_pipe(input))
+	{
 		add_static_var(vars, "?", "2");
 		free(input);
 		return ;
 	}
-	while (is_input_incomplete(input))
-	{
-		input = get_continuation(input);
-		if (!input)
-		{
-			add_static_var(vars, "?", "130");
-			return ;
-		}
-		if (ft_strlen(input) > 0)
-			add_history(input);
-	}
+	if (!handle_incomplete_input(&input, vars))
+		return ;
 	if (input)
 		parser(input, vars, envp);
 }

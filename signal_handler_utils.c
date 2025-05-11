@@ -6,13 +6,11 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 12:13:38 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/11 12:18:05 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:23:04 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-volatile sig_atomic_t	g_received_signal = 0;
 
 void	restore_heredoc_signals(int original_signal)
 {
