@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:27:12 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 09:55:06 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 13:34:50 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,10 @@ static void	handle_parent_process(pid_t child_pid, t_simple_cmds *cmd_list,
 	sigaction(SIGQUIT, old_quit, NULL);
 	if (WIFSIGNALED(status))
 	{
-		if (WTERMSIG(status) == SIGINT && isatty(STDOUT_FILENO))
-			write(STDOUT_FILENO, "\n", 1);
+		if (WTERMSIG(status) == SIGINT)
+			write(STDOUT_FILENO, "\n", 1);  // Always write newline for SIGINT
+		else if (WTERMSIG(status) == SIGQUIT)
+			write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 		cmd_list->return_value = 128 + WTERMSIG(status);
 	}
 	else if (WIFEXITED(status))
