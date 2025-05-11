@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 13:37:42 by ahmtemel         ###   ########.fr       */
+/*   Updated: 2025/05/11 14:00:10 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,5 +354,6 @@ void							write_buffer_to_fd(int fd, char **buffer,
 char							*join_input_and_continuation(char *input,
 									char *continuation);
 int								is_leading_pipe(char *input);
-int								handle_incomplete_input(char **input, t_vars **vars);
+int								handle_incomplete_input(char **input,
+									t_vars **vars);
 #endif

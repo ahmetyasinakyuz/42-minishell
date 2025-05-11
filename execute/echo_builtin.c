@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:59:20 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/11 14:09:14 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/11 14:18:02 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ static int	is_n_flag(char *str)
 		return (0);
 	if (str[0] == '-' && str[1] == 'n')
 	{
-		while(str[i] == 'n')
+		while (str[i] == 'n')
 		{
 			i++;
 		}
-		if(str[i] == '\0')
+		if (str[i] == '\0')
 		{
 			return (1);
 		}
