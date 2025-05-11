@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 09:57:30 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 11:05:59 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,5 +324,15 @@ pid_t							get_shell_pid(void);
 char							*pid_to_string(pid_t pid);
 pid_t							process_ps_lines(char *buffer, int i);
 void							found_var(char *str, t_vars **vars);
+char	*get_env_value(char *env_var, t_vars **vars);
+char	*get_pid_value(void);
+char	*process_question_mark(char *result, int *i, t_vars **vars);
+int	open_heredoc_file(char **filename);
+void	cleanup_on_interrupt(int fd, char *filename, int original_stdin);
+void	restore_stdin(int original_stdin);
+char	*process_dollar_sign(char *result, int *i, t_vars **vars);
+int	setup_heredoc_signals_and_save(void);
+void	restore_heredoc_signals(int original_signal);
+char	*generate_temp_filename(void);
 
 #endif

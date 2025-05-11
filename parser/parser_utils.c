@@ -6,40 +6,22 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:32 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/10 12:13:54 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 10:53:08 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*process_dollar(char *result, int *i, t_vars **vars)
+char	*process_dollar_sign(char *result, int *i, t_vars **vars)
 {
 	char	*env_var;
 	char	*env_value;
 
-	if (result[*i + 1] == '$')
-	{
-		env_var = ft_strdup("$");
-		env_value = get_env_value(env_var, vars);
-		free(env_var);
-		result = join_env_parts(result, *i, env_value, 1);
-		*i = -1;
-		return (result);
-	}
-	if (result[*i + 1] == '?')
-	{
-		result = replace_env_var(result, *i, vars);
-		*i = -1;
-		return (result);
-	}
-	if (result[*i + 1] && (ft_isalpha(result[*i + 1]) || result[*i + 1] == '_'
-			|| (ft_isdigit(result[*i + 1]) && result[*i + 1] != ' ')))
-	{
-		result = replace_env_var(result, *i, vars);
-		*i = -1;
-	}
-	else
-		(*i)++;
+	env_var = ft_strdup("$");
+	env_value = get_env_value(env_var, vars);
+	free(env_var);
+	result = join_env_parts(result, *i, env_value, 1);
+	*i = -1;
 	return (result);
 }
 

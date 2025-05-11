@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 09:59:10 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 10:44:35 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,10 @@ int	validate_quotes(char *str)
 	return (0);
 }
 
-void	process_quotes(char *str, char *result, int *i, int *j)
+static int	handle_empty_quotes(char *str, char *result, int *i, int *j)
 {
-	int	in_squote;
-	int	in_dquote;
 	int	len;
 
-	in_squote = 0;
-	in_dquote = 0;
 	len = ft_strlen(str);
 	if (len == 2 && ((str[0] == '\'' && str[1] == '\'') || (str[0] == '\"'
 				&& str[1] == '\"')))
@@ -61,8 +57,18 @@ void	process_quotes(char *str, char *result, int *i, int *j)
 		result[2] = '\0';
 		*i = 2;
 		*j = 2;
-		return ;
+		return (1);
 	}
+	return (0);
+}
+
+static void	process_quote_chars(char *str, char *result, int *i, int *j)
+{
+	int	in_squote;
+	int	in_dquote;
+
+	in_squote = 0;
+	in_dquote = 0;
 	while (str[*i])
 	{
 		if (str[*i] == '\'' && !in_dquote)
@@ -74,4 +80,13 @@ void	process_quotes(char *str, char *result, int *i, int *j)
 		(*i)++;
 	}
 	result[*j] = '\0';
+}
+
+void	process_quotes(char *str, char *result, int *i, int *j)
+{
+	*i = 0;
+	*j = 0;
+	if (handle_empty_quotes(str, result, i, j))
+		return ;
+	process_quote_chars(str, result, i, j);
 }

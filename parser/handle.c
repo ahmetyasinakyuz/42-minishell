@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 09:14:44 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/10 20:06:01 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 10:55:02 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,25 @@ void	handle_last_token(t_lexer **start, t_lexer *end,
 		new_cmd->pipe = 0;
 		add_command(cmd_list, new_cmd);
 	}
+}
+
+int	is_valid_var_char(char c)
+{
+	return (ft_isalpha(c) || c == '_' || (ft_isdigit(c) && c != ' '));
+}
+
+char	*process_dollar(char *result, int *i, t_vars **vars)
+{
+	if (result[*i + 1] == '$')
+		return (process_dollar_sign(result, i, vars));
+	if (result[*i + 1] == '?')
+		return (process_question_mark(result, i, vars));
+	if (result[*i + 1] && is_valid_var_char(result[*i + 1]))
+	{
+		result = replace_env_var(result, *i, vars);
+		*i = -1;
+	}
+	else
+		(*i)++;
+	return (result);
 }

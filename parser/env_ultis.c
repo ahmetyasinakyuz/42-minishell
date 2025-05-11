@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 09:14:48 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/10 12:21:53 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 10:46:02 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,28 +44,23 @@ char	*get_var(char *key, t_vars **vars)
 	return (NULL);
 }
 
-char	*get_env_value(char *env_var, t_vars **vars)
+static char	*get_exit_status_value(char *env_var, t_vars **vars)
 {
 	char	*env_value;
-	pid_t	shell_pid;
 
-	if (ft_strncmp(env_var, "$", 2) == 0)
+	if (is_in_vars(env_var, vars))
 	{
-		shell_pid = get_shell_pid();
-		if (shell_pid > 0)
-			return (pid_to_string(shell_pid));
-		return (ft_strdup("0"));
+		env_value = get_var(env_var, vars);
+		if (env_value && *env_value)
+			return (ft_strdup(env_value));
 	}
-	if (ft_strncmp(env_var, "?", 2) == 0)
-	{
-		if (is_in_vars(env_var, vars))
-		{
-			env_value = get_var(env_var, vars);
-			if (env_value && *env_value)
-				return (ft_strdup(env_value));
-		}
-		return (ft_strdup("0"));
-	}
+	return (ft_strdup("0"));
+}
+
+static char	*get_regular_env_value(char *env_var, t_vars **vars)
+{
+	char	*env_value;
+
 	env_value = NULL;
 	if (is_in_vars(env_var, vars))
 		env_value = get_var(env_var, vars);
@@ -74,4 +69,13 @@ char	*get_env_value(char *env_var, t_vars **vars)
 	if (!env_value || !*env_value)
 		return (ft_strdup(""));
 	return (ft_strdup(env_value));
+}
+
+char	*get_env_value(char *env_var, t_vars **vars)
+{
+	if (ft_strncmp(env_var, "$", 2) == 0)
+		return (get_pid_value());
+	if (ft_strncmp(env_var, "?", 2) == 0)
+		return (get_exit_status_value(env_var, vars));
+	return (get_regular_env_value(env_var, vars));
 }

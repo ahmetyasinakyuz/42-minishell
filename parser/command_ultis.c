@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_ultis.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 09:14:54 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 09:14:56 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/11 10:49:54 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,14 @@ int	is_var_assignment(char *str)
 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 		i++;
 	return (str[i] == '=');
+}
+
+char	*get_pid_value(void)
+{
+	pid_t	shell_pid;
+
+	shell_pid = get_shell_pid();
+	if (shell_pid > 0)
+		return (pid_to_string(shell_pid));
+	return (ft_strdup("0"));
 }

@@ -6,13 +6,13 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:30:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 09:59:03 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 11:05:59 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char	*generate_temp_filename(void)
+char	*generate_temp_filename(void)
 {
 	static int	heredoc_count = 0;
 	char		*count_str;
@@ -26,35 +26,13 @@ static char	*generate_temp_filename(void)
 	return (filename);
 }
 
-void	process_heredoc_input(int fd, char *delimiter, t_vars *vars)
+int	setup_heredoc_signals_and_save(void)
 {
-	char	*line;
-	int		original_signal;
+	int	original_signal;
 
 	original_signal = g_received_signal;
 	setup_heredoc_signals();
-	while (1)
-	{
-		line = readline("> ");
-		if (!line || g_received_signal == SIGINT)
-		{
-			if (g_received_signal == SIGINT)
-			{
-				add_static_var(&vars, "?", "130");
-			}
-			break ;
-		}
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
-		{
-			free(line);
-			break ;
-		}
-		line = is_dolar(line, &vars);
-		ft_putendl_fd(line, fd);
-		free(line);
-	}
-	setup_signals();
-	g_received_signal = original_signal;
+	return (original_signal);
 }
 
 char	*create_heredoc_file(char *delimiter, t_vars *vars)
@@ -63,29 +41,18 @@ char	*create_heredoc_file(char *delimiter, t_vars *vars)
 	int		fd;
 	int		original_stdin;
 
-	filename = generate_temp_filename();
-	if (!filename)
-		return (NULL);
-	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	fd = open_heredoc_file(&filename);
 	if (fd == -1)
-	{
-		free(filename);
 		return (NULL);
-	}
 	original_stdin = dup(STDIN_FILENO);
 	process_heredoc_input(fd, delimiter, vars);
 	if (g_received_signal == SIGINT)
 	{
-		close(fd);
-		unlink(filename);
-		free(filename);
-		dup2(original_stdin, STDIN_FILENO);
-		close(original_stdin);
+		cleanup_on_interrupt(fd, filename, original_stdin);
 		return (NULL);
 	}
 	close(fd);
-	dup2(original_stdin, STDIN_FILENO);
-	close(original_stdin);
+	restore_stdin(original_stdin);
 	return (filename);
 }
 

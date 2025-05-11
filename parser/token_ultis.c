@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 09:15:47 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/10 09:22:09 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 11:11:03 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,37 +27,62 @@ t_lexer	*copy_token(t_lexer *token)
 	return (new_token);
 }
 
-int	validate_redirections(t_lexer *token_list)
+static int	check_initial_pipe(t_lexer *token_list)
 {
-	t_lexer	*current;
-
-	current = token_list;
-	if (current && current->token == PIPE)
+	if (token_list && token_list->token == PIPE)
 	{
 		printf("bash: syntax error near unexpected token `|'\n");
 		return (2);
 	}
+	return (0);
+}
+
+static int	validate_redirection_token(t_lexer *current)
+{
+	if (!current->next || is_redirection(current->next->token)
+		|| current->next->token == PIPE)
+	{
+		ft_putstr_fd("bash: syntax error near unexpected token", STDERR_FILENO);
+		ft_putstr_fd("`newline'\n", STDERR_FILENO);
+		return (2);
+	}
+	return (0);
+}
+
+static int	validate_pipe_token(t_lexer *current)
+{
+	if (!current->next || current->next->token == PIPE)
+	{
+		if (!current->next)
+			return (0);
+		printf("bash: syntax error near unexpected token `|'\n");
+		return (2);
+	}
+	return (0);
+}
+
+int	validate_redirections(t_lexer *token_list)
+{
+	t_lexer	*current;
+	int		ret;
+
+	ret = check_initial_pipe(token_list);
+	if (ret != 0)
+		return (ret);
+	current = token_list;
 	while (current)
 	{
 		if (is_redirection(current->token))
 		{
-			if (!current->next || is_redirection(current->next->token)
-				|| current->next->token == PIPE)
-			{
-				printf("bash: syntax error near unexpected token");
-				ft_putstr_fd("`newline'\n", STDERR_FILENO);
-				return (2);
-			}
+			ret = validate_redirection_token(current);
+			if (ret != 0)
+				return (ret);
 		}
 		else if (current->token == PIPE)
 		{
-			if (!current->next || current->next->token == PIPE)
-			{
-				if (!current->next)
-					return (0);
-				printf("bash: syntax error near unexpected token `|'\n");
-				return (2);
-			}
+			ret = validate_pipe_token(current);
+			if (ret != 0)
+				return (ret);
 		}
 		current = current->next;
 	}

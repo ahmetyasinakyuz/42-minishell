@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:24 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 09:15:24 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/11 10:50:08 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,11 @@ t_lexer	*lexer(char *input)
 	if (!lexer_precheck(input))
 		return (NULL);
 	return (lexer_tokenize(input));
+}
+
+char	*process_question_mark(char *result, int *i, t_vars **vars)
+{
+	result = replace_env_var(result, *i, vars);
+	*i = -1;
+	return (result);
 }

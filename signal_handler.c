@@ -6,13 +6,19 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 10:40:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 10:03:45 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 10:47:47 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 volatile sig_atomic_t	g_received_signal = 0;
+
+void	restore_heredoc_signals(int original_signal)
+{
+	setup_signals();
+	g_received_signal = original_signal;
+}
 
 void	handle_heredoc_sigint(int signum)
 {
