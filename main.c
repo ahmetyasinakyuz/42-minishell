@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 09:57:51 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:19:01 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	handle_input_loop(char *input, t_vars **vars, char ***envp)
 		if (!input)
 		{
 			add_static_var(vars, "?", "130");
-			return;
+			return ;
 		}
 		if (ft_strlen(input) > 0)
 			add_history(input);

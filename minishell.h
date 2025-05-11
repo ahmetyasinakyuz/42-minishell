@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 11:05:59 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:18:43 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,15 +324,27 @@ pid_t							get_shell_pid(void);
 char							*pid_to_string(pid_t pid);
 pid_t							process_ps_lines(char *buffer, int i);
 void							found_var(char *str, t_vars **vars);
-char	*get_env_value(char *env_var, t_vars **vars);
-char	*get_pid_value(void);
-char	*process_question_mark(char *result, int *i, t_vars **vars);
-int	open_heredoc_file(char **filename);
-void	cleanup_on_interrupt(int fd, char *filename, int original_stdin);
-void	restore_stdin(int original_stdin);
-char	*process_dollar_sign(char *result, int *i, t_vars **vars);
-int	setup_heredoc_signals_and_save(void);
-void	restore_heredoc_signals(int original_signal);
-char	*generate_temp_filename(void);
-
+char							*get_env_value(char *env_var, t_vars **vars);
+char							*get_pid_value(void);
+char							*process_question_mark(char *result, int *i,
+									t_vars **vars);
+int								open_heredoc_file(char **filename);
+void							cleanup_on_interrupt(int fd, char *filename,
+									int original_stdin);
+void							restore_stdin(int original_stdin);
+char							*process_dollar_sign(char *result, int *i,
+									t_vars **vars);
+int								setup_heredoc_signals_and_save(void);
+void							restore_heredoc_signals(int original_signal);
+void							handle_heredoc_sigint(int signum);
+void							handle_sigint(int signum);
+void							handle_continuation_sigint(int signum);
+void							setup_signals(void);
+char							*generate_temp_filename(void);
+void							restore_heredoc_signals(int original_signal);
+void							setup_child_signals(void);
+void							setup_execute_signals(void);
+void							setup_heredoc_signals(void);
+void							setup_continuation_signals(void);
+void							reset_signal_handling(void);
 #endif

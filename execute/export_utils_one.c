@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 01:36:27 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/05 01:39:58 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:17:43 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,10 @@ int	find_env_index(char **envp, const char *key)
 	key_len = ft_strlen(key);
 	while (envp[i])
 	{
-		if ((ft_strncmp(envp[i], key, key_len) == 0) &&
-			(envp[i][key_len] == '=' || envp[i][key_len] == '\0'))
+		if ((ft_strncmp(envp[i], key, key_len) == 0)
+			&& (envp[i][key_len] == '=' || envp[i][key_len] == '\0'))
 			return (i);
 		i++;
 	}
 	return (-1);
 }
-
