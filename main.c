@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/10 12:14:16 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 09:46:50 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,11 @@ void	handle_input_loop(char *input, t_vars **vars, char ***envp)
 	while (is_input_incomplete(input))
 	{
 		input = get_continuation(input);
-		if (!input)
-			break ;
+		if (!input)  // If continuation was aborted (e.g. by SIGINT)
+		{
+			add_static_var(vars, "?", "130");  // Set exit status to 130 (SIGINT)
+			return;  // Return to main prompt
+		}
 		if (ft_strlen(input) > 0)
 			add_history(input);
 	}

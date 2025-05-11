@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 09:42:22 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 09:53:39 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ void							run_shell(t_vars **vars, char ***envp);
 void							setup_signals(void);
 void							setup_execute_signals(void);
 void							setup_heredoc_signals(void);
+void							setup_continuation_signals(void);
 void							reset_signal_handling(void);
 void							handle_sigint(int signum);
 void							setup_child_signals(void);

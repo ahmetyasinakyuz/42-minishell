@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 01:37:46 by aysesudecam       #+#    #+#             */
-/*   Updated: 2025/05/10 09:22:17 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 09:53:39 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,28 @@ char	*get_continuation(char *input)
 	char	*continuation;
 	char	*combined;
 	char	*temp;
+	int		original_stdin;
 
+	// Save original stdin
+	original_stdin = dup(STDIN_FILENO);
+	
+	g_received_signal = 0;  // Reset signal flag
+	setup_continuation_signals();  // Use special signal handler
+	
 	continuation = readline("> ");
-	if (!continuation)
-		return (input);
+	
+	// Restore original stdin and signals
+	dup2(original_stdin, STDIN_FILENO);
+	close(original_stdin);
+	setup_signals();
+	
+	// Check for NULL (Control-D) or SIGINT (Control-C)
+	if (!continuation || g_received_signal == SIGINT)
+	{
+		free(input);  // Free the existing input
+		return (NULL);  // Return NULL to indicate we should abort
+	}
+	
 	if (ft_strlen(continuation) > 0)
 	{
 		temp = ft_strjoin(input, " ");

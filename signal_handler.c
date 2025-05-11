@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 10:40:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 09:42:22 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 09:53:39 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,13 @@ void	handle_sigint(int signum)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+}
+
+void	handle_continuation_sigint(int signum)
+{
+	g_received_signal = signum;
+	write(STDOUT_FILENO, "\n", 1);
+	close(0);  // Close stdin to force readline to return NULL
 }
 
 void	setup_signals(void)
@@ -80,6 +87,21 @@ void	setup_heredoc_signals(void)
 	struct sigaction	sa_quit;
 
 	sa_int.sa_handler = handle_heredoc_sigint;
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = 0;
+	sigaction(SIGINT, &sa_int, NULL);
+	sa_quit.sa_handler = SIG_IGN;
+	sigemptyset(&sa_quit.sa_mask);
+	sa_quit.sa_flags = 0;
+	sigaction(SIGQUIT, &sa_quit, NULL);
+}
+
+void	setup_continuation_signals(void)
+{
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+
+	sa_int.sa_handler = handle_continuation_sigint;
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = 0;
 	sigaction(SIGINT, &sa_int, NULL);
