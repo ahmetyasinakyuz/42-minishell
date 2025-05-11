@@ -6,33 +6,38 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 10:46:20 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 11:07:19 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:53:57 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	handle_heredoc_line(char *line, char *delimiter, t_vars *vars,
-		char ***buffer)
+static int	check_heredoc_exit_conditions(char *line)
 {
-	char	*processed_line;
-	char	**new_buffer;
-	int		i;
-
 	if (!line || g_received_signal == SIGINT)
 	{
 		if (g_received_signal == SIGINT)
-			add_static_var(&vars, "?", "130");
+			return (-1);
 		return (0);
 	}
+	return (1);
+}
+
+static int	is_delimiter_match(char *line, char *delimiter)
+{
 	if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
 	{
 		free(line);
-		return (0);
+		return (1);
 	}
-	
-	processed_line = is_dolar(line, &vars);
-	// Add line to buffer instead of writing directly to file
+	return (0);
+}
+
+static int	add_to_buffer(char *processed_line, char ***buffer)
+{
+	char	**new_buffer;
+	int		i;
+
 	i = 0;
 	while ((*buffer) && (*buffer)[i])
 		i++;
@@ -50,37 +55,34 @@ static int	handle_heredoc_line(char *line, char *delimiter, t_vars *vars,
 	}
 	new_buffer[i] = processed_line;
 	new_buffer[i + 1] = NULL;
-	
 	if (*buffer)
 		free(*buffer);
 	*buffer = new_buffer;
-	
 	return (1);
 }
 
-void	process_heredoc_input(int fd, char *delimiter, t_vars *vars)
+int	handle_heredoc_line(char *line, char *delimiter, t_vars *vars,
+		char ***buffer)
 {
-	char	*line;
-	int		original_signal;
-	int		continue_reading;
-	char	**buffer;
-	int		i;
+	char	*processed_line;
+	int		result;
 
-	buffer = malloc(sizeof(char *));
-	if (!buffer)
-		return;
-	buffer[0] = NULL;
-	
-	original_signal = setup_heredoc_signals_and_save();
-	continue_reading = 1;
-	while (continue_reading)
-	{
-		line = readline("> ");
-		continue_reading = handle_heredoc_line(line, delimiter, vars, &buffer);
-	}
-	
-	// Only write buffer to file if no SIGINT received
-	if (g_received_signal != SIGINT)
+	result = check_heredoc_exit_conditions(line);
+	if (result <= 0)
+		return (result);
+	if (is_delimiter_match(line, delimiter))
+		return (0);
+	processed_line = is_dolar(line, &vars);
+	if (!add_to_buffer(processed_line, buffer))
+		return (0);
+	return (1);
+}
+
+void	write_buffer_to_fd(int fd, char **buffer, int sigint_received)
+{
+	int	i;
+
+	if (!sigint_received)
 	{
 		i = 0;
 		while (buffer && buffer[i])
@@ -92,43 +94,8 @@ void	process_heredoc_input(int fd, char *delimiter, t_vars *vars)
 	}
 	else
 	{
-		// Free buffer contents
 		i = 0;
 		while (buffer && buffer[i])
 			free(buffer[i++]);
 	}
-	
-	free(buffer);
-	restore_heredoc_signals(original_signal);
-}
-
-int	open_heredoc_file(char **filename)
-{
-	int	fd;
-
-	*filename = generate_temp_filename();
-	if (!*filename)
-		return (-1);
-	fd = open(*filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd == -1)
-	{
-		free(*filename);
-		return (-1);
-	}
-	return (fd);
-}
-
-void	cleanup_on_interrupt(int fd, char *filename, int original_stdin)
-{
-	close(fd);
-	unlink(filename);
-	free(filename);
-	dup2(original_stdin, STDIN_FILENO);
-	close(original_stdin);
-}
-
-void	restore_stdin(int original_stdin)
-{
-	dup2(original_stdin, STDIN_FILENO);
-	close(original_stdin);
 }

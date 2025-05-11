@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aycami <aycami@student.42.fr>              +#+  +:+       +#+         #
+#    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/11 12:16:15 by aycami           ###   ########.fr        #
+#    Updated: 2025/05/11 12:55:11 by aakyuz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRCS =	parser/flags.c                      \
 		parser/handle.c                     \
 		parser/heredoc.c                    \
 		parser/heredoc_ultis.c              \
+		parser/herecoc_ultis2.c             \
 		parser/var.c                        \
 		parser/pid.c                        \
 		execute/builtin_control.c           \

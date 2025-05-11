@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:30:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 11:05:59 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:20:19 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ char	*create_heredoc_file(char *delimiter, t_vars *vars)
 	if (g_received_signal == SIGINT)
 	{
 		cleanup_on_interrupt(fd, filename, original_stdin);
+		add_static_var(&vars, "?", "130");
 		return (NULL);
 	}
 	close(fd);
