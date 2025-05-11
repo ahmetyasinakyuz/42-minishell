@@ -6,13 +6,20 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 10:40:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 09:55:06 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 09:42:22 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 volatile sig_atomic_t	g_received_signal = 0;
+
+void	handle_heredoc_sigint(int signum)
+{
+	g_received_signal = signum;
+	write(STDOUT_FILENO, "\n", 1);
+	// Don't close stdin, just set the signal flag
+}
 
 void	handle_sigint(int signum)
 {
@@ -58,6 +65,21 @@ void	setup_execute_signals(void)
 	struct sigaction	sa_quit;
 
 	sa_int.sa_handler = SIG_IGN;
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = 0;
+	sigaction(SIGINT, &sa_int, NULL);
+	sa_quit.sa_handler = SIG_IGN;
+	sigemptyset(&sa_quit.sa_mask);
+	sa_quit.sa_flags = 0;
+	sigaction(SIGQUIT, &sa_quit, NULL);
+}
+
+void	setup_heredoc_signals(void)
+{
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+
+	sa_int.sa_handler = handle_heredoc_sigint;
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = 0;
 	sigaction(SIGINT, &sa_int, NULL);

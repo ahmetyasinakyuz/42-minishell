@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:30:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/05 09:24:49 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 09:39:34 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,27 +29,39 @@ static char	*generate_temp_filename(void)
 void	process_heredoc_input(int fd, char *delimiter, t_vars *vars)
 {
 	char	*line;
+	int		original_signal;
 
+	original_signal = g_received_signal;
+	setup_heredoc_signals();
 	while (1)
 	{
 		line = readline("> ");
-		if (!line)
-			break ;
+		if (!line || g_received_signal == SIGINT)
+		{
+			if (g_received_signal == SIGINT)
+			{
+				add_static_var(&vars, "?", "130");
+			}
+			break;
+		}
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
 		{
 			free(line);
-			break ;
+			break;
 		}
 		line = is_dolar(line, &vars);
 		ft_putendl_fd(line, fd);
 		free(line);
 	}
+	setup_signals();
+	g_received_signal = original_signal;
 }
 
 char	*create_heredoc_file(char *delimiter, t_vars *vars)
 {
 	char	*filename;
 	int		fd;
+	int		original_stdin;
 
 	filename = generate_temp_filename();
 	if (!filename)
@@ -60,8 +72,24 @@ char	*create_heredoc_file(char *delimiter, t_vars *vars)
 		free(filename);
 		return (NULL);
 	}
+	// Save original stdin
+	original_stdin = dup(STDIN_FILENO);
 	process_heredoc_input(fd, delimiter, vars);
+	// If interrupted by SIGINT, return NULL to indicate failure
+	if (g_received_signal == SIGINT)
+	{
+		close(fd);
+		unlink(filename);
+		free(filename);
+		// Restore original stdin
+		dup2(original_stdin, STDIN_FILENO);
+		close(original_stdin);
+		return (NULL);
+	}
 	close(fd);
+	// Restore original stdin
+	dup2(original_stdin, STDIN_FILENO);
+	close(original_stdin);
 	return (filename);
 }
 

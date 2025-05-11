@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:30:15 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/10 12:29:11 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 09:27:14 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ pid_t	process_ps_lines(char *buffer, int i)
 	char	cmd[64];
 	pid_t	pid;
 
+	if (!buffer)
+		return (0);
 	while (buffer[i])
 	{
 		extract_pid(buffer, &i, pid_str, ppid_str);
