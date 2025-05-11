@@ -6,7 +6,7 @@
 /*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 14:22:37 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/11 14:22:40 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/11 15:02:14 by aycami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,10 @@ int	is_input_incomplete(char *input)
 {
 	int	len;
 	int	i;
+	int	j;
 
 	len = ft_strlen(input);
 	if (len == 0)
-		return (0);
-	i = 0;
-	while (i < len && (input[i] == ' ' || input[i] == '\t'))
-		i++;
-	if (i < len && input[i] == '|')
 		return (0);
 	i = len - 1;
 	while (i >= 0 && (input[i] == ' ' || input[i] == '\t'))
@@ -59,6 +55,14 @@ int	is_input_incomplete(char *input)
 		return (0);
 	if (input[i] != '|')
 		return (0);
+	if (i > 0)
+	{
+		j = i - 1;
+		while (j >= 0 && (input[j] == ' ' || input[j] == '\t'))
+			j--;
+		if (j >= 0 && input[j] == '|')
+			return (0);
+	}
 	return (is_quote_closed(input));
 }
 
