@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:59:20 by aycami            #+#    #+#             */
-/*   Updated: 2025/05/11 13:15:31 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 13:32:28 by ahmtemel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,19 @@ static int	is_n_flag(char *str)
 		return (0);
 	if (str[0] == '-' && str[1] == 'n' && str[2] == '\0')
 		return (1);
-		
 	return (0);
+}
+
+static void	echo_print_content(t_simple_cmds *cmd_list, int i)
+{
+	while (cmd_list->content[i] && cmd_list->content[i + 1])
+	{
+		ft_putstr_fd(cmd_list->content[i], STDOUT_FILENO);
+		ft_putchar_fd(' ', STDOUT_FILENO);
+		i++;
+	}
+	if (cmd_list->content[i])
+		ft_putstr_fd(cmd_list->content[i], STDOUT_FILENO);
 }
 
 void	echo_builtin(t_simple_cmds *cmd_list)
@@ -38,16 +49,7 @@ void	echo_builtin(t_simple_cmds *cmd_list)
 		}
 	}
 	if (cmd_list->content)
-	{
-		while (cmd_list->content[i] && cmd_list->content[i + 1])
-		{
-			ft_putstr_fd(cmd_list->content[i], STDOUT_FILENO);
-			ft_putchar_fd(' ', STDOUT_FILENO);
-			i++;
-		}
-		if (cmd_list->content[i])
-			ft_putstr_fd(cmd_list->content[i], STDOUT_FILENO);
-	}
+		echo_print_content(cmd_list, i);
 	if (flag == 0)
 		ft_putchar_fd('\n', STDOUT_FILENO);
 	cmd_list->return_value = 0;

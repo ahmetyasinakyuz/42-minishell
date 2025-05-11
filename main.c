@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aycami <aycami@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:39 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 12:31:39 by aycami           ###   ########.fr       */
+/*   Updated: 2025/05/11 13:38:45 by ahmtemel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	handle_null_input(t_vars **vars, char ***envp)
 	return (1);
 }
 
-static int	is_leading_pipe(char *input)
+int	is_leading_pipe(char *input)
 {
 	int	i;
 
@@ -38,7 +38,7 @@ static int	is_leading_pipe(char *input)
 	return (0);
 }
 
-static int	handle_incomplete_input(char **input, t_vars **vars)
+int	handle_incomplete_input(char **input, t_vars **vars)
 {
 	while (is_input_incomplete(*input))
 	{
@@ -91,40 +91,4 @@ void	run_shell(t_vars **vars, char ***envp)
 			free(input);
 	}
 	clean_exit(vars, envp);
-}
-
-char	**env_maker(char **envp)
-{
-	int		i;
-	char	**local_envp;
-
-	i = 0;
-	while (envp[i])
-		i++;
-	local_envp = malloc(sizeof(char *) * (i + 1));
-	if (!local_envp)
-		return (NULL);
-	i = 0;
-	while (envp[i])
-	{
-		local_envp[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	local_envp[i] = NULL;
-	return (local_envp);
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	t_vars	*vars;
-	char	**local_envp;
-
-	local_envp = env_maker(envp);
-	vars = NULL;
-	(void)argv;
-	if (argc == 1)
-		run_shell(&vars, &local_envp);
-	else
-		printf("Usage: ./minishell\n");
-	return (0);
 }

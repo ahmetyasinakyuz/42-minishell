@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 01:37:46 by aysesudecam       #+#    #+#             */
-/*   Updated: 2025/05/11 09:58:21 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 13:36:08 by ahmtemel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,29 @@ int	is_input_incomplete(char *input)
 	return (is_quote_closed(input));
 }
 
+char	*join_input_and_continuation(char *input, char *continuation)
+{
+	char	*temp;
+	char	*combined;
+
+	temp = ft_strjoin(input, " ");
+	if (!temp)
+	{
+		free(continuation);
+		return (input);
+	}
+	combined = ft_strjoin(temp, continuation);
+	free(temp);
+	free(input);
+	free(continuation);
+	if (!combined)
+		return (NULL);
+	return (combined);
+}
+
 char	*get_continuation(char *input)
 {
 	char	*continuation;
-	char	*combined;
-	char	*temp;
 	int		original_stdin;
 
 	original_stdin = dup(STDIN_FILENO);
@@ -82,21 +100,7 @@ char	*get_continuation(char *input)
 		return (NULL);
 	}
 	if (ft_strlen(continuation) > 0)
-	{
-		temp = ft_strjoin(input, " ");
-		if (!temp)
-		{
-			free(continuation);
-			return (input);
-		}
-		combined = ft_strjoin(temp, continuation);
-		free(temp);
-		free(input);
-		free(continuation);
-		if (!combined)
-			return (NULL);
-		return (combined);
-	}
+		return (join_input_and_continuation(input, continuation));
 	free(continuation);
 	return (input);
 }

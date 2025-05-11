@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+         #
+#    By: ahmtemel <ahmtemel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/17 18:27:43 by aakyuz            #+#    #+#              #
-#    Updated: 2025/05/11 12:55:11 by aakyuz           ###   ########.fr        #
+#    Updated: 2025/05/11 13:37:13 by ahmtemel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,6 +59,7 @@ SRCS =	parser/flags.c                      \
 		signal_handler_utils.c              \
 		main.c                              \
 		main_utils.c                        \
+		main_extra.c                        \
 		execute/execute_utils_oth.c	        \
 		execute/execute_utils.c
 
