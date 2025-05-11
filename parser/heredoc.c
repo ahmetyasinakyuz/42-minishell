@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:30:18 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 09:39:34 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 09:59:03 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ void	process_heredoc_input(int fd, char *delimiter, t_vars *vars)
 			{
 				add_static_var(&vars, "?", "130");
 			}
-			break;
+			break ;
 		}
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
 		line = is_dolar(line, &vars);
 		ft_putendl_fd(line, fd);
@@ -72,29 +72,25 @@ char	*create_heredoc_file(char *delimiter, t_vars *vars)
 		free(filename);
 		return (NULL);
 	}
-	// Save original stdin
 	original_stdin = dup(STDIN_FILENO);
 	process_heredoc_input(fd, delimiter, vars);
-	// If interrupted by SIGINT, return NULL to indicate failure
 	if (g_received_signal == SIGINT)
 	{
 		close(fd);
 		unlink(filename);
 		free(filename);
-		// Restore original stdin
 		dup2(original_stdin, STDIN_FILENO);
 		close(original_stdin);
 		return (NULL);
 	}
 	close(fd);
-	// Restore original stdin
 	dup2(original_stdin, STDIN_FILENO);
 	close(original_stdin);
 	return (filename);
 }
 
 void	process_single_heredoc(t_simple_cmds *cmd, t_lexer *current,
-			t_vars *vars)
+		t_vars *vars)
 {
 	char	*delimiter;
 	char	*filename;

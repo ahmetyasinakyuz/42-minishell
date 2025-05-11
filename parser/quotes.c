@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:01:57 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/10 20:20:43 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 09:59:10 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,19 @@ void	process_quotes(char *str, char *result, int *i, int *j)
 	int	in_squote;
 	int	in_dquote;
 	int	len;
-	
+
 	in_squote = 0;
 	in_dquote = 0;
 	len = ft_strlen(str);
-	if (len == 2 && ((str[0] == '\'' && str[1] == '\'') || 
-		(str[0] == '\"' && str[1] == '\"')))
+	if (len == 2 && ((str[0] == '\'' && str[1] == '\'') || (str[0] == '\"'
+				&& str[1] == '\"')))
 	{
 		result[0] = str[0];
 		result[1] = str[1];
 		result[2] = '\0';
 		*i = 2;
 		*j = 2;
-		return;
+		return ;
 	}
 	while (str[*i])
 	{

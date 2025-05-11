@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 10:40:00 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 09:53:39 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 10:03:45 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	handle_heredoc_sigint(int signum)
 {
 	g_received_signal = signum;
 	write(STDOUT_FILENO, "\n", 1);
-	// Don't close stdin, just set the signal flag
+	close(0);  // Close stdin to force readline to return NULL
 }
 
 void	handle_sigint(int signum)
@@ -37,7 +37,7 @@ void	handle_continuation_sigint(int signum)
 {
 	g_received_signal = signum;
 	write(STDOUT_FILENO, "\n", 1);
-	close(0);  // Close stdin to force readline to return NULL
+	close(0);
 }
 
 void	setup_signals(void)

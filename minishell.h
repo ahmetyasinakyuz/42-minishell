@@ -6,7 +6,7 @@
 /*   By: aakyuz <aakyuz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:27:46 by aakyuz            #+#    #+#             */
-/*   Updated: 2025/05/11 09:53:39 by aakyuz           ###   ########.fr       */
+/*   Updated: 2025/05/11 09:57:30 by aakyuz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,8 +314,8 @@ int								is_input_incomplete(char *input);
 char							*get_continuation(char *input);
 void							run_shell(t_vars **vars, char ***envp);
 int								handle_null_input(t_vars **vars, char ***envp);
-void							handle_input_loop(char *input,
-									t_vars **vars,	char ***envp);
+void							handle_input_loop(char *input, t_vars **vars,
+									char ***envp);
 char							**env_maker(char **envp);
 int								validate_redirections(t_lexer *token_list);
 char							*join_env_parts(char *result, int i,
@@ -323,7 +323,6 @@ char							*join_env_parts(char *result, int i,
 pid_t							get_shell_pid(void);
 char							*pid_to_string(pid_t pid);
 pid_t							process_ps_lines(char *buffer, int i);
-void	found_var(char *str, t_vars **vars);
-
+void							found_var(char *str, t_vars **vars);
 
 #endif
